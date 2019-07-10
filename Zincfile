@@ -9,7 +9,8 @@ files:
     destination_path: .github
   - source_path: GitHub/pull_request_template.md
     destination_path: .github
-  - source_path: GitHub/.gitignore
+  - source_path: GitHub/.gitignore-spm
+    name: .gitignore
   # Rubocop
   - source_path: Rubocop/rubocop.yml
     destination_path: .zinc

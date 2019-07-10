@@ -41,22 +41,11 @@ playground.xcworkspace
 # Packages/
 # Package.pins
 .build/
+# .swiftpm/ is generated when editing a Swift package in Xcode 11
 .swiftpm/
-
-# CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-# Pods/
-
-# Carthage
-#
-# Add this line if you want to avoid checking in source code from Carthage dependencies.
-# Carthage/Checkouts
-
-Carthage/Build
+# A .xcodeproj file should never be created or generated for SPM except for use with versions earlier than Xcode 11
+# If it does get generated somehow, ignore it
+*.xcodeproj
 
 # jazzy
 undocumented.json
