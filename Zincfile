@@ -1,0 +1,20 @@
+---
+source: https://github.com/spothero/Shared-iOS.git
+files:
+  # Danger
+  - source_path: Danger/Dangerfile
+    destination_path: .zinc
+  # GitHub
+  - source_path: GitHub/CODEOWNERS
+    destination_path: .github
+  - source_path: GitHub/pull_request_template.md
+    destination_path: .github
+  - source_path: GitHub/.gitignore
+  # Rubocop
+  - source_path: Rubocop/rubocop.yml
+    destination_path: .zinc
+  # SwiftLint
+  - source_path: SwiftLint/.swiftlint.yml
+  # SwiftFormat
+  - source_path: SwiftFormat/.swiftformat-spm
+    name: .swiftformat
