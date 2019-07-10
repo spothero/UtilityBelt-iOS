@@ -1,9 +1,4 @@
-//
-//  HTTPStatusCodeTests.swift
-//  
-//
-//  Created by Brian Drelling on 6/12/19.
-//
+// Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 @testable import UtilityBelt
 import XCTest
@@ -14,21 +9,21 @@ final class HTTPStatusCodeTests: XCTestCase {
         for code in HTTPStatusCode.allCases {
             // None that we currently work with should be undefined
             XCTAssertNotEqual(code.responseType, .undefined)
-            
+
             switch code.rawValue {
-            case Int.min..<100:
+            case Int.min ..< 100:
                 XCTFail("Status codes should not be less than 100.")
-            case 100..<200:
+            case 100 ..< 200:
                 XCTAssertEqual(code.responseType, .informational)
-            case 200..<300:
+            case 200 ..< 300:
                 XCTAssertEqual(code.responseType, .success)
-            case 300..<400:
+            case 300 ..< 400:
                 XCTAssertEqual(code.responseType, .redirection)
-            case 400..<500:
+            case 400 ..< 500:
                 XCTAssertEqual(code.responseType, .clientError)
-            case 500..<600:
+            case 500 ..< 600:
                 XCTAssertEqual(code.responseType, .serverError)
-            case 600..<Int.max:
+            case 600 ..< Int.max:
                 XCTFail("Status codes should not be greater than or equal to 600.")
             default:
                 XCTFail("Status code is outside of the possible integer range. How did that happen?")
