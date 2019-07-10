@@ -9,7 +9,7 @@
 /// Sources:
 /// - [Mozilla - HTTP Headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
 /// - [Wikipedia - List of HTTP Header Fields](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields)
-enum HTTPHeader: String {
+public enum HTTPHeader: String {
     // MARK: Request
 
     /// Media type(s) that is/are acceptable for the response.
@@ -251,7 +251,7 @@ enum HTTPHeader: String {
 
 // MARK: - Extensions
 
-extension HTTPHeader {
+public extension HTTPHeader {
     /// Shorthand for `.acceptableInstanceManipulations`
     static let aim: HTTPHeader = .acceptableInstanceManipulations
 
