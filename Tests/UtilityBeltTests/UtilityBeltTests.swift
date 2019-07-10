@@ -1,5 +1,7 @@
-import XCTest
+// Copyright © 2019 SpotHero, Inc. All rights reserved.
+
 @testable import UtilityBelt
+import XCTest
 
 final class UtilityBelt_iOSTests: XCTestCase {
     func testExample() {
