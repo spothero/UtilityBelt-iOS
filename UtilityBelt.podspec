@@ -5,7 +5,7 @@ Pod::Spec.new do |spec|
   spec.author = 'SpotHero, Inc.'
   spec.homepage = 'https://github.com/spothero/UtilityBelt-iOS'
   spec.license = 'Commercial'
-  spec.summary = 'UtilityBelt is a collection of common SpotHero Swift utility scripts and classes.'
+  spec.summary = 'UtilityBelt is a collection of common Swift utility files.'
 
   spec.ios.deployment_target = '11.0'
   spec.watchos.deployment_target = '3.0'
