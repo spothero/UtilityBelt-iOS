@@ -1,0 +1,14 @@
+# Rules
+# makes sure the self. prefix is added where appropriate
+--self insert
+# only strips unused arguments (replacing with _) in closures, not methods
+--stripunusedargs closure-only 
+# sets the header block to supplied text
+--header "Copyright © {year} SpotHero, Inc. All rights reserved."
+
+# Disabled Rules
+--disable specifiers # because it isn't configurable
+
+# File Exclusions
+--exclude Pods
+--exclude Package.swift
