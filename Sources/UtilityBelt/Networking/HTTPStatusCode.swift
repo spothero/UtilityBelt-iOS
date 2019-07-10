@@ -18,7 +18,7 @@ import Foundation
 /// Sources:
 /// - [Mozilla - HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 /// - [Wikipedia - List of HTTP Status Codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
-enum HTTPStatusCode: Int, CaseIterable {
+public enum HTTPStatusCode: Int, CaseIterable {
     /// The response class representation of status codes, these get grouped by their first digit.
     enum ResponseType {
         /// Indicates that the request was received and understood.
@@ -353,7 +353,7 @@ enum HTTPStatusCode: Int, CaseIterable {
 
 // MARK: - Extensions
 
-extension HTTPURLResponse {
+public extension HTTPURLResponse {
     var status: HTTPStatusCode? {
         return HTTPStatusCode(rawValue: self.statusCode)
     }
