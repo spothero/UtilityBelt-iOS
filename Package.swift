@@ -5,7 +5,9 @@ import PackageDescription
 let package = Package(
     name: "UtilityBelt",
     products: [
-        .library(name: "UtilityBelt", targets: ["UtilityBelt"]),
+        .library(name: "Sham", targets: ["Sham"]),
+        .library(name: "UtilityBelt", targets: ["UtilityBeltNetworking"]),
+        .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
     ],
     dependencies: [
         .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.40.10"),
@@ -14,16 +16,27 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "UtilityBelt",
-            dependencies: [],
-            path: "Sources/UtilityBelt"
+            name: "Sham",
+            dependencies: [
+                .target(name: "UtilityBeltNetworking")
+            ]
+        ),
+        .target(
+            name: "UtilityBeltNetworking",
+            dependencies: []
         ),
         .testTarget(
-            name: "UtilityBeltTests",
+            name: "ShamTests",
             dependencies: [
-                .target(name: "UtilityBelt")
-            ],
-            path: "Tests/UtilityBeltTests"
+                .target(name: "Sham")
+            ]
+        ),
+        .testTarget(
+            name: "UtilityBeltNetworkingTests",
+            dependencies: [
+                .target(name: "Sham"),
+                .target(name: "UtilityBeltNetworking")
+            ]
         )
     ]
 )

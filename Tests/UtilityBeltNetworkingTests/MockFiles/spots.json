@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "title": "Seven Lions - Valet",
+        "price": 1400,
+        "description": "Arrive at this location at 97 E Adams St. This is the Seven Lions valet stand operated by VPA. It is located in front of Starbucks on the south side of E Adams St. between S Michigan Ave. and S Wabash Ave. If you are using the SpotHero Mobile App, please refer to the 2nd picture for an annotated map.",
+        "distance": "0.1 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_1632,y_1224/v1433342744/anwchje8oi6zjldxb04q.jpg"
+    },
+    {
+        "id": 2,
+        "title": "55 E Monroe St. - Garage",
+        "price": 1650,
+        "description": "Enter this location at 55 E Monroe St. This is the Park Monroe garage, operated by SP+. It is located on the south/right-hand side of E Monroe St. (a one-way street) between S Wabash Ave. and S Michigan Ave. You may also enter this location at its other entrance, 50 E Adams, between S Michigan Ave and S Wabash Ave.",
+        "distance": "390 ft",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_2571,y_1502/v1412374303/iy9iobjbtmrix01hp2yw.jpg"
+    },
+    {
+        "id": 3,
+        "title": "124 S Wabash Ave. - Garage",
+        "price": 1500,
+        "description": "Enter this location at 124 S Wabash Ave. This is the Palmer House garage operated by ABM Parking. It is located on the west/right-hand side of S Wabash Ave St (a one-way street) between E Monroe St and E Adams St. It is just past the Corner Bakery and just before the main entrance of the Palmer House. Please note: The address 124 S. Wabash is for GPS purposes, this address will not be displayed above the garage entrance, look for a black and gold sign stating \"Parking\" in white print.",
+        "distance": "0.1 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_2304,y_1536/v1412377222/msvt2qdusildhvgopsl3.jpg"
+    },
+    {
+        "id": 4,
+        "title": "210 S Wabash Ave. - Adams & Wabash Garage",
+        "price": 1400,
+        "description": "Enter this location at 210 S Wabash Ave.  This is the Adams and Wabash garage operated by InterPark. It is located on the west/right-hand side of S Wabash Ave. (a one-way street) between E Adams St. and E Jackson Blvd. You may also enter this location at its other entrance, 17 E Adams St.",
+        "distance": "0.2 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_374,y_247/v1425512904/bhwlpxwcmvkigrn1xmbm.png"
+    },
+    {
+        "id": 5,
+        "title": "17-21 E Adams St. - Adams & Wabash Garage",
+        "price": 1450,
+        "description": "This is the Adams and Wabash garage operated by InterPark. There are 2 entrances for this facility, 17 E Adams St. and 210 S. Wabash.\r\n\r\n*The 17 E. Adams St. entrance  is located on the south/left-hand side of E Adams St. (a one-way street) between S Wabash Ave. and S State St.            \r\n\r\n*The 210 S. Wabash Ave. entrance is located on the west/right-hand side of S. Wabash St. (a one-way street) just south of the intersection of Wabash and Adams. This will be the first garage entrance you encounter once you go south through the intersection of Wabash/Adams. ",
+        "distance": "0.2 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_1632,y_1224/v1425513192/xlmmigpvhmb0e1snodcj.jpg"
+    },
+    {
+        "id": 6,
+        "title": "111 N Wabash Ave. - Valet",
+        "price": 1800,
+        "description": "Enter this location at 111 N Wabash Ave. This valet stand for the Garland Building is operated by Capital Parking. It is located on the east/left-hand side of N Wabash Ave. (a one-way street) between W Randolph St. and W Washington St. right before the Staples store entrance.",
+        "distance": "0.3 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_2034,y_1536/v1412383079/feavlfsuvue8gvrl1qrq.jpg"
+    },
+    {
+        "id": 7,
+        "title": "55 E Jackson Blvd. - Valet-Assist Garage",
+        "price": 1200,
+        "description": "Enter this location at 313 S Wabash. This is an ABM Parking Facility, entrance is on the east/left-hand side of S. Wabash, just 1/4 block south of the intersection of Jackson and Wabash. The entrance to the parking garage is to the right of a Potbelly restaurant off Wabash.\r\n\r\n**HERO TIP: Enter this garage where the GRAY steel building meets the RED steel building on the east/left-hand side S. Wabash, the entrance takes you underground to the parking area**",
+        "distance": "0.2 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_2417,y_1611/v1451513464/png8ajl6xkc2ruqqt2jf.jpg"
+    },
+    {
+        "id": 8,
+        "title": "33 W Monroe St. - Garage",
+        "price": 1850,
+        "description": "Enter this location on Marble Place off of Dearborn St.  This is a LAZ Parking Facility located at the back of the 33 W. Monroe building.  If you are going North on Dearborn, you will see a large vertical \"PARK\" sign between Adams and Monroe that will navigate you to the garage. When you see this sign please make a right into the alley  (this alley is Marble Pl) and head to the garage entrance. ",
+        "distance": "0.2 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_2304,y_1536/v1412374621/tpdbqwyqybtgpehoth3f.jpg"
+    },
+    {
+        "id": 9,
+        "title": "9 S Dearborn St. - Prime Rosebud Valet",
+        "price": 1400,
+        "description": "Enter this location at 55 S Dearborn St. This Rosebud Prime valet stand is operated by River North Parking. It is located on the east/right-hand side of S Dearborn St. (a one-way street) between W Monroe St. and W Madison St. Pull into the alley between the two Blue Line station entrances north of Monroe, and pull up to the red awning reading \"Rosebud Prime\", the valet will then take your vehicle.",
+        "distance": "0.3 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_2880,y_1920/v1459275142/gkcgzedhqojsrobzdvsa.jpg"
+    },
+    {
+        "id": 10,
+        "title": "131 S Dearborn St. - Garage",
+        "price": 1550,
+        "description": "The best address for GPS is 41 W. Marble Place. The facility entrance is located in the alley (Marble Place) on the east side of Dearborn, between Adams St. and Monroe. While heading northbound on Dearborn St., after crossing Adams St., turn right into the alley just past the Monroe CTA Blue Line entrance.  After turning into the alley, the garage entrance is on the right with a black and white “Self Park” sign above the entrance.",
+        "distance": "0.3 mi",
+        "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_2880,y_1920/v1446132663/sd29xbvmbl52loakpumb.jpg"
+    }
+]
