@@ -116,10 +116,21 @@ private extension URL {
 //}
 
 public struct StubResponse {
-    public let data: Data
+    public var data: Data? = nil
+    public var error: Error? = nil
+    public var statusCode: HTTPStatusCode = .ok
+    public var headers: [String: String] = [:]
     
     static func data(_ data: Data) -> StubResponse {
         return StubResponse(data: data)
+    }
+    
+    static func failure(error: Error, statusCode: HTTPStatusCode = .internalServerError, headers: [String: String] = [:]) -> StubResponse {
+        return StubResponse(error: error, statusCode: statusCode, headers: headers)
+    }
+    
+    static func http(statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> StubResponse {
+        return StubResponse(statusCode: statusCode, headers: headers)
     }
     
     static func encodable<T>(_ encodable: T) -> StubResponse where T : Encodable {
