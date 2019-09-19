@@ -23,13 +23,13 @@ final class MockServiceTests: XCTestCase {
     }
     
     func testStubbingSameURL() {
-        MockService.shared.stub(self.fullURL, object: self.mockData)
-        MockService.shared.stub(self.fullURL, object: self.mockData)
-        MockService.shared.stub(self.fullURL, object: self.mockData)
+        self.stub(self.fullURL, with: .encodable(self.mockData))
+        self.stub(self.fullURL, with: .encodable(self.mockData))
+        self.stub(self.fullURL, with: .encodable(self.mockData))
     }
     
     func testStubbingExactURLOnly() {
-        MockService.shared.stub(self.fullURL, object: self.mockData)
+        self.stub(self.fullURL, with: .encodable(self.mockData))
         
         self.request(url: self.fullURL, data: self.mockData)
         self.request(url: self.schemeOnlyURL, data: self.mockData, shouldFail: true)
@@ -39,7 +39,7 @@ final class MockServiceTests: XCTestCase {
     }
     
     func testStubbingHostOnly() {
-        MockService.shared.stub(self.hostOnlyURL, object: self.mockData)
+        self.stub(self.hostOnlyURL, with: .encodable(self.mockData))
         
         self.request(url: self.fullURL, data: self.mockData)
         self.request(url: self.schemeOnlyURL, data: self.mockData, shouldFail: true)
@@ -49,7 +49,7 @@ final class MockServiceTests: XCTestCase {
     }
     
     func testStubbingPathOnly() {
-        MockService.shared.stub(self.pathOnlyURL, object: self.mockData)
+        self.stub(self.pathOnlyURL, with: .encodable(self.mockData))
         
         self.request(url: self.fullURL, data: self.mockData)
         self.request(url: self.schemeOnlyURL, data: self.mockData, shouldFail: true)
@@ -59,7 +59,7 @@ final class MockServiceTests: XCTestCase {
     }
     
     func testStubbingSchemeOnlyFails() {
-        MockService.shared.stub(self.schemeOnlyURL, object: self.mockData)
+        self.stub(self.schemeOnlyURL, with: .encodable(self.mockData))
         
         let hasData = MockService.shared.hasData(for: self.schemeOnlyURL)
         
@@ -68,7 +68,7 @@ final class MockServiceTests: XCTestCase {
     }
     
     func testStubbingQueryOnlyFails() {
-        MockService.shared.stub(self.queryOnlyURL, object: self.mockData)
+        self.stub(self.queryOnlyURL, with: .encodable(self.mockData))
         
         let hasData = MockService.shared.hasData(for: self.queryOnlyURL)
         

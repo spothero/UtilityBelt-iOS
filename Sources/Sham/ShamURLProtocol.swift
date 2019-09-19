@@ -22,9 +22,9 @@ public class ShamURLProtocol: URLProtocol {
         }
         
         let response: HTTPURLResponse?
-        let data = MockService.shared.getData(for: request.url)
+        let stubbedResponse = MockService.shared.getResponse(for: request.url)
         
-        if data != nil {
+        if stubbedResponse?.data != nil {
             response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)
         } else {
             response = HTTPURLResponse(url: url, statusCode: 400, httpVersion: nil, headerFields: nil)
@@ -37,7 +37,7 @@ public class ShamURLProtocol: URLProtocol {
         
         client?.urlProtocol(self, didReceive: unwrappedResponse, cacheStoragePolicy: .notAllowed)
         
-        if let data = data {
+        if let data = stubbedResponse?.data {
             client?.urlProtocol(self, didLoad: data)
         }
         

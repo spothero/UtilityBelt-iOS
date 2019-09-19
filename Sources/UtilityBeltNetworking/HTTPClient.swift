@@ -56,10 +56,6 @@ public class HTTPClient {
     
     // MARK: Request
     
-    public func test() {
-//        self.request
-    }
-    
     public func request<T>(_ url: URL, method: HTTPMethod, completion: DecodableTaskCompletion<T>? = nil) where T : Decodable {
         self.request(url, method: method) { rawResult in
             guard let data = rawResult.data, let decodedObject = try? JSONDecoder().decode(T.self, from: data) else {
