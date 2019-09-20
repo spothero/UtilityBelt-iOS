@@ -1,4 +1,4 @@
-
+// Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 extension Spot {
     static let mockList = [

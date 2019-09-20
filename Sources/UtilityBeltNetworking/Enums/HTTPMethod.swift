@@ -1,4 +1,3 @@
-
 /// HTTP Methods are a set of request methods to indicate the desired action to be performed for a given resource.
 ///
 /// Sources:

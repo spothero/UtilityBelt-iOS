@@ -1,9 +1,4 @@
-//
-//  File.swift
-//  
-//
-//  Created by Brian Drelling on 9/18/19.
-//
+// Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 import Foundation
 

@@ -14,7 +14,7 @@ let package = Package(
         .target(
             name: "Sham",
             dependencies: [
-                .target(name: "UtilityBeltNetworking")
+                .target(name: "UtilityBeltNetworking"),
             ]
         ),
         .target(
@@ -24,15 +24,15 @@ let package = Package(
         .testTarget(
             name: "ShamTests",
             dependencies: [
-                .target(name: "Sham")
+                .target(name: "Sham"),
             ]
         ),
         .testTarget(
             name: "UtilityBeltNetworkingTests",
             dependencies: [
                 .target(name: "Sham"),
-                .target(name: "UtilityBeltNetworking")
+                .target(name: "UtilityBeltNetworking"),
             ]
-        )
+        ),
     ]
 )
