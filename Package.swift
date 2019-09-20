@@ -9,11 +9,7 @@ let package = Package(
         .library(name: "UtilityBelt", targets: ["UtilityBeltNetworking"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
     ],
-    dependencies: [
-        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.40.10"),
-        .package(url: "https://github.com/Realm/SwiftLint", from: "0.33.1"),
-        .package(url: "https://github.com/spothero/Zinc", from: "0.5.0"),
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "Sham",
