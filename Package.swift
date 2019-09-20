@@ -7,8 +7,7 @@ let package = Package(
     products: [
         .library(name: "UtilityBelt", targets: ["UtilityBelt"]),
     ],
-    dependencies: [
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "UtilityBelt",
