@@ -1,10 +1,10 @@
-// Copyright © 2019 SpotHero, Inc. All rights reserved.
-
 import XCTest
 
-import UtilityBeltTests
+import ShamTests
+import UtilityBeltNetworkingTests
 
 var tests = [XCTestCaseEntry]()
-tests += UtilityBeltTests.__allTests()
+tests += ShamTests.__allTests()
+tests += UtilityBeltNetworkingTests.__allTests()
 
 XCTMain(tests)

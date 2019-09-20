@@ -4,19 +4,27 @@ import Foundation
 import UtilityBeltNetworking
 
 public struct StubResponse {
-    public var data: Data?
-    public var error: Error?
+    public var data: Data? = nil
+    public var error: Error? = nil
     public var statusCode: HTTPStatusCode = .ok
     public var headers: [String: String] = [:]
 
     /// Determines whether or not the headers in this response are appended to or replace the request headers. Appends by default.
     public var shouldReplaceHeaders: Bool = false
+    
+    public init(data: Data? = nil, error: Error? = nil, statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:], shouldReplaceHeaders: Bool = false) {
+        self.data = data
+        self.error = error
+        self.statusCode = statusCode
+        self.headers = headers
+        self.shouldReplaceHeaders = shouldReplaceHeaders
+    }
 
-    static func data(_ data: Data) -> Self {
+    static func data(_ data: Data) -> StubResponse {
         return self.init(data: data)
     }
 
-    static func error(_ error: Error, statusCode: HTTPStatusCode = .internalServerError, headers: [String: String] = [:]) -> Self {
+    static func error(_ error: Error, statusCode: HTTPStatusCode = .internalServerError, headers: [String: String] = [:]) -> StubResponse {
         return self.init(error: error, statusCode: statusCode, headers: headers)
     }
     
@@ -25,7 +33,7 @@ public struct StubResponse {
                      subdirectory: String? = nil,
                      bundle: Bundle = .main,
                      statusCode: HTTPStatusCode = .ok,
-                     headers: [String: String] = [:]) -> Self {
+                     headers: [String: String] = [:]) -> StubResponse {
         guard let resourceURL = bundle.url(forResource: path, withExtension: fileExtension, subdirectory: subdirectory) else {
             assertionFailure("Unable to find resource.")
             return self.init(data: nil)
@@ -40,11 +48,11 @@ public struct StubResponse {
         }
     }
 
-    static func http(statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> Self {
+    static func http(statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> StubResponse {
         return self.init(statusCode: statusCode, headers: headers)
     }
 
-    static func encodable<T>(_ encodable: T, statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> Self where T: Encodable {
+    static func encodable<T>(_ encodable: T, statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> StubResponse where T: Encodable {
         do {
             let data = try JSONEncoder().encode(encodable)
             return self.init(data: data, statusCode: statusCode, headers: headers)
