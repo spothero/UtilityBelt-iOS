@@ -15,10 +15,12 @@ final class MockServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-//        MockService.shared.stub("spots", object: Spot.mockList)
+        MockService.shared.register()
     }
     
     override func tearDown() {
+        super.tearDown()
+        
         MockService.shared.clearData()
     }
     
@@ -26,6 +28,16 @@ final class MockServiceTests: XCTestCase {
         self.stub(self.fullURL, with: .encodable(self.mockData))
         self.stub(self.fullURL, with: .encodable(self.mockData))
         self.stub(self.fullURL, with: .encodable(self.mockData))
+    }
+    
+    func testStubbingAllRequests() {
+        self.stub(.allRequests, with: .encodable(self.mockData))
+        
+        self.request(url: self.fullURL, data: self.mockData)
+        self.request(url: self.schemeOnlyURL, data: self.mockData)
+        self.request(url: self.hostOnlyURL, data: self.mockData)
+        self.request(url: self.pathOnlyURL, data: self.mockData)
+        self.request(url: self.queryOnlyURL, data: self.mockData)
     }
     
     func testStubbingExactURLOnly() {
@@ -58,21 +70,30 @@ final class MockServiceTests: XCTestCase {
         self.request(url: self.queryOnlyURL, data: self.mockData, shouldFail: true)
     }
     
+    func testStubbingGetFailsPostRequests() {
+        self.stub(.get(self.fullURL), with: .encodable(self.mockData))
+        
+        let hasData = MockService.shared.hasStub(for: .post(self.fullURL))
+        
+        XCTAssertFalse(MockService.shared.isEmpty)
+        XCTAssertFalse(hasData)
+    }
+    
     func testStubbingSchemeOnlyFails() {
         self.stub(self.schemeOnlyURL, with: .encodable(self.mockData))
         
-        let hasData = MockService.shared.hasData(for: self.schemeOnlyURL)
+        let hasData = MockService.shared.hasStub(for: self.schemeOnlyURL)
         
-        XCTAssertTrue(MockService.shared.isEmpty)
+        XCTAssertFalse(MockService.shared.isEmpty)
         XCTAssertFalse(hasData)
     }
     
     func testStubbingQueryOnlyFails() {
         self.stub(self.queryOnlyURL, with: .encodable(self.mockData))
         
-        let hasData = MockService.shared.hasData(for: self.queryOnlyURL)
+        let hasData = MockService.shared.hasStub(for: self.queryOnlyURL)
         
-        XCTAssertTrue(MockService.shared.isEmpty)
+        XCTAssertFalse(MockService.shared.isEmpty)
         XCTAssertFalse(hasData)
     }
     

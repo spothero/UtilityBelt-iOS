@@ -9,153 +9,119 @@ import Foundation
 import UtilityBeltNetworking
 
 public class MockService {
+    // MARK: - Shared Instance
+    
     public static let shared = MockService()
     
-    private var stubbedResponses = [URL: StubResponse]()
+    // MARK: - Properties
+    
     var isMockingAllRequests = true
     
+    private var stubResponses = [StubRequest: StubResponse]()
+    
     var isEmpty: Bool {
-        return self.stubbedResponses.isEmpty
+        return self.stubResponses.isEmpty
     }
     
-    private init() {
-        URLProtocol.registerClass(ShamURLProtocol.self)
+    // MARK: - Methods
+    
+    // Because of the way URLProtocol registration works, using any instance other than the shared instance would cause problems
+    private init() { }
+    
+    // MARK: Registration
+    
+    public func register() {
+        URLProtocol.registerClass(MockURLProtocol.self)
     }
+    
+    // MARK: Stubbing
+    
+    public func getResponse(for stubRequest: StubRequest?) -> StubResponse? {
+        guard let stubRequest = stubRequest else {
+            return nil
+        }
+        
+        // Check for a match with the exact URL
+        if let exactMatchResponse = self.stubResponses[stubRequest] {
+            return exactMatchResponse
+        }
+        
+        // Otherwise, find the most appropriate match
+        let firstResponse = self.stubResponses.first { $0.key.canMockData(for: stubRequest) }
+        
+        return firstResponse?.value
+    }
+    
+    public func hasStub(for stubRequest: StubRequest?) -> Bool {
+        return self.getResponse(for: stubRequest) != nil
+    }
+    
+    public func canMockData(for stubRequest: StubRequest?) -> Bool {
+        return self.isMockingAllRequests || self.hasStub(for: stubRequest)
+    }
+    
+    public func stub(_ request: StubRequest, with response: StubResponse) {
+        // Ensure that the URL is valid for stubbing
+        guard request.isValidForStubbing else {
+            return
+        }
+        
+        if self.stubResponses.contains(where: { $0.key == request }) {
+            print("Stubbed data already exists for request '\(request.description)'. Updating with new data.")
+        }
+        
+        self.stubResponses[request] = response
+    }
+    
+    // MARK: URLRequest Convenience
+    
+    public func getResponse(for urlRequest: URLRequest?) -> StubResponse? {
+        guard let urlRequest = urlRequest else {
+            return nil
+        }
+        
+        return self.getResponse(for: StubRequest(urlRequest: urlRequest))
+    }
+    
+    public func hasStub(for urlRequest: URLRequest?) -> Bool {
+        return self.getResponse(for: urlRequest) != nil
+    }
+    
+    public func canMockData(for urlRequest: URLRequest?) -> Bool {
+        return self.isMockingAllRequests || self.hasStub(for: urlRequest)
+    }
+    
+    public func stub(_ urlRequest: URLRequest, with response: StubResponse) {
+        let request = StubRequest(urlRequest: urlRequest)
+        return self.stub(request, with: response)
+    }
+    
+    // MARK: URL Convenience
     
     public func getResponse(for url: URL?) -> StubResponse? {
         guard let url = url else {
             return nil
         }
         
-        // Check for a match with the exact URL
-        if let exactMatchResponse = self.stubbedResponses[url] {
-            return exactMatchResponse
-        }
-        
-        // Otherwise, find the most appropriate match
-        let firstResponse = self.stubbedResponses.first { (key, value) in
-            var isIncluded = true
-            
-            // Include any stubbed response where the scheme matches the incoming URL's scheme or is nil or empty
-            isIncluded = isIncluded && (key.scheme == url.scheme || key.scheme?.isEmpty != false)
-            
-            // Include any stubbed response where the host matches the incoming URL's host or is nil or empty
-            isIncluded = isIncluded && (key.host == url.host || key.host?.isEmpty != false)
-            
-            // Include any stubbed response where the port matches the incoming URL's port or is nil
-            isIncluded = isIncluded && (key.port == url.port || key.port == nil)
-            
-            // Include any stubbed response where the path matches the incoming URL's path or is empty
-            isIncluded = isIncluded && (key.trimmedPath == url.trimmedPath || key.trimmedPath.isEmpty)
-            
-            // Include any stubbed response where the query matches the incoming URL' query or is nil or empty
-            isIncluded = isIncluded && (key.query == url.query || key.query?.isEmpty != false)
-            
-            return isIncluded
-        }
-        
-        return firstResponse?.value
+        return self.getResponse(for: .http(url))
     }
     
-    public func hasData(for url: URL?) -> Bool {
+    public func hasStub(for url: URL?) -> Bool {
         return self.getResponse(for: url) != nil
     }
     
     public func canMockData(for url: URL?) -> Bool {
-        return self.isMockingAllRequests || self.hasData(for: url)
+        return self.isMockingAllRequests || self.hasStub(for: url)
     }
     
     public func stub(_ url: URL, with response: StubResponse) {
-        // Ensure that the URL is valid for stubbing
-        guard url.isValidForStubbing else {
-            return
-        }
-        
-        if self.stubbedResponses.contains(where: { $0.key == url }) {
-            print("Stubbed data already exists for URL '\(url.absoluteString)'. Replacing with new data.")
-        }
-        
-        self.stubbedResponses[url] = response
+        let request: StubRequest = .http(url)
+        return self.stub(request, with: response)
     }
     
-//    public func stub<T>(_ url: URL, data: T) where T : Encodable {
-//        do {
-//            let encodedData = try JSONEncoder().encode(data)
-//            self.stub(url, data: encodedData)
-//        } catch { }
-//    }
+    // MARK: Utilities
     
     public func clearData() {
-        self.stubbedResponses = [:]
+        self.stubResponses = [:]
     }
 }
-
-private extension String {
-    func trimmingSlashes() -> String {
-        return self.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-    }
-}
-
-private extension URL {
-    var trimmedPath: String {
-        return self.path.trimmingSlashes()
-    }
-    
-    var isValidForStubbing: Bool {
-        // In order for a URL to be considered valid for stubbing,
-        // it must have a non-empty path or a non-nil and non-empty host
-        return !self.path.isEmpty || self.host?.isEmpty == false
-    }
-}
-
-//public protocol Stubbable {
-//    var value: Data { get }
-//}
-//
-//public extension Stubbable {
-//}
-
-public struct StubResponse {
-    public var data: Data? = nil
-    public var error: Error? = nil
-    public var statusCode: HTTPStatusCode = .ok
-    public var headers: [String: String] = [:]
-    
-    static func data(_ data: Data) -> StubResponse {
-        return StubResponse(data: data)
-    }
-    
-    static func failure(error: Error, statusCode: HTTPStatusCode = .internalServerError, headers: [String: String] = [:]) -> StubResponse {
-        return StubResponse(error: error, statusCode: statusCode, headers: headers)
-    }
-    
-    static func http(statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> StubResponse {
-        return StubResponse(statusCode: statusCode, headers: headers)
-    }
-    
-    static func encodable<T>(_ encodable: T) -> StubResponse where T : Encodable {
-        do {
-            let data = try JSONEncoder().encode(encodable)
-            return StubResponse(data: data)
-        } catch {
-            assertionFailure("Unable to encode type \(String(describing: T.self)) for stubbing.")
-            return StubResponse(data: Data())
-        }
-    }
-}
-
-//protocol Stubbable {
-//    func asData() -> Data?
-//}
-//
-//extension Data: Stubbable {
-//    func asData() -> Data? {
-//        return self
-//    }
-//}
-//
-//extension Data: Stubbable {
-//    func asData() -> Data? {
-//        return try? JSONEncoder().encode(self)
-//    }
-//}
