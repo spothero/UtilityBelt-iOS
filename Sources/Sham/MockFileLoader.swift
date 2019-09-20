@@ -2,10 +2,10 @@
 
 import Foundation
 
-public class MockLoader {
+public class MockFileLoader {
     // MARK: - Enums
 
-    public enum MockError: Error, LocalizedError {
+    public enum MockFileError: Error, LocalizedError {
         case invaldURL(_ url: URL)
         case unableToParseURL(_ urlString: String)
         case pathNotFound(_ url: URL)
@@ -30,7 +30,7 @@ public class MockLoader {
 
     // MARK: - Static Instance
 
-    public static let shared = MockLoader()
+    public static let shared = MockFileLoader()
 
     // MARK: - Properties
 
@@ -49,7 +49,7 @@ public class MockLoader {
     public func load(fromURLString urlString: String) throws -> Data? {
         // Attempt to convert the string into a URL
         guard let url = URL(string: urlString) else {
-            throw MockError.unableToParseURL(urlString)
+            throw MockFileError.unableToParseURL(urlString)
         }
 
         return try self.load(fromURL: url)
@@ -64,14 +64,14 @@ public class MockLoader {
         }
 
         // Ensure that the incoming url matches the base cache URL
-        guard scheme == MockLoader.baseURL.scheme, host == MockLoader.baseURL.host else {
-            throw MockError.invaldURL(url)
+        guard scheme == MockFileLoader.baseURL.scheme, host == MockFileLoader.baseURL.host else {
+            throw MockFileError.invaldURL(url)
         }
 
         do {
             return try self.load(fromRoute: url.path)
-        } catch MockError.routeNotFound {
-            throw MockError.pathNotFound(url)
+        } catch MockFileError.routeNotFound {
+            throw MockFileError.pathNotFound(url)
         } catch {
             throw error
         }
@@ -80,13 +80,13 @@ public class MockLoader {
     public func load(fromRoute route: String?) throws -> Data? {
         // Trim any leading or trailing slashes from the route and ensure it isn't nil or empty
         guard var route = route?.trimmingCharacters(in: .init(charactersIn: "/")), !route.isEmpty else {
-            throw MockError.routeNotFound
+            throw MockFileError.routeNotFound
         }
 
         // Convert any slashes in the route into underscores
         route = route.replacingOccurrences(of: "/", with: "_")
 
-        return try self.load(fromResourcePath: route, withExtension: MockLoader.defaultFileExtension, subdirectory: MockLoader.defaultSubdirectory)
+        return try self.load(fromResourcePath: route, withExtension: MockFileLoader.defaultFileExtension, subdirectory: MockFileLoader.defaultSubdirectory)
     }
 
     private func load(fromResourcePath path: String, withExtension fileExtension: String? = nil, subdirectory: String? = nil) throws -> Data {
@@ -107,7 +107,7 @@ public class MockLoader {
                 fullPath += ".\(fileExtension)"
             }
 
-            throw MockError.resourceNotFound(fullPath)
+            throw MockFileError.resourceNotFound(fullPath)
         }
 
         return try Data(contentsOf: resourceURL)

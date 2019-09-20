@@ -15,6 +15,21 @@ public struct StubResponse {
     static func data(_ data: Data) -> Self {
         return self.init(data: data)
     }
+    
+    static func file(_ path: String, fileExtension: String? = nil, subdirectory: String? = nil, bundle: Bundle = .main) -> Self {
+        guard let resourceURL = bundle.url(forResource: path, withExtension: fileExtension, subdirectory: subdirectory) else {
+            assertionFailure("Unable to find resource.")
+            return self.init(data: nil)
+        }
+        
+        do {
+            let data = try Data(contentsOf: resourceURL)
+            return self.init(data: data)
+        } catch {
+            assertionFailure("Unable to get data from resource.")
+            return self.init(data: nil)
+        }
+    }
 
     static func error(_ error: Error, statusCode: HTTPStatusCode = .internalServerError, headers: [String: String] = [:]) -> Self {
         return self.init(error: error, statusCode: statusCode, headers: headers)
@@ -30,7 +45,7 @@ public struct StubResponse {
             return self.init(data: data)
         } catch {
             assertionFailure("Unable to encode type \(String(describing: T.self)) for stubbing.")
-            return self.init(data: Data())
+            return self.init(data: nil)
         }
     }
 }
