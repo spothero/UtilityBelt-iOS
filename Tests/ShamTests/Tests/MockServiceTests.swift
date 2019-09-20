@@ -73,7 +73,6 @@ final class MockServiceTests: XCTestCase {
 
     func testStubbingGetFailsPostRequests() {
         self.stub(.get(self.fullURL), with: .encodable(self.mockData))
-        self.stub(.get(self.fullURL), with: .file(""))
 
         let hasData = MockService.shared.hasStub(for: .post(self.fullURL))
 
