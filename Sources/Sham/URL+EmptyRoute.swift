@@ -4,6 +4,6 @@ import Foundation
 
 public extension URL {
     static var emptyRoute: URL {
-        return URL("/")
+        return URL(string: "/")!
     }
 }

@@ -10,6 +10,7 @@ public class MockService {
 
     // MARK: - Properties
 
+    var defaultBundle: Bundle = .main
     var isMockingAllRequests = true
 
     private var stubResponses = [StubRequest: StubResponse]()
@@ -26,6 +27,7 @@ public class MockService {
     // MARK: Registration
 
     public func register() {
+        // TODO: Add some capability of also setting up a URLSessionConfiguration via a register() method
         URLProtocol.registerClass(MockURLProtocol.self)
     }
 

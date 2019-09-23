@@ -4,14 +4,14 @@ import Foundation
 import UtilityBeltNetworking
 
 public struct StubResponse {
-    public var data: Data? = nil
-    public var error: Error? = nil
+    public var data: Data?
+    public var error: Error?
     public var statusCode: HTTPStatusCode = .ok
     public var headers: [String: String] = [:]
 
     /// Determines whether or not the headers in this response are appended to or replace the request headers. Appends by default.
     public var shouldReplaceHeaders: Bool = false
-    
+
     public init(data: Data? = nil, error: Error? = nil, statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:], shouldReplaceHeaders: Bool = false) {
         self.data = data
         self.error = error
@@ -27,18 +27,20 @@ public struct StubResponse {
     static func error(_ error: Error, statusCode: HTTPStatusCode = .internalServerError, headers: [String: String] = [:]) -> StubResponse {
         return self.init(error: error, statusCode: statusCode, headers: headers)
     }
-    
+
     static func file(_ path: String,
                      fileExtension: String? = nil,
                      subdirectory: String? = nil,
-                     bundle: Bundle = .main,
+                     bundle: Bundle? = nil,
                      statusCode: HTTPStatusCode = .ok,
                      headers: [String: String] = [:]) -> StubResponse {
+        let bundle = bundle ?? MockService.shared.defaultBundle
+
         guard let resourceURL = bundle.url(forResource: path, withExtension: fileExtension, subdirectory: subdirectory) else {
             assertionFailure("Unable to find resource.")
             return self.init(data: nil)
         }
-        
+
         do {
             let data = try Data(contentsOf: resourceURL)
             return self.init(data: data, statusCode: statusCode, headers: headers)
