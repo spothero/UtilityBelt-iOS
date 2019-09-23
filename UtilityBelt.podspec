@@ -17,12 +17,12 @@ Pod::Spec.new do |spec|
 
   # When we have Core files (files shared across multiple subspecs/modules), this subspec will be required
   # spec.subspec 'Core' do |s|
-  #   s.source_files = 'Sources/UtilityBelt/Core/**/*.swift'
+  #   s.source_files = 'Sources/UtilityBeltCore/**/*.swift'
   # end
 
   spec.subspec 'Networking' do |s|
     # When we have Core files (files shared across multiple subspecs/modules), this dependency will likely be required
     # s.dependency 'UtilityBelt/Core'
-    s.source_files = 'Sources/UtilityBelt/Networking/**/*.swift'
+    s.source_files = 'Sources/UtilityBeltNetworking/**/*.swift'
   end
 end
