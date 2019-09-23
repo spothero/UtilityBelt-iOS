@@ -25,15 +25,15 @@ final class ParameterEncodingTests: XCTestCase {
     func testParameterEncoding() {
         var components = URLComponents(string: "localhost")
         components?.setQueryItems(with: self.parameters)
-        
+
         guard let queryItems = components?.queryItems else {
             return
         }
-        
+
         for item in queryItems {
             print(item.name, item.value)
         }
-        
+
         print(components?.percentEncodedQuery)
     }
 }

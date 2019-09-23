@@ -3,7 +3,7 @@
 public enum ParameterEncoding {
     case httpBody(HTTPBodyEncoding)
     case queryString
-    
+
     static func defaultEncoding(for method: HTTPMethod) -> ParameterEncoding {
         switch method {
         case .delete, .get, .head:

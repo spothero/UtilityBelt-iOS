@@ -6,7 +6,7 @@ extension URLComponents {
     mutating func setQueryItems(with parameters: [String: Any]) {
         self.queryItems = parameters.flatMap { self.evaluatedQueryItems(for: $0) }
     }
-    
+
     private func evaluatedQueryItems(for parameter: (key: String, value: Any)) -> [URLQueryItem] {
         switch parameter.value {
         case let dictionary as [String: Any]:
