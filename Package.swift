@@ -5,21 +5,20 @@ import PackageDescription
 let package = Package(
     name: "UtilityBelt",
     products: [
-        .library(name: "UtilityBelt", targets: ["UtilityBelt"]),
+        .library(name: "UtilityBelt", targets: ["UtilityBeltNetworking"]),
+        .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "UtilityBelt",
-            dependencies: [],
-            path: "Sources/UtilityBelt"
+            name: "UtilityBeltNetworking",
+            dependencies: []
         ),
         .testTarget(
-            name: "UtilityBeltTests",
+            name: "UtilityBeltNetworkingTests",
             dependencies: [
-                .target(name: "UtilityBelt")
-            ],
-            path: "Tests/UtilityBeltTests"
+                .target(name: "UtilityBeltNetworking")
+            ]
         )
     ]
 )
