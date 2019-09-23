@@ -2,9 +2,9 @@
 
 import XCTest
 
-import UtilityBeltTests
+import UtilityBeltNetworkingTests
 
 var tests = [XCTestCaseEntry]()
-tests += UtilityBeltTests.__allTests()
+tests += UtilityBeltNetworkingTests.__allTests()
 
 XCTMain(tests)
