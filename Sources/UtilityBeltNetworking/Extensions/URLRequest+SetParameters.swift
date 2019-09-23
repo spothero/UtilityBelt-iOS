@@ -4,7 +4,7 @@ import Foundation
 
 extension URLRequest {
     mutating func setParameters(_ parameters: [String: Any]?, method: HTTPMethod, encoding: ParameterEncoding? = nil) {
-        let encoding = encoding ?? method.defaultParameterEncoding
+        let encoding = encoding ?? .defaultEncoding(for: method)
         self.setParameters(parameters, encoding: encoding)
     }
 
