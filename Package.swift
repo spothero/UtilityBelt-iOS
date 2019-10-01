@@ -22,12 +22,6 @@ let package = Package(
             dependencies: []
         ),
         .testTarget(
-            name: "ShamTests",
-            dependencies: [
-                .target(name: "Sham"),
-            ]
-        ),
-        .testTarget(
             name: "UtilityBeltNetworkingTests",
             dependencies: [
                 .target(name: "Sham"),
