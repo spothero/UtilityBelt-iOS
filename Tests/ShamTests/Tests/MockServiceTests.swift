@@ -113,8 +113,15 @@ final class MockServiceTests: XCTestCase {
 
     private func request<T>(url: URL, data: T, shouldFail: Bool = false, file: StaticString = #file, line: UInt = #line) where T: Codable, T: Equatable {
         let expectation = self.expectation(description: "Requesting foo strings.")
+        
+        // Register the MockURLProtocol
+        let config = URLSessionConfiguration.default
+        config.protocolClasses = [MockURLProtocol]
+        
+        let session = URLSession(configuration: config)
 
-        URLSession.shared.dataTask(with: url) { (responseData, response, error) in
+        // We just need a super basic task to fire
+        session.dataTask(with: url) { (responseData, response, error) in
             defer {
                 expectation.fulfill()
             }
