@@ -20,7 +20,7 @@ import Foundation
 /// - [Wikipedia - List of HTTP Status Codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
 public enum HTTPStatusCode: Int, CaseIterable {
     /// The response class representation of status codes, these get grouped by their first digit.
-    enum ResponseType {
+    public enum ResponseType {
         /// Indicates that the request was received and understood.
         ///
         /// It is issued on a provisional basis while request processing continues.
@@ -333,7 +333,7 @@ public enum HTTPStatusCode: Int, CaseIterable {
     case networkAuthenticationRequired = 511
 
     /// The category that the status code belongs to.
-    var responseType: ResponseType {
+    public var responseType: ResponseType {
         switch self.rawValue {
         case 100 ..< 200:
             return .informational
