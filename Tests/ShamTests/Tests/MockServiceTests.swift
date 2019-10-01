@@ -114,29 +114,21 @@ final class MockServiceTests: XCTestCase {
     private func request<T>(url: URL, data: T, shouldFail: Bool = false, file: StaticString = #file, line: UInt = #line) where T: Codable, T: Equatable {
         let expectation = self.expectation(description: "Requesting foo strings.")
 
-        HTTPClient.shared.request(url, method: .get) { (result: DecodableResult<T>) in
+        URLSession.shared.dataTask(with: url) { (responseData, response, error) in
             defer {
                 expectation.fulfill()
             }
-
-            XCTAssertEqual(shouldFail, !result.success)
-
-            if shouldFail {
-                XCTAssertNil(result.data, file: file, line: line)
+            
+            if
+                !shouldFail,
+                let responseData = responseData,
+                let decodedObject = try? JSONDecoder().decode(T.self, from: responseData) {
+                    XCTAssertNil(error)
+                    XCTAssertEqual(data, decodedObject, file: file, line: line)
             } else {
-                XCTAssertEqual(data, result.data, file: file, line: line)
+                XCTAssertNil(responseData, file: file, line: line)
             }
-
-//            guard let strings = result.data else {
-//                XCTFail("No data returned!")
-//                return
-//            }
-//
-//            XCTAssertTrue(result.success)
-//            XCTAssertEqual(strings.count, 2)
-//            XCTAssertEqual(strings[0], "foo")
-//            XCTAssertEqual(strings[1], "bar")
-        }
+        }.resume()
 
         self.waitForExpectations(timeout: 15)
     }
