@@ -30,12 +30,20 @@ public class HTTPClient {
                            encoding: ParameterEncoding? = nil,
                            completion: DecodableTaskCompletion<T>? = nil) where T: Decodable {
         self.request(url, method: method, parameters: parameters, encoding: encoding) { rawResult in
-            guard let data = rawResult.data, let decodedObject = try? JSONDecoder().decode(T.self, from: data) else {
-                completion?(DecodableResult(data: nil, response: rawResult.response, error: rawResult.error))
-                return
+            // Initialize a nil decoded object to eventually pass into the DecodableResult
+            var decodedObject: T?
+            
+            // If there is data in the raw result, attempt to decode it
+            if let data = rawResult.data {
+                decodedObject = try? JSONDecoder().decode(T.self, from: data)
             }
-
-            completion?(DecodableResult(data: decodedObject, response: rawResult.response, error: rawResult.error))
+            
+            // Create the DecodableResult object with the new decodedObject (if successfully decoded),
+            // as well as the response and status from the previous result
+            let result = DecodableResult(data: decodedObject, response: rawResult.response, status: rawResult.status)
+            
+            // Fire the completion handler
+            completion?(result)
         }
     }
 

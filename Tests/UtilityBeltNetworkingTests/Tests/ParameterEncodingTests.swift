@@ -14,6 +14,17 @@ final class ParameterEncodingTests: XCTestCase {
             "double": 2.5,
             "integer": 1,
             "string": "foo",
+            "dictionary": [
+                "bool": true,
+                "double": 2.5,
+                "integer": 1,
+                "string": "foo",
+            ],
+            "array": [
+                "alice",
+                "bob",
+                "carol",
+            ],
         ],
         "array": [
             "alice",
@@ -22,6 +33,7 @@ final class ParameterEncodingTests: XCTestCase {
         ],
     ]
 
+    // This is totally not a test case, this is just me hacking around for now -- ignore it
     func testParameterEncoding() {
         var components = URLComponents(string: "localhost")
         components?.setQueryItems(with: self.parameters)

@@ -3,6 +3,13 @@
 import Foundation
 
 extension URLRequest {
+    // TODO: Drop the requirement of this function. The problem is that we need one function for if the method is set,
+    //       and another if the method is unset. We can refactor this, just need to determine the right way.
+    //
+    //       Examples:
+    //       1, method without encoding: Use the default method's encoding.
+    //       2. method with encoding: Use the method, but override the encoding.
+    //       3. encoding without method: Doesn't matter what method, override the encoding.
     mutating func setParameters(_ parameters: [String: Any]?, method: HTTPMethod, encoding: ParameterEncoding? = nil) {
         let encoding = encoding ?? .defaultEncoding(for: method)
         self.setParameters(parameters, encoding: encoding)
