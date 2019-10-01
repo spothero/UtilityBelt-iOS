@@ -24,20 +24,10 @@ public class MockURLProtocol: URLProtocol {
 
         let stubResponse = MockService.shared.getResponse(for: self.request)
 
-        var headers = self.request.allHTTPHeaderFields ?? [:]
-
-        if let stubResponse = stubResponse {
-            if stubResponse.shouldReplaceHeaders {
-                headers.merge(stubResponse.headers) { _, new in new }
-            } else {
-                headers = stubResponse.headers
-            }
-        }
-
         let httpResponse = HTTPURLResponse(url: url,
                                            statusCode: stubResponse?.statusCode.rawValue ?? 400,
                                            httpVersion: nil,
-                                           headerFields: headers)
+                                           headerFields: stubResponse?.headers ?? [:])
 
         guard let response = httpResponse else {
             self.client?.urlProtocol(self, didFailWithError: MockURLProtocol.Error.noResponse)
