@@ -2,51 +2,31 @@
 
 import Foundation
 
-public enum HTTPResultStatus {
-    case success
-    case failure(Error)
-}
-
+/// The result that is returned from an HTTP request.
 public protocol HTTPResult {
+    /// The type of data that is returned by the request.
     associatedtype DataType
 
+    /// The data returned by the request.
     var data: DataType { get }
-    var response: URLResponse? { get }
-    var status: HTTPResultStatus { get }
     
-    init(data: DataType, response: URLResponse?, status: HTTPResultStatus)
+    /// The HTTP response returned by the request.
+    var response: HTTPURLResponse? { get }
+    
+    /// The status of the response, based on status codes and whether or not there were any errors.
+    var status: HTTPResultStatus { get }
+
+    /// Initializes an HTTPResult, with status explicitly defined.
+    init(data: DataType, response: HTTPURLResponse?, status: HTTPResultStatus)
 }
 
 public extension HTTPResult {
-    init(data: DataType, response: URLResponse?, error: Error? = nil) {
+    /// Initializes an HTTPResult, with status based on whether or not an error was provided.
+    init(data: DataType, response: HTTPURLResponse?, error: Error? = nil) {
         if let error = error {
             self.init(data: data, response: response, status: .failure(error))
         } else {
             self.init(data: data, response: response, status: .success)
         }
-    }
-}
-
-public struct DataResult: HTTPResult {
-    public let data: Data?
-    public let response: URLResponse?
-    public let status: HTTPResultStatus
-    
-    public init(data: Data?, response: URLResponse?, status: HTTPResultStatus) {
-        self.data = data
-        self.response = response
-        self.status = status
-    }
-}
-
-public struct DecodableResult<T>: HTTPResult where T: Decodable {
-    public let data: T?
-    public let response: URLResponse?
-    public let status: HTTPResultStatus
-    
-    public init(data: T?, response: URLResponse?, status: HTTPResultStatus) {
-        self.data = data
-        self.response = response
-        self.status = status
     }
 }
