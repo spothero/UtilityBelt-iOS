@@ -49,11 +49,6 @@ public class HTTPClient {
         }
 
         let task = self.session.dataTask(with: request) { data, response, error in
-//            guard let mimeType = response.mimeType, mimeType == "application/json" else {
-//                print("Wrong MIME type!")
-//                return
-//            }
-
             var result: DataResult
 
             if let httpResponse = response as? HTTPURLResponse {
@@ -100,6 +95,8 @@ public class HTTPClient {
                            encoding: ParameterEncoding? = nil,
                            completion: DecodableTaskCompletion<T>? = nil) where T: Decodable {
         self.request(url, method: method, parameters: parameters, encoding: encoding) { rawResult in
+            // TODO: Check the response.mimeType and ensure it is application/json, which is required for decoding
+                                                                                       
             // Initialize a nil decoded object to eventually pass into the DecodableResult
             var decodedObject: T?
 
