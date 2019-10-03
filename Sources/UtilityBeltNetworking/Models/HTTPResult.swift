@@ -2,18 +2,27 @@
 
 import Foundation
 
+/// The result that is returned from an HTTP request.
 public protocol HTTPResult {
+    /// The type of data that is returned by the request.
     associatedtype DataType
 
+    /// The data returned by the request.
     var data: DataType { get }
-    var response: URLResponse? { get }
+    
+    /// The HTTP response returned by the request.
+    var response: HTTPURLResponse? { get }
+    
+    /// The status of the response, based on status codes and whether or not there were any errors.
     var status: HTTPResultStatus { get }
 
-    init(data: DataType, response: URLResponse?, status: HTTPResultStatus)
+    /// Initializes an HTTPResult, with status explicitly defined.
+    init(data: DataType, response: HTTPURLResponse?, status: HTTPResultStatus)
 }
 
 public extension HTTPResult {
-    init(data: DataType, response: URLResponse?, error: Error? = nil) {
+    /// Initializes an HTTPResult, with status based on whether or not an error was provided.
+    init(data: DataType, response: HTTPURLResponse?, error: Error? = nil) {
         if let error = error {
             self.init(data: data, response: response, status: .failure(error))
         } else {

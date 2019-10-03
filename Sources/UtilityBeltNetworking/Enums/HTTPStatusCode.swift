@@ -350,11 +350,3 @@ public enum HTTPStatusCode: Int, CaseIterable {
         }
     }
 }
-
-// MARK: - Extensions
-
-public extension HTTPURLResponse {
-    var status: HTTPStatusCode? {
-        return HTTPStatusCode(rawValue: self.statusCode)
-    }
-}

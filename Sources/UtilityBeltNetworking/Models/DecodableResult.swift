@@ -2,12 +2,13 @@
 
 import Foundation
 
+/// Represents an HTTP result that contains a decoded object as its data.
 public struct DecodableResult<T>: HTTPResult where T: Decodable {
     public let data: T?
-    public let response: URLResponse?
+    public let response: HTTPURLResponse?
     public let status: HTTPResultStatus
 
-    public init(data: T?, response: URLResponse?, status: HTTPResultStatus) {
+    public init(data: T?, response: HTTPURLResponse?, status: HTTPResultStatus) {
         self.data = data
         self.response = response
         self.status = status

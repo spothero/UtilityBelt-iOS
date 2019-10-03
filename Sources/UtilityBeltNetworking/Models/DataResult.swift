@@ -2,12 +2,13 @@
 
 import Foundation
 
+/// Represents an HTTP result that contains raw data.
 public struct DataResult: HTTPResult {
     public let data: Data?
-    public let response: URLResponse?
+    public let response: HTTPURLResponse?
     public let status: HTTPResultStatus
 
-    public init(data: Data?, response: URLResponse?, status: HTTPResultStatus) {
+    public init(data: Data?, response: HTTPURLResponse?, status: HTTPResultStatus) {
         self.data = data
         self.response = response
         self.status = status
