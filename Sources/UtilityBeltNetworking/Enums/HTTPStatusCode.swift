@@ -78,7 +78,7 @@ public enum HTTPStatusCode: Int, CaseIterable {
     /// - `HEAD`: The entity headers are in the message body.
     /// - `PUT` or `POST`: The resource describing the result of the action is transmitted in the message body.
     /// - `TRACE`: The message body contains the request message as received by the server
-    case ok = 200
+    case ok = 200 // swiftlint:disable:this identifier_name
 
     /// The request has succeeded and a new resource has been created as a result of it.
     ///
@@ -348,13 +348,5 @@ public enum HTTPStatusCode: Int, CaseIterable {
         default:
             return .undefined
         }
-    }
-}
-
-// MARK: - Extensions
-
-public extension HTTPURLResponse {
-    var status: HTTPStatusCode? {
-        return HTTPStatusCode(rawValue: self.statusCode)
     }
 }
