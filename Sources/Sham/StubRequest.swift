@@ -4,50 +4,63 @@ import Foundation
 import UtilityBeltNetworking
 
 public struct StubRequest: Hashable {
+    // MARK: - Enums
+    
+    public enum StubRequestError: Error {
+        case invalidURLString(String)
+    }
+    
     // MARK: - Properties
 
     public let method: HTTPMethod?
-    public let url: URL
+    public let url: URL?
 
-    public var description: String {
-        if let method = method {
-            return "\(method): \(self.url.absoluteString)"
+    public var description: String? {
+        if let method = self.method, let url = self.url {
+            return "\(method): \(url.absoluteString)"
+        } else if let url = self.url {
+            return url.absoluteString
         } else {
-            return self.url.absoluteString
+            return nil
         }
     }
 
     public var isValidForStubbing: Bool {
-        return self.url.isValidForStubbing
+        return self.url?.isValidForStubbing == true
     }
 
     // MARK: - Methods
 
-    public init(method: HTTPMethod, url: URL) {
+    public init(method: HTTPMethod, url: URLConvertible) {
         self.method = method
-        self.url = url
+        self.url = try? url.asURL()
     }
 
-    public init(url: URL) {
+    public init(url: URLConvertible) {
         self.method = .none
-        self.url = url
+        self.url = try? url.asURL()
     }
 
-    public init(urlRequest: URLRequest) {
-        if let rawHttpMethod = urlRequest.httpMethod,
+    public init(urlRequest: URLRequestConvertible) {
+        if let rawHttpMethod = (try? urlRequest.asURLRequest())?.httpMethod,
             let httpMethod = HTTPMethod(rawValue: rawHttpMethod) {
             self.method = httpMethod
         } else {
             self.method = .none
         }
-
-        self.url = urlRequest.url ?? .emptyRoute
+        
+        self.url = try? urlRequest.asURLRequest().url
     }
 
     public func canMockData(for request: StubRequest) -> Bool {
         // If this request is valid for all requests, return true
         guard self != .allRequests else {
             return true
+        }
+        
+        // If either request has no URL, return false
+        guard let url = self.url, let requestURL = request.url else {
+            return false
         }
 
         // If this request is not valid for the incoming request's HTTP method, return false
@@ -63,19 +76,19 @@ public struct StubRequest: Hashable {
         var isIncluded = true
 
         // Include any stubbed response where the scheme matches the incoming URL's scheme or is nil or empty
-        isIncluded = isIncluded && (self.url.scheme == request.url.scheme || self.url.scheme?.isEmpty != false)
+        isIncluded = isIncluded && (url.scheme == requestURL.scheme || url.scheme?.isEmpty != false)
 
         // Include any stubbed response where the host matches the incoming URL's host or is nil or empty
-        isIncluded = isIncluded && (self.url.host == request.url.host || self.url.host?.isEmpty != false)
+        isIncluded = isIncluded && (url.host == requestURL.host || url.host?.isEmpty != false)
 
         // Include any stubbed response where the port matches the incoming URL's port or is nil
-        isIncluded = isIncluded && (self.url.port == request.url.port || self.url.port == nil)
+        isIncluded = isIncluded && (url.port == requestURL.port || url.port == nil)
 
         // Include any stubbed response where the path matches the incoming URL's path or is empty
-        isIncluded = isIncluded && (self.url.trimmedPath == request.url.trimmedPath || self.url.trimmedPath.isEmpty)
+        isIncluded = isIncluded && (url.trimmedPath == requestURL.trimmedPath || url.trimmedPath.isEmpty)
 
         // Include any stubbed response where the query matches the incoming URL' query or is nil or empty
-        isIncluded = isIncluded && (self.url.query == request.url.query || self.url.query?.isEmpty != false)
+        isIncluded = isIncluded && (url.query == requestURL.query || url.query?.isEmpty != false)
 
         return isIncluded
     }
@@ -85,42 +98,42 @@ public struct StubRequest: Hashable {
 
 public extension StubRequest {
     static var allRequests: StubRequest {
-        return .http(.emptyRoute)
+        return .http(URL.emptyRoute)!
     }
 
-    static func http(_ url: URL) -> StubRequest {
+    static func http(_ url: URLConvertible) -> StubRequest {
         return self.init(url: url)
     }
 
-    static func connect(_ url: URL) -> StubRequest {
+    static func connect(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .connect, url: url)
     }
 
-    static func delete(_ url: URL) -> StubRequest {
+    static func delete(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .delete, url: url)
     }
 
-    static func get(_ url: URL) -> StubRequest {
+    static func get(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .get, url: url)
     }
 
-    static func head(_ url: URL) -> StubRequest {
+    static func head(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .head, url: url)
     }
 
-    static func options(_ url: URL) -> StubRequest {
+    static func options(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .options, url: url)
     }
 
-    static func patch(_ url: URL) -> StubRequest {
+    static func patch(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .patch, url: url)
     }
 
-    static func post(_ url: URL) -> StubRequest {
+    static func post(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .post, url: url)
     }
 
-    static func put(_ url: URL) -> StubRequest {
+    static func put(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .put, url: url)
     }
 }

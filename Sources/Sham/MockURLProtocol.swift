@@ -9,7 +9,11 @@ public class MockURLProtocol: URLProtocol {
     }
 
     override public class func canInit(with task: URLSessionTask) -> Bool {
-        return MockService.shared.canMockData(for: task.currentRequest?.url)
+        guard let currentRequest = task.currentRequest else {
+            return false
+        }
+        
+        return MockService.shared.canMockData(for: currentRequest)
     }
 
     override public class func canonicalRequest(for request: URLRequest) -> URLRequest {
