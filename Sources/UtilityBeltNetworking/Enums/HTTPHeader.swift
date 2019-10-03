@@ -92,7 +92,7 @@ public enum HTTPHeader: String {
     /// plus the "trailers" value (related to the "chunked" transfer method) to notify the server
     /// it expects to receive additional fields in the trailer after the last, zero-sized, chunk.
     /// Only `trailers` is supported in HTTP/2.
-    case te = "TE"
+    case te = "TE" // swiftlint:disable:this identifier_name
 
     /// The user agent string of the user agent.
     case userAgent = "User-Agent"
@@ -256,5 +256,5 @@ public extension HTTPHeader {
     static let aim: HTTPHeader = .acceptableInstanceManipulations
 
     /// Shorthand for `.instanceManipulations`
-    static let im: HTTPHeader = .instanceManipulations
+    static let im: HTTPHeader = .instanceManipulations // swiftlint:disable:this identifier_name
 }
