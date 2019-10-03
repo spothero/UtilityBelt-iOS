@@ -5,11 +5,11 @@ import UtilityBeltNetworking
 import XCTest
 
 final class MockServiceTests: XCTestCase {
-    let fullURL: URL = "https://foo.com/foo?foo=bar"
-    let schemeOnlyURL: URL = "https://"
-    let hostOnlyURL: URL = "//foo.com"
-    let pathOnlyURL: URL = "/foo"
-    let queryOnlyURL: URL = "?foo=bar"
+    let fullURL = URL(string: "https://foo.com/foo?foo=bar")!
+    let schemeOnlyURL = URL(string: "https://")!
+    let hostOnlyURL = URL(string: "//foo.com")!
+    let pathOnlyURL = URL(string: "/foo")!
+    let queryOnlyURL = URL(string: "?foo=bar")!
 
     let mockData = ["foo", "bar"]
 
@@ -114,28 +114,25 @@ final class MockServiceTests: XCTestCase {
     private func request<T>(url: URL, data: T, shouldFail: Bool = false, file: StaticString = #file, line: UInt = #line) where T: Codable, T: Equatable {
         let expectation = self.expectation(description: "Requesting foo strings.")
         
-        // Register the MockURLProtocol
-        let config = URLSessionConfiguration.default
-        config.protocolClasses = [MockURLProtocol]
-        
-        let session = URLSession(configuration: config)
-
-        // We just need a super basic task to fire
-        session.dataTask(with: url) { (responseData, response, error) in
+        HTTPClient.shared.request(url, method: .get) { (result: DecodableResult<T>) in
             defer {
                 expectation.fulfill()
             }
             
-            if
-                !shouldFail,
-                let responseData = responseData,
-                let decodedObject = try? JSONDecoder().decode(T.self, from: responseData) {
-                    XCTAssertNil(error)
-                    XCTAssertEqual(data, decodedObject, file: file, line: line)
-            } else {
-                XCTAssertNil(responseData, file: file, line: line)
+            if shouldFail, case .failure = result.status {
+                
             }
-        }.resume()
+            
+            switch (result.status, shouldFail) {
+            case (.success, false):
+                XCTAssertEqual(data, result.data, file: file, line: line)
+            case (.success, true),
+                 (.failure, false):
+                XCTFail()
+            case (.failure, true):
+                break
+            }
+        }
 
         self.waitForExpectations(timeout: 15)
     }
