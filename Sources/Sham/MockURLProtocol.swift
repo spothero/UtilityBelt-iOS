@@ -12,10 +12,10 @@ public class MockURLProtocol: URLProtocol {
         guard let currentRequest = task.currentRequest else {
             return false
         }
-        
+
         return MockService.shared.canMockData(for: currentRequest)
     }
-    
+
     override public class func canInit(with request: URLRequest) -> Bool {
         return MockService.shared.canMockData(for: request)
     }

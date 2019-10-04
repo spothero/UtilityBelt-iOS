@@ -47,7 +47,7 @@ public class HTTPClient {
             // TODO: Throw error
             return
         }
-        
+
         guard let request = self.configuredURLRequest(url: url, method: method, parameters: parameters, encoding: encoding) else {
             // TODO: Throw error
             return
@@ -84,10 +84,10 @@ public class HTTPClient {
             // TODO: Throw error
             return
         }
-        
+
         self.request(url, method: method, parameters: parameters, encoding: encoding) { rawResult in
             // TODO: Check the response.mimeType and ensure it is application/json, which is required for decoding
-                                                                                       
+
             // Initialize a nil decoded object to eventually pass into the DecodableResult
             var decodedObject: T?
 

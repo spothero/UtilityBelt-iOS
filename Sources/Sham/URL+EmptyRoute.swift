@@ -2,7 +2,7 @@
 
 import Foundation
 
-public extension URL {
+extension URL {
     static var emptyRoute: URL {
         return URL(string: "/")!
     }

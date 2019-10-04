@@ -113,16 +113,14 @@ final class MockServiceTests: XCTestCase {
 
     private func request<T>(url: URL, data: T, shouldFail: Bool = false, file: StaticString = #file, line: UInt = #line) where T: Codable, T: Equatable {
         let expectation = self.expectation(description: "Requesting foo strings.")
-        
+
         HTTPClient.shared.request(url, method: .get) { (result: DecodableResult<T>) in
             defer {
                 expectation.fulfill()
             }
-            
-            if shouldFail, case .failure = result.status {
-                
-            }
-            
+
+            if shouldFail, case .failure = result.status {}
+
             switch (result.status, shouldFail) {
             case (.success, false):
                 XCTAssertEqual(data, result.data, file: file, line: line)

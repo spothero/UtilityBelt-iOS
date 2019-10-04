@@ -15,11 +15,11 @@ public struct StubResponse {
         self.statusCode = statusCode
         self.headers = headers
     }
-    
+
     public static func data(_ data: Data) -> StubResponse {
         return self.init(data: data)
     }
-    
+
     public static func encodable<T>(_ encodable: T, statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> StubResponse where T: Encodable {
         do {
             let data = try JSONEncoder().encode(encodable)
@@ -29,15 +29,15 @@ public struct StubResponse {
             return self.init(data: nil, statusCode: statusCode, headers: headers)
         }
     }
-    
+
     public static func error(_ error: Error, statusCode: HTTPStatusCode = .internalServerError, headers: [String: String] = [:]) -> StubResponse {
         return self.init(error: error, statusCode: statusCode, headers: headers)
     }
-    
+
     public static func http(statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> StubResponse {
         return self.init(statusCode: statusCode, headers: headers)
     }
-    
+
     public static func relativeFile(_ relativeFilePath: String,
                                     statusCode: HTTPStatusCode = .ok,
                                     headers: [String: String] = [:],
@@ -45,17 +45,17 @@ public struct StubResponse {
         let sourceFileURL = URL(fileURLWithPath: "\(sourceFile)", isDirectory: false)
         let sourceFileDirectory = sourceFileURL.deletingLastPathComponent()
         let filePath = "\(sourceFileDirectory.path)/\(relativeFilePath)"
-        
+
         // Verify that file exists at the relative path
         guard FileManager.default.fileExists(atPath: filePath) else {
             assertionFailure("Unable to find file: '\(filePath)'.")
             return self.init(data: nil, statusCode: statusCode, headers: headers)
         }
-        
+
         let data = FileManager.default.contents(atPath: filePath)
         return self.init(data: data, statusCode: statusCode, headers: headers)
     }
-    
+
     public static func resource(_ path: String,
                                 fileExtension: String? = nil,
                                 subdirectory: String? = nil,

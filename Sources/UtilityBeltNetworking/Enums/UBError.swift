@@ -1,9 +1,4 @@
-//
-//  File.swift
-//  
-//
-//  Created by Brian Drelling on 10/3/19.
-//
+// Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -15,9 +10,9 @@ public enum UBError: Swift.Error {
 extension UBError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .invalidFilePath(let path):
+        case let .invalidFilePath(path):
             return "Invalid file path: '\(path)'."
-        case .invalidURLString(let urlString):
+        case let .invalidURLString(urlString):
             return "Invalid URL string: '\(urlString)'."
         }
     }

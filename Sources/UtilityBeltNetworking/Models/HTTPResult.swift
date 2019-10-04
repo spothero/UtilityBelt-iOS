@@ -9,10 +9,10 @@ public protocol HTTPResult {
 
     /// The data returned by the request.
     var data: DataType { get }
-    
+
     /// The HTTP response returned by the request.
     var response: HTTPURLResponse? { get }
-    
+
     /// The status of the response, based on status codes and whether or not there were any errors.
     var status: HTTPResultStatus { get }
 

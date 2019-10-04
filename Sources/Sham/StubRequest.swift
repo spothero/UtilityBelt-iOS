@@ -5,11 +5,11 @@ import UtilityBeltNetworking
 
 public struct StubRequest: Hashable {
     // MARK: - Enums
-    
+
     public enum StubRequestError: Error {
         case invalidURLString(String)
     }
-    
+
     // MARK: - Properties
 
     public let method: HTTPMethod?
@@ -48,7 +48,7 @@ public struct StubRequest: Hashable {
         } else {
             self.method = .none
         }
-        
+
         self.url = try? urlRequest.asURLRequest().url
     }
 
@@ -57,7 +57,7 @@ public struct StubRequest: Hashable {
         guard self != .allRequests else {
             return true
         }
-        
+
         // If either request has no URL, return false
         guard let url = self.url, let requestURL = request.url else {
             return false
