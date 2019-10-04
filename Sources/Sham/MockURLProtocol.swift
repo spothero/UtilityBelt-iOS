@@ -15,6 +15,10 @@ public class MockURLProtocol: URLProtocol {
         
         return MockService.shared.canMockData(for: currentRequest)
     }
+    
+    override public class func canInit(with request: URLRequest) -> Bool {
+        return MockService.shared.canMockData(for: request)
+    }
 
     override public class func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request

@@ -1,5 +1,6 @@
 // Copyright © 2019 SpotHero, Inc. All rights reserved.
 
+import UtilityBeltNetworking
 import XCTest
 
 public extension XCTestCase {
@@ -7,15 +8,7 @@ public extension XCTestCase {
         MockService.shared.stub(stubRequest, with: response)
     }
 
-    func stub(_ urlRequest: URLRequest, with response: StubResponse) {
+    func stub(_ urlRequest: URLRequestConvertible, with response: StubResponse) {
         MockService.shared.stub(urlRequest, with: response)
-    }
-
-    func stub(_ url: URL, with response: StubResponse) {
-        MockService.shared.stub(url, with: response)
-    }
-
-    func stub(_ urlString: String, with response: StubResponse) {
-        MockService.shared.stub(urlString, with: response)
     }
 }

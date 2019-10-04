@@ -10,12 +10,12 @@ public class MockService {
 
     // MARK: - Properties
 
-    var defaultBundle: Bundle = .main
-    var isMockingAllRequests = true
+    public var defaultBundle: Bundle = .main
+    public var isMockingAllRequests = true
 
     private var stubResponses = [StubRequest: StubResponse]()
 
-    var isEmpty: Bool {
+    public var isEmpty: Bool {
         return self.stubResponses.isEmpty
     }
 
