@@ -2,12 +2,12 @@
 
 import Foundation
 
-public enum UBError: Swift.Error {
+public enum UBNetworkError: Swift.Error {
     case invalidFilePath(String)
     case invalidURLString(String)
 }
 
-extension UBError: LocalizedError {
+extension UBNetworkError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .invalidFilePath(path):
