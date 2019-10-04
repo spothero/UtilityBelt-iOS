@@ -2,7 +2,7 @@
 
 import Foundation
 
-public enum UBNetworkError: Swift.Error {
+public enum UBNetworkError: Error {
     case invalidFilePath(String)
     case invalidURLString(String)
 }
