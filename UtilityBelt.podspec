@@ -1,20 +1,23 @@
 Pod::Spec.new do |spec|
+  # Root Specification
   spec.name = 'UtilityBelt'
-  spec.version = '0.1.0'
+  spec.version = '0.2.0'
 
   spec.author = 'SpotHero, Inc.'
   spec.homepage = 'https://github.com/spothero/UtilityBelt-iOS'
   spec.license = 'Commercial'
+  spec.source = { :git => 'https://github.com/spothero/UtilityBelt-iOS.git',
+                  :tag => "#{spec.version}" }
   spec.summary = 'UtilityBelt is a collection of common Swift utility files.'
 
-  spec.ios.deployment_target = '11.0'
-  spec.watchos.deployment_target = '3.0'
+  # Platform
+  spec.ios.deployment_target = '8.0'
+  spec.osx.deployment_target = '10.10'
+  spec.tvos.deployment_target = '9.0'
+  spec.watchos.deployment_target = '2.0'
+  spec.swift_versions = ['5.0', '5.1']
 
-  spec.source = { :git => 'https://github.com/spothero/UtilityBelt-iOS.git', :tag => "#{spec.version}" }
-
-  # We might need to use an xcconfig to get compatibility with Xcode 10.2 / iOS 12
-  # spec.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
-
+  # Subspecs
   # When we have Core files (files shared across multiple subspecs/modules), this subspec will be required
   # spec.subspec 'Core' do |s|
   #   s.source_files = 'Sources/UtilityBeltCore/**/*.swift'
