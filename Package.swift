@@ -7,10 +7,10 @@ import PackageDescription
 let package = Package(
     name: "UtilityBelt",
     platforms: [
-        .iOS(.v10),
-        .macOS(.v10_10),
-        .tvOS(.v9),
-        .watchOS(.v2),
+        .iOS(.v8),          // minimum supported version via SPM
+        .macOS(.v10_10),    // minimum supported version via SPM
+        .tvOS(.v9),         // minimum supported version via SPM
+        .watchOS(.v2),      // minimum supported version via SPM
     ],
     products: [
         .library(name: "UtilityBelt", targets: ["UtilityBeltNetworking"]),
