@@ -6,6 +6,12 @@ import PackageDescription
 
 let package = Package(
     name: "UtilityBelt",
+    platforms: [
+        .iOS(.v10),
+        .macOS(.v10_10),
+        .tvOS(.v9),
+        .watchOS(.v2),
+    ],
     products: [
         .library(name: "UtilityBelt", targets: ["UtilityBeltNetworking"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
@@ -22,5 +28,8 @@ let package = Package(
                 .target(name: "UtilityBeltNetworking"),
             ]
         ),
+    ],
+    swiftLanguageVersions: [
+        .v5,
     ]
 )

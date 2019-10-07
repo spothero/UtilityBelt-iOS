@@ -4,7 +4,7 @@ import Foundation
 
 extension Dictionary {
     func asJSONSerializedData() throws -> Data {
-        if #available(iOS 11.0, OSX 10.13, *) {
+        if #available(iOS 11.0, OSX 10.13, watchOS 4.0, tvOS 11.0, *) {
             return try JSONSerialization.data(withJSONObject: self, options: .sortedKeys)
         } else {
             return try JSONSerialization.data(withJSONObject: self, options: [])
