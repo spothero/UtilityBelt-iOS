@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.1
 
 // Copyright © 2019 SpotHero, Inc. All rights reserved.
 
