@@ -15,6 +15,7 @@ Pod::Spec.new do |spec|
   spec.osx.deployment_target = '10.10'
   spec.tvos.deployment_target = '9.0'
   spec.watchos.deployment_target = '2.0'
+  spec.swift_versions = ['5.0', '5.1']
 
   # Subspecs
   # When we have Core files (files shared across multiple subspecs/modules), this subspec will be required
