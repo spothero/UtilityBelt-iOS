@@ -3,7 +3,7 @@ Pod::Spec.new do |spec|
   spec.name = 'UtilityBelt'
   spec.version = '0.2.0'
 
-  spec.author = 'SpotHero, Inc.'
+  spec.author   = { 'SpotHero' => 'ios@spothero.com' }
   spec.homepage = 'https://github.com/spothero/UtilityBelt-iOS'
   spec.license = 'Commercial'
   spec.source = { :git => 'https://github.com/spothero/UtilityBelt-iOS.git',
