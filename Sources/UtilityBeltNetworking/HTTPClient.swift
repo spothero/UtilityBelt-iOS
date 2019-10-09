@@ -98,7 +98,7 @@ public class HTTPClient {
 
             // Create the DecodableResult object with the new decodedObject (if successfully decoded),
             // as well as the response and status from the previous result
-            let result = DecodableResult(data: decodedObject, response: rawResult.response, status: rawResult.status)
+            let result = DecodableResult(data: decodedObject, response: rawResult.response)
 
             // Fire the completion handler
             completion?(result)
