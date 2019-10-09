@@ -13,7 +13,7 @@ public class MockURLProtocol: URLProtocol {
             return false
         }
 
-        return MockService.shared.canMockData(for: currentRequest)
+        return self.canInit(with: currentRequest)
     }
 
     override public class func canInit(with request: URLRequest) -> Bool {

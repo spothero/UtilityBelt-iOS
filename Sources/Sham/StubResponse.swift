@@ -16,11 +16,13 @@ public struct StubResponse {
         self.headers = headers
     }
 
-    public static func data(_ data: Data) -> StubResponse {
-        return self.init(data: data)
+    public static func data(_ data: Data, statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> StubResponse {
+        return self.init(data: data, statusCode: statusCode, headers: headers)
     }
 
-    public static func encodable<T>(_ encodable: T, statusCode: HTTPStatusCode = .ok, headers: [String: String] = [:]) -> StubResponse where T: Encodable {
+    public static func encodable<T>(_ encodable: T,
+                                    statusCode: HTTPStatusCode = .ok,
+                                    headers: [String: String] = [:]) -> StubResponse where T: Encodable {
         do {
             let data = try JSONEncoder().encode(encodable)
             return self.init(data: data, statusCode: statusCode, headers: headers)

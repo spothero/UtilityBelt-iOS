@@ -5,11 +5,11 @@ import UtilityBeltNetworking
 import XCTest
 
 final class MockServiceTests: XCTestCase {
-    let fullURL = URL(string: "https://foo.com/foo?foo=bar")!
-    let schemeOnlyURL = URL(string: "https://")!
-    let hostOnlyURL = URL(string: "//foo.com")!
-    let pathOnlyURL = URL(string: "/foo")!
-    let queryOnlyURL = URL(string: "?foo=bar")!
+    let fullURL = "https://foo.com/foo?foo=bar"
+    let schemeOnlyURL = "https://"
+    let hostOnlyURL = "//foo.com"
+    let pathOnlyURL = "/foo"
+    let queryOnlyURL = "?foo=bar"
 
     let mockData = ["foo", "bar"]
 
@@ -111,7 +111,11 @@ final class MockServiceTests: XCTestCase {
 //        }
 //    }
 
-    private func request<T>(url: URL, data: T, shouldFail: Bool = false, file: StaticString = #file, line: UInt = #line) where T: Codable, T: Equatable {
+    private func request<T>(url: URLConvertible,
+                            data: T,
+                            shouldFail: Bool = false,
+                            file: StaticString = #file,
+                            line: UInt = #line) where T: Codable, T: Equatable {
         let expectation = self.expectation(description: "Requesting foo strings.")
 
         HTTPClient.shared.request(url, method: .get) { (result: DecodableResult<T>) in
@@ -124,9 +128,10 @@ final class MockServiceTests: XCTestCase {
             switch (result.status, shouldFail) {
             case (.success, false):
                 XCTAssertEqual(data, result.data, file: file, line: line)
-            case (.success, true),
-                 (.failure, false):
-                XCTFail()
+            case (.success, true):
+                XCTFail("Request succeeded, expected it to fail.")
+            case (.failure, false):
+                XCTFail("Request failed, expected it to succeed.")
             case (.failure, true):
                 break
             }
