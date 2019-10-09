@@ -48,7 +48,6 @@ public class MockService {
     
     /// Returns the stubbed response that matches the request.
     /// Returns nil if there is no matching stubbed request found.
-    ///
     /// - Parameter request: The request to match against stubbed requests.
     public func getResponse(for request: StubRequest) -> StubResponse? {
         // Check for a match with the exact URL
@@ -63,7 +62,6 @@ public class MockService {
     }
     
     /// Determines whether or not a matching request has been stubbed.
-    ///
     /// - Parameter request: The request to match against stubbed requests.
     public func hasStub(for request: StubRequest) -> Bool {
         return self.getResponse(for: request) != nil
@@ -71,14 +69,12 @@ public class MockService {
     
     /// Determines whether or not the service can attempt to mock a given request.
     /// Returns true if the service is attempting to intercept and mock all requests.
-    ///
     /// - Parameter request: The request to match against stubbed requests.
     public func canMockData(for request: StubRequest) -> Bool {
         return self.isMockingAllRequests || self.hasStub(for: request)
     }
     
     /// Adds a response to the stub response collection for the MockService.
-    ///
     /// - Parameter request: The request to stub.
     /// - Parameter response: The response to return upon receiving the given request.
     public func stub(_ request: StubRequest, with response: StubResponse) {
@@ -89,7 +85,7 @@ public class MockService {
         }
 
         if self.stubResponses.contains(where: { $0.key == request }) {
-            print("Stubbed data already exists for request '\(request.description)'. Updating with new data.")
+            print("Stubbed data already exists for request '\(request)'. Updating with new data.")
         }
 
         self.stubResponses[request] = response
@@ -98,14 +94,12 @@ public class MockService {
     // MARK: URLRequest Convenience
     
     /// Returns a stubbed response if there is a stubbed request that matches.
-    ///
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to match against stubbed requests.
     public func getResponse(for urlRequest: URLRequestConvertible) -> StubResponse? {
         return self.getResponse(for: StubRequest(urlRequest: urlRequest))
     }
     
     /// Determines whether or not a matching request has been stubbed.
-    ///
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to match against stubbed requests.
     public func hasStub(for urlRequest: URLRequestConvertible) -> Bool {
         return self.getResponse(for: urlRequest) != nil
@@ -113,14 +107,12 @@ public class MockService {
     
     /// Determines whether or not the service can attempt to mock a given request.
     /// Returns true if the service is attempting to intercept and mock all requests.
-    ///
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to against stubbed requests.
     public func canMockData(for urlRequest: URLRequestConvertible) -> Bool {
         return self.isMockingAllRequests || self.hasStub(for: urlRequest)
     }
     
     /// Adds a response to the stub response collection.
-    ///
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to stub.
     /// - Parameter response: The response to return upon receiving the given request.
     public func stub(_ urlRequest: URLRequestConvertible, with response: StubResponse) {

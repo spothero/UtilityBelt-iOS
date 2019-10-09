@@ -10,5 +10,5 @@ public enum HTTPResultStatus {
     /// The HTTP request was unsuccessful, implying there was either an error or the status code was in the 4xx or 5xx range.
     case failure(Error)
 
-    #warning("We need to account for 1xx and 3xx properly here, but it will take some discussion.")
+    #warning("TODO: We need to account for 1xx and 3xx properly here, but it will take some discussion.")
 }
