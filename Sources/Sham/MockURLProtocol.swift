@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// A subclass of URLProtocol that validates requests against stubs added via the MockService class.
 public class MockURLProtocol: URLProtocol {
     public enum Error: Swift.Error {
         case invalidRequestURL

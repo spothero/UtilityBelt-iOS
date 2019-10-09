@@ -3,6 +3,7 @@
 import Foundation
 import UtilityBeltNetworking
 
+/// A request for stubbing response meant to mirror a URLRequest.
 public struct StubRequest: Hashable {
     // MARK: - Enums
 
@@ -12,9 +13,21 @@ public struct StubRequest: Hashable {
 
     // MARK: - Properties
 
+    /// The HTTP method to stub. If nil, stubs all methods.
     public let method: HTTPMethod?
+    
+    /// The URL to stub. This can be a fully qualified URL, a host, or a route.
+    ///
+    /// If this is only a host (eg. https://example.com), it will stub all requests to any URL with an _exact_ matching host,
+    /// regardless of path or query string.
+    ///
+    /// If this is only a route (eg. /api/users/), it will stub all requests to any URL with an _exact_ matching path,
+    /// regardless of host or query string.
+    ///
+    /// Query parameters are also evaluated, but the order does not matter.
     public let url: URL?
 
+    /// The string representation of the request.
     public var description: String? {
         if let method = self.method, let url = self.url {
             return "\(method): \(url.absoluteString)"
@@ -25,22 +38,32 @@ public struct StubRequest: Hashable {
         }
     }
 
+    /// Whether or not the request is valid for stubbing.
     public var isValidForStubbing: Bool {
         return self.url?.isValidForStubbing == true
     }
 
     // MARK: - Methods
+    
+    // MARK: Initializers
 
+    /// Initializes a StubRequest.
+    /// - Parameter method: The HTTP method to stub.
+    /// - Parameter url: The URL to stub.
     public init(method: HTTPMethod, url: URLConvertible) {
         self.method = method
         self.url = try? url.asURL()
     }
-
+    
+    /// Initializes a StubRequest that stubs all HTTP methods for a given URL.
+    /// - Parameter url: The URL to stub.
     public init(url: URLConvertible) {
         self.method = .none
         self.url = try? url.asURL()
     }
-
+    
+    /// Initializes a StubRequest by attempting to parse a URL and HTTP method out of a URLRequest.
+    /// - Parameter urlRequest: The URLRequest to stub.
     public init(urlRequest: URLRequestConvertible) {
         if let rawHttpMethod = (try? urlRequest.asURLRequest())?.httpMethod,
             let httpMethod = HTTPMethod(rawValue: rawHttpMethod) {
@@ -51,7 +74,10 @@ public struct StubRequest: Hashable {
 
         self.url = try? urlRequest.asURLRequest().url
     }
-
+    
+    /// Determines whether or not this request is able to mock data for a given request.
+    ///
+    /// - Parameter request: The request to validate against.
     public func canMockData(for request: StubRequest) -> Bool {
         // If this request is valid for all requests, return true
         guard self != .allRequests else {
@@ -88,6 +114,7 @@ public struct StubRequest: Hashable {
         isIncluded = isIncluded && (url.trimmedPath == requestURL.trimmedPath || url.trimmedPath.isEmpty)
 
         // Include any stubbed response where the query matches the incoming URL' query or is nil or empty
+        // TODO: Compare query parameters
         isIncluded = isIncluded && (url.query == requestURL.query || url.query?.isEmpty != false)
 
         return isIncluded
