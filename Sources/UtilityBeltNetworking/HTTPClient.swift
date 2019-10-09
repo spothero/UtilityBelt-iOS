@@ -60,7 +60,8 @@ public class HTTPClient {
                 result = DataResult(data: data, response: httpResponse, error: error)
             } else {
                 // TODO: Return a custom error in this block
-                result = DataResult(data: data, response: nil, error: error)
+                assertionFailure("Unable to parse URLResponse into an HTTPURLResponse.")
+                result = DataResult(data: data, response: .undefined(url), error: UBNetworkError.invalidURLResponse)
             }
 
             completion?(result)
@@ -98,7 +99,7 @@ public class HTTPClient {
 
             // Create the DecodableResult object with the new decodedObject (if successfully decoded),
             // as well as the response and status from the previous result
-            let result = DecodableResult(data: decodedObject, response: rawResult.response, status: rawResult.status)
+            let result = DecodableResult(data: decodedObject, response: rawResult.response)
 
             // Fire the completion handler
             completion?(result)
