@@ -27,10 +27,6 @@ public struct StubRequest: Hashable, CustomStringConvertible {
     /// Query parameters are also evaluated, but the order does not matter.
     public let url: URL?
     
-    #warning("TODO: Implement some capability for HTTP Body.")
-    
-    #warning("TODO: Implement some capability for request headers.")
-    
     /// The string representation of the request.
     public var description: String {
         if let method = self.method, let url = self.url {
@@ -117,7 +113,6 @@ public struct StubRequest: Hashable, CustomStringConvertible {
         isIncluded = isIncluded && (url.trimmedPath == requestURL.trimmedPath || url.trimmedPath.isEmpty)
 
         // Include any stubbed response where the query matches the incoming URL' query or is nil or empty
-        #warning("TODO: Validate query parameters against each other, ignoring the order.")
         isIncluded = isIncluded && (url.query == requestURL.query || url.query?.isEmpty != false)
 
         return isIncluded
