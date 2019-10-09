@@ -117,23 +117,26 @@ final class MockServiceTests: XCTestCase {
                             file: StaticString = #file,
                             line: UInt = #line) where T: Codable, T: Equatable {
         let expectation = self.expectation(description: "Requesting foo strings.")
-
-        HTTPClient.shared.request(url, method: .get) { (result: DecodableResult<T>) in
+        
+        HTTPClient.sham.request(url, method: .get) { (result: DecodableResult<T>) in
             defer {
                 expectation.fulfill()
             }
-
-            if shouldFail, case .failure = result.status {}
-
-            switch (result.status, shouldFail) {
-            case (.success, false):
-                XCTAssertEqual(data, result.data, file: file, line: line)
-            case (.success, true):
-                XCTFail("Request succeeded, expected it to fail.")
-            case (.failure, false):
-                XCTFail("Request failed, expected it to succeed.")
-            case (.failure, true):
-                break
+            
+            switch result.status.responseType {
+            case .success:
+                if shouldFail {
+                    XCTFail("Request succeeded, expected it to fail.", file: file, line: line)
+                } else {
+                    XCTAssertEqual(data, result.data, file: file, line: line)
+                }
+            case .clientError,
+                 .serverError:
+                if !shouldFail {
+                    XCTFail("Request failed, expected it to succeed.", file: file, line: line)
+                }
+            default:
+                XCTFail("Request response type invalid: \(result.status.responseType)", file: file, line: line)
             }
         }
 

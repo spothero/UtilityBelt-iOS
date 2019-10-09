@@ -1,6 +1,7 @@
 // Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 import Foundation
+import UtilityBeltNetworking
 
 /// A subclass of URLProtocol that validates requests against stubs added via the MockService class.
 public class MockURLProtocol: URLProtocol {
@@ -34,7 +35,7 @@ public class MockURLProtocol: URLProtocol {
         let stubResponse = MockService.shared.getResponse(for: self.request)
 
         let httpResponse = HTTPURLResponse(url: url,
-                                           statusCode: stubResponse?.statusCode.rawValue ?? 400,
+                                           statusCode: stubResponse?.statusCode.rawValue ?? HTTPStatusCode.badRequest.rawValue  ,
                                            httpVersion: nil,
                                            headerFields: stubResponse?.headers ?? [:])
 
