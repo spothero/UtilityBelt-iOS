@@ -31,14 +31,3 @@ public extension HTTPResult {
         return self.response.statusCode
     }
 }
-
-// public extension HTTPResult {
-//    /// Initializes an HTTPResult, with status based on whether or not an error was provided.
-//    init(data: DataType, response: HTTPURLResponse?, error: Error? = nil) {
-//        if let error = error {
-//            self.init(data: data, response: response, status: .failure(error))
-//        } else {
-//            self.init(data: data, response: response, status: .success)
-//        }
-//    }
-// }
