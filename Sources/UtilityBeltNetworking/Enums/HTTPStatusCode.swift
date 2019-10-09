@@ -19,6 +19,8 @@ import Foundation
 /// - [Mozilla - HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 /// - [Wikipedia - List of HTTP Status Codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
 public enum HTTPStatusCode: Int, CaseIterable {
+    // MARK: ResponseType
+
     /// The response class representation of status codes, these get grouped by their first digit.
     public enum ResponseType {
         /// Indicates that the request was received and understood.
@@ -331,6 +333,16 @@ public enum HTTPStatusCode: Int, CaseIterable {
     /// Intended for use by intercepting proxies used to control access to the network
     /// (eg. "captive portals" used to require agreement to Terms of Service before granting full Internet access via a Wi-Fi hotspot).
     case networkAuthenticationRequired = 511
+
+    // MARK: Undefined
+
+    /// The client has encountered an undefined status code.
+    ///
+    /// In the event this is _ever_ returned by a service, look at the actual underlying
+    /// status code of the HTTPURLResponse to identify the actual status code returned.
+    case undefined = -1
+
+    // MARK: Properties
 
     /// The category that the status code belongs to.
     public var responseType: ResponseType {

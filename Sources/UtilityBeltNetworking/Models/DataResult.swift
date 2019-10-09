@@ -6,9 +6,9 @@ import Foundation
 public struct DataResult: HTTPResult {
     public let data: Data?
     public let error: Error?
-    public let response: HTTPURLResponse?
+    public let response: HTTPURLResponse
 
-    public init(data: Data?, response: HTTPURLResponse?, error: Error? = nil) {
+    public init(data: Data?, response: HTTPURLResponse, error: Error? = nil) {
         self.data = data
         self.error = error
         self.response = response

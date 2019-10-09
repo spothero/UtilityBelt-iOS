@@ -60,7 +60,8 @@ public class HTTPClient {
                 result = DataResult(data: data, response: httpResponse, error: error)
             } else {
                 // TODO: Return a custom error in this block
-                result = DataResult(data: data, response: nil, error: error)
+                assertionFailure("Unable to parse URLResponse into an HTTPURLResponse.")
+                result = DataResult(data: data, response: .undefined(url), error: UBNetworkError.invalidURLResponse)
             }
 
             completion?(result)

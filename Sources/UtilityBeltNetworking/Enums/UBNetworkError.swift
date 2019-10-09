@@ -5,6 +5,7 @@ import Foundation
 public enum UBNetworkError: Error {
     case invalidFilePath(String)
     case invalidURLString(String)
+    case invalidURLResponse
 }
 
 extension UBNetworkError: LocalizedError {
@@ -14,6 +15,8 @@ extension UBNetworkError: LocalizedError {
             return "Invalid file path: '\(path)'."
         case let .invalidURLString(urlString):
             return "Invalid URL string: '\(urlString)'."
+        case .invalidURLResponse:
+            return "Invalid URL Response."
         }
     }
 }
