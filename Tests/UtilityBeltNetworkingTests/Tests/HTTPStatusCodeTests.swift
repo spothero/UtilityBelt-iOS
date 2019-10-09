@@ -8,9 +8,11 @@ final class HTTPStatusCodeTests: XCTestCase {
     func testResponseTypes() {
         // Test response types for every status code
         for code in HTTPStatusCode.allCases {
-            // None that we currently work with should be undefined
-            XCTAssertNotEqual(code.responseType, .undefined)
-
+            guard code != .undefined else {
+                XCTAssertEqual(code.responseType, .undefined)
+                continue
+            }
+            
             switch code.rawValue {
             case Int.min ..< 100:
                 XCTFail("Status codes should not be less than 100.")
