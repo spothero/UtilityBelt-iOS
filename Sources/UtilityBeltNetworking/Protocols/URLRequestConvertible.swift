@@ -2,10 +2,7 @@
 
 import Foundation
 
-/// A convenience protocol allowing the passing of Strings, URLs, and other URLRequest compatible classes
-/// to be used in places where a URLRequest is typically required.
 public protocol URLRequestConvertible {
-    /// Returns a URLRequest representation of this object.
     func asURLRequest() throws -> URLRequest
 }
 
