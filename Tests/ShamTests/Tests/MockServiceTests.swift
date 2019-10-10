@@ -117,12 +117,12 @@ final class MockServiceTests: XCTestCase {
                             file: StaticString = #file,
                             line: UInt = #line) where T: Codable, T: Equatable {
         let expectation = self.expectation(description: "Requesting foo strings.")
-        
+
         HTTPClient.sham.request(url, method: .get) { (result: DecodableResult<T>) in
             defer {
                 expectation.fulfill()
             }
-            
+
             switch result.status.responseType {
             case .success:
                 if shouldFail {

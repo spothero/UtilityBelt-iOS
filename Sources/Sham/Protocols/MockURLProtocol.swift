@@ -35,7 +35,7 @@ public class MockURLProtocol: URLProtocol {
         let stubResponse = MockService.shared.getResponse(for: self.request)
 
         let httpResponse = HTTPURLResponse(url: url,
-                                           statusCode: stubResponse?.statusCode.rawValue ?? HTTPStatusCode.badRequest.rawValue  ,
+                                           statusCode: stubResponse?.statusCode.rawValue ?? HTTPStatusCode.badRequest.rawValue,
                                            httpVersion: nil,
                                            headerFields: stubResponse?.headers ?? [:])
 

@@ -15,7 +15,7 @@ public struct StubRequest: Hashable, CustomStringConvertible {
 
     /// The HTTP method to stub. If nil, stubs all methods.
     public let method: HTTPMethod?
-    
+
     /// The URL to stub. This can be a fully qualified URL, a host, or a route.
     ///
     /// If this is only a host (eg. https://example.com), it will stub all requests to any URL with an _exact_ matching host,
@@ -26,7 +26,7 @@ public struct StubRequest: Hashable, CustomStringConvertible {
     ///
     /// Query parameters are also evaluated, but the order does not matter.
     public let url: URL?
-    
+
     /// The string representation of the request.
     public var description: String {
         if let method = self.method, let url = self.url {
@@ -44,7 +44,7 @@ public struct StubRequest: Hashable, CustomStringConvertible {
     }
 
     // MARK: - Methods
-    
+
     // MARK: Initializers
 
     /// Initializes a StubRequest.
@@ -54,14 +54,14 @@ public struct StubRequest: Hashable, CustomStringConvertible {
         self.method = method
         self.url = try? url.asURL()
     }
-    
+
     /// Initializes a StubRequest that stubs all HTTP methods for a given URL.
     /// - Parameter url: The URL to stub.
     public init(url: URLConvertible) {
         self.method = .none
         self.url = try? url.asURL()
     }
-    
+
     /// Initializes a StubRequest by attempting to parse a URL and HTTP method out of a URLRequest.
     /// - Parameter urlRequest: The URLRequest to stub.
     public init(urlRequest: URLRequestConvertible) {
@@ -74,7 +74,7 @@ public struct StubRequest: Hashable, CustomStringConvertible {
 
         self.url = try? urlRequest.asURLRequest().url
     }
-    
+
     /// Determines whether or not this request is able to mock data for a given request.
     /// - Parameter request: The request to validate against.
     public func canMockData(for request: StubRequest) -> Bool {
@@ -126,61 +126,61 @@ public extension StubRequest {
     static var allRequests: StubRequest {
         return .http(URL.emptyRoute)!
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches all HTTP methods.
     /// - Parameter url: The URL to stub.
     static func http(_ url: URLConvertible) -> StubRequest {
         return self.init(url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the CONNECT HTTP method.
     /// - Parameter url: The URL to stub.
     static func connect(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .connect, url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the DELETE HTTP method.
     /// - Parameter url: The URL to stub.
     static func delete(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .delete, url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the GET HTTP method.
     /// - Parameter url: The URL to stub.
     static func get(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .get, url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the HEAD HTTP method.
     /// - Parameter url: The URL to stub.
     static func head(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .head, url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the OPTIONS HTTP method.
     /// - Parameter url: The URL to stub.
     static func options(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .options, url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the PATCH HTTP method.
     /// - Parameter url: The URL to stub.
     static func patch(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .patch, url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the POST HTTP method.
     /// - Parameter url: The URL to stub.
     static func post(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .post, url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the PUT HTTP method.
     /// - Parameter url: The URL to stub.
     static func put(_ url: URLConvertible) -> StubRequest {
         return self.init(method: .put, url: url)
     }
-    
+
     /// Initializes a StubRequest for a given URL that matches the TRACE HTTP method.
     /// - Parameter url: The URL to stub.
     static func trace(_ url: URLConvertible) -> StubRequest {

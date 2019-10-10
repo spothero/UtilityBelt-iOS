@@ -6,15 +6,15 @@ import UtilityBeltNetworking
 /// A service which contains stub requests and stub responses for use with the MockURLProtocol.
 public class MockService {
     // MARK: - Shared Instance
-    
+
     /// The shared instance of the service.
     public static let shared = MockService()
 
     // MARK: - Properties
-    
+
     /// The default bundle to use when loading data via Bundle resource paths.
     public var defaultBundle: Bundle = .main
-    
+
     /// Whether or not the service should be intercepting and mocking all requests.
     /// If false, the service will throw an error when it receive a request it has no response for.
     public var isMockingAllRequests = true
@@ -37,7 +37,7 @@ public class MockService {
     private init() {}
 
     // MARK: Registration
-    
+
     /// Registers the MockURLProtocol to URLProtocol.
     public func register() {
         // TODO: Add some capability of also setting up a URLSessionConfiguration via a register() method
@@ -45,7 +45,7 @@ public class MockService {
     }
 
     // MARK: Stubbing
-    
+
     /// Returns the stubbed response that matches the request.
     /// Returns nil if there is no matching stubbed request found.
     /// - Parameter request: The request to match against stubbed requests.
@@ -60,20 +60,20 @@ public class MockService {
 
         return firstResponse?.value
     }
-    
+
     /// Determines whether or not a matching request has been stubbed.
     /// - Parameter request: The request to match against stubbed requests.
     public func hasStub(for request: StubRequest) -> Bool {
         return self.getResponse(for: request) != nil
     }
-    
+
     /// Determines whether or not the service can attempt to mock a given request.
     /// Returns true if the service is attempting to intercept and mock all requests.
     /// - Parameter request: The request to match against stubbed requests.
     public func canMockData(for request: StubRequest) -> Bool {
         return self.isMockingAllRequests || self.hasStub(for: request)
     }
-    
+
     /// Adds a response to the stub response collection for the MockService.
     /// - Parameter request: The request to stub.
     /// - Parameter response: The response to return upon receiving the given request.
@@ -92,26 +92,26 @@ public class MockService {
     }
 
     // MARK: URLRequest Convenience
-    
+
     /// Returns a stubbed response if there is a stubbed request that matches.
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to match against stubbed requests.
     public func getResponse(for urlRequest: URLRequestConvertible) -> StubResponse? {
         return self.getResponse(for: StubRequest(urlRequest: urlRequest))
     }
-    
+
     /// Determines whether or not a matching request has been stubbed.
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to match against stubbed requests.
     public func hasStub(for urlRequest: URLRequestConvertible) -> Bool {
         return self.getResponse(for: urlRequest) != nil
     }
-    
+
     /// Determines whether or not the service can attempt to mock a given request.
     /// Returns true if the service is attempting to intercept and mock all requests.
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to against stubbed requests.
     public func canMockData(for urlRequest: URLRequestConvertible) -> Bool {
         return self.isMockingAllRequests || self.hasStub(for: urlRequest)
     }
-    
+
     /// Adds a response to the stub response collection.
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to stub.
     /// - Parameter response: The response to return upon receiving the given request.
@@ -121,7 +121,7 @@ public class MockService {
     }
 
     // MARK: Utilities
-    
+
     /// Clears all stubbed responses from the stub response collection.
     public func clearData() {
         self.stubResponses = [:]

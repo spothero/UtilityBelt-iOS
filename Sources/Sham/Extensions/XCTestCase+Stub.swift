@@ -10,7 +10,7 @@ public extension XCTestCase {
     func stub(_ stubRequest: StubRequest, with response: StubResponse) {
         MockService.shared.stub(stubRequest, with: response)
     }
-    
+
     /// Convenience method for stubbing new requests within an XCTestCase.
     /// - Parameter urlRequest: The request to stub.
     /// - Parameter response: The response to return.
