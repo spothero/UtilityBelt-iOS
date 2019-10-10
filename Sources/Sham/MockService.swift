@@ -20,10 +20,10 @@ public class MockService {
     public var isMockingAllRequests = true
 
     /// A dictionary of stub responses keyed by stub requests.
-    private var stubResponses = [StubRequest: StubResponse]()
+    private var stubResponses: [StubRequest: StubResponse] = [:]
 
     /// Whether or not there are any stubbed response.
-    public var isEmpty: Bool {
+    public var hasStubs: Bool {
         return self.stubResponses.isEmpty
     }
 
@@ -38,10 +38,18 @@ public class MockService {
 
     // MARK: Registration
 
-    /// Registers the MockURLProtocol to URLProtocol.
+    /// Globally registers the MockURLProtocol to URLProtocol.
+    ///
+    /// This doesn't work for all clients (eg. Alamofire), so in some cases we'll need to add the protocol
+    /// into a URLSessionConfiguration and build a URLSession from that instead.
     public func register() {
         // TODO: Add some capability of also setting up a URLSessionConfiguration via a register() method
         URLProtocol.registerClass(MockURLProtocol.self)
+    }
+    
+    /// Globally unregisters the MockURLProtocol from URLProtocol.
+    public func unregister() {
+        URLProtocol.unregisterClass(MockURLProtocol.self)
     }
 
     // MARK: Stubbing

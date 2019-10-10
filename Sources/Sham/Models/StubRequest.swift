@@ -92,24 +92,22 @@ public struct StubRequest: Hashable, CustomStringConvertible {
             return true
         }
 
-        var isIncluded = true
-
         // Include any stubbed response where the scheme matches the incoming URL's scheme or is nil or empty
-        isIncluded = isIncluded && (url.scheme == requestURL.scheme || url.scheme?.isEmpty != false)
+        let validScheme = url.scheme == requestURL.scheme || url.scheme?.isEmpty != false
 
         // Include any stubbed response where the host matches the incoming URL's host or is nil or empty
-        isIncluded = isIncluded && (url.host == requestURL.host || url.host?.isEmpty != false)
+        let validHost = url.host == requestURL.host || url.host?.isEmpty != false
 
         // Include any stubbed response where the port matches the incoming URL's port or is nil
-        isIncluded = isIncluded && (url.port == requestURL.port || url.port == nil)
+        let validPort = url.port == requestURL.port || url.port == nil
 
         // Include any stubbed response where the path matches the incoming URL's path or is empty
-        isIncluded = isIncluded && (url.trimmedPath == requestURL.trimmedPath || url.trimmedPath.isEmpty)
+        let validPath = url.trimmedPath == requestURL.trimmedPath || url.trimmedPath.isEmpty
 
         // Include any stubbed response where the query matches the incoming URL' query or is nil or empty
-        isIncluded = isIncluded && (url.query == requestURL.query || url.query?.isEmpty != false)
+        let validQuery = url.query == requestURL.query || url.query?.isEmpty != false
 
-        return isIncluded
+        return validScheme && validHost && validPort && validPath && validQuery
     }
 }
 
@@ -118,7 +116,7 @@ public struct StubRequest: Hashable, CustomStringConvertible {
 public extension StubRequest {
     /// Initializes a StubRequest that matches all incoming requests.
     static var allRequests: StubRequest {
-        return .http(URL.emptyRoute)!
+        return .http(URL.emptyRoute)
     }
 
     /// Initializes a StubRequest for a given URL that matches all HTTP methods.

@@ -14,10 +14,10 @@ public struct StubResponse {
     public var error: Error?
 
     /// The status code of the response.
-    public var statusCode: HTTPStatusCode = .ok
+    public var statusCode: HTTPStatusCode
 
     /// A dictionary of headers to be returned in the response.
-    public var headers: [String: String] = [:]
+    public var headers: [String: String]
 
     // MARK: - Methods
 
@@ -66,8 +66,8 @@ public extension StubResponse {
     }
 
     /// Initializes a StubResponse with an error and no data.
-    /// - Parameter error: The error to be returned in the response. Defaults to `Internal Server Error` (`500`).
-    /// - Parameter statusCode: The status code of the response.
+    /// - Parameter error: The error to be returned in the response.
+    /// - Parameter statusCode: The status code of the response. Defaults to `Internal Server Error` (`500`).
     /// - Parameter headers: A dictionary of headers to be returned in the response.
     static func error(_ error: Error, statusCode: HTTPStatusCode = .internalServerError, headers: [String: String] = [:]) -> StubResponse {
         return self.init(error: error, statusCode: statusCode, headers: headers)

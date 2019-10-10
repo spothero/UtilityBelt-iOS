@@ -26,6 +26,8 @@ final class MockServiceTests: XCTestCase {
     }
 
     func testStubbingSameURL() {
+        // TODO: This was for development, but it's something we should build out better tests for.
+        
         self.stub(self.fullURL, with: .encodable(self.mockData))
         self.stub(self.fullURL, with: .encodable(self.mockData))
         self.stub(self.fullURL, with: .encodable(self.mockData))
@@ -76,7 +78,7 @@ final class MockServiceTests: XCTestCase {
 
         let hasData = MockService.shared.hasStub(for: .post(self.fullURL))
 
-        XCTAssertFalse(MockService.shared.isEmpty)
+        XCTAssertFalse(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
     }
 
@@ -86,7 +88,7 @@ final class MockServiceTests: XCTestCase {
 
         let hasData = MockService.shared.hasStub(for: self.schemeOnlyURL)
 
-        XCTAssertTrue(MockService.shared.isEmpty)
+        XCTAssertTrue(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
     }
 
@@ -96,20 +98,9 @@ final class MockServiceTests: XCTestCase {
 
         let hasData = MockService.shared.hasStub(for: self.queryOnlyURL)
 
-        XCTAssertTrue(MockService.shared.isEmpty)
+        XCTAssertTrue(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
     }
-
-//    func testMockService() {
-//        let client = HTTPClient.shared
-//
-//        client.request("spots", method: .get) { (result: DecodableResult<[Spot]>) in
-//            let spots = result.data
-//
-//
-//            print(spots)
-//        }
-//    }
 
     private func request<T>(url: URLConvertible,
                             data: T,
@@ -140,6 +131,6 @@ final class MockServiceTests: XCTestCase {
             }
         }
 
-        self.waitForExpectations(timeout: 15)
+        self.waitForExpectations(timeout: 5)
     }
 }
