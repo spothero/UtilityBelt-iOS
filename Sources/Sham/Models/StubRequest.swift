@@ -5,12 +5,6 @@ import UtilityBeltNetworking
 
 /// A request for stubbing response meant to mirror a URLRequest.
 public struct StubRequest: Hashable, CustomStringConvertible {
-    // MARK: - Enums
-
-    public enum StubRequestError: Error {
-        case invalidURLString(String)
-    }
-
     // MARK: - Properties
 
     /// The HTTP method to stub. If nil, stubs all methods.

@@ -5,7 +5,7 @@
     import UtilityBeltNetworking
 
     public extension HTTPClient {
-        /// Convenience initializer for an HTTPClient set up to work with a Sham MockService
+        /// An HTTPClient set up to work with Sham's MockService on top of the default settings.
         static let sham = HTTPClient(session: .sham)
     }
 
