@@ -22,10 +22,10 @@ public class MockService {
     /// A dictionary of stubbed responses keyed by stubbed requests.
     private var stubbedData = [StubRequest: StubResponse]()
     
-    /// A convenience array of stubbed requests, taken from stubbedData dictionary keys.
-    private var stubbedRequests: [StubRequest] {
-        return self.stubbedData.keys
-    }
+//    /// A convenience array of stubbed requests, taken from stubbedData dictionary keys.
+//    private var stubbedRequests: [StubRequest] {
+//        return self.stubbedData.keys
+//    }
 
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
@@ -69,7 +69,7 @@ public class MockService {
         }
 
         // Otherwise, find the first matching stubbed request/response pair for the given request
-        let firstStubbedDataPair = self.stubbedData.first { $0.key.canMockData(for: request) }.v
+        let firstStubbedDataPair = self.stubbedData.first { $0.key.canMockData(for: request) }
 
         // Return the stubbed response from the first stubbed data pair found
         return firstStubbedDataPair?.value
@@ -98,7 +98,9 @@ public class MockService {
             return
         }
 
-        if self.stubbedRequests.contains(request) {
+        // If the request exists, print a log to verify
+        if self.stubbedData.keys.contains(request) {
+            // TODO: Instead of print, use some sort of DLog equivalent
             print("Stubbed data already exists for request '\(request)'. Updating with new data.")
         }
 
