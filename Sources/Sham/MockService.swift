@@ -19,12 +19,17 @@ public class MockService {
     /// If false, the service will throw an error when it receive a request it has no response for.
     public var isMockingAllRequests = true
 
-    /// A dictionary of stub responses keyed by stub requests.
-    private var stubResponses: [StubRequest: StubResponse] = [:]
+    /// A dictionary of stubbed responses keyed by stubbed requests.
+    private var stubbedData = [StubRequest: StubResponse]()
+    
+    /// A convenience array of stubbed requests, taken from stubbedData dictionary keys.
+    private var stubbedRequests: [StubRequest] {
+        return self.stubbedData.keys
+    }
 
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
-        return self.stubResponses.isEmpty
+        return self.stubbedData.isEmpty
     }
 
     // MARK: - Methods
@@ -59,14 +64,15 @@ public class MockService {
     /// - Parameter request: The request to match against stubbed requests.
     public func getResponse(for request: StubRequest) -> StubResponse? {
         // Check for a match with the exact URL
-        if let exactMatchResponse = self.stubResponses[request] {
+        if let exactMatchResponse = self.stubbedData[request] {
             return exactMatchResponse
         }
 
-        // Otherwise, find the most appropriate match
-        let firstResponse = self.stubResponses.first { $0.key.canMockData(for: request) }
+        // Otherwise, find the first matching stubbed request/response pair for the given request
+        let firstStubbedDataPair = self.stubbedData.first { $0.key.canMockData(for: request) }.v
 
-        return firstResponse?.value
+        // Return the stubbed response from the first stubbed data pair found
+        return firstStubbedDataPair?.value
     }
 
     /// Determines whether or not a matching request has been stubbed.
@@ -92,11 +98,11 @@ public class MockService {
             return
         }
 
-        if self.stubResponses.contains(where: { $0.key == request }) {
+        if self.stubbedRequests.contains(request) {
             print("Stubbed data already exists for request '\(request)'. Updating with new data.")
         }
 
-        self.stubResponses[request] = response
+        self.stubbedData[request] = response
     }
 
     // MARK: URLRequest Convenience
@@ -132,6 +138,6 @@ public class MockService {
 
     /// Clears all stubbed responses from the stub response collection.
     public func clearData() {
-        self.stubResponses = [:]
+        self.stubbedData = [:]
     }
 }
