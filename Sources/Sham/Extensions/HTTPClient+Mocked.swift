@@ -5,8 +5,8 @@
     import UtilityBeltNetworking
 
     public extension HTTPClient {
-        /// An HTTPClient set up to work with Sham's MockService on top of the default settings.
-        static let sham = HTTPClient(session: .sham)
+        /// An HTTPClient set up to work with the MockService on top of the default settings.
+        static let mocked = HTTPClient(session: .mocked)
     }
 
 #endif

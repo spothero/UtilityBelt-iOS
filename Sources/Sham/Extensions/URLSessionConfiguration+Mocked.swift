@@ -3,9 +3,9 @@
 import Foundation
 
 public extension URLSessionConfiguration {
-    /// A URLSessionConfiguration set up to work with Sham's MockService on top of the default settings.
-    static var sham: URLSessionConfiguration {
-        let urlConfig: URLSessionConfiguration = .default
+    /// A URLSessionConfiguration set up to work with the MockService on top of the default settings.
+    static var mocked: URLSessionConfiguration {
+        let urlConfig: URLSessionConfiguration = .mocked
         urlConfig.protocolClasses = [MockURLProtocol.self]
 
         return urlConfig

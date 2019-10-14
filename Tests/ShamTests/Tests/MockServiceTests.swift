@@ -109,7 +109,7 @@ final class MockServiceTests: XCTestCase {
                             line: UInt = #line) where T: Codable, T: Equatable {
         let expectation = self.expectation(description: "Requesting foo strings.")
 
-        HTTPClient.sham.request(url, method: .get) { (result: DecodableResult<T>) in
+        HTTPClient.mocked.request(url, method: .get) { (result: DecodableResult<T>) in
             defer {
                 expectation.fulfill()
             }
