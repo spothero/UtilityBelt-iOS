@@ -93,10 +93,10 @@ public struct StubRequest: Hashable, CustomStringConvertible {
         }
 
         // Include any stubbed response where the scheme matches the incoming URL's scheme or is nil or empty
-        let validScheme = url.scheme == requestURL.scheme || url.scheme?.isEmpty != false
+        let validScheme = url.scheme == requestURL.scheme || url.scheme.isNilOrEmpty
 
         // Include any stubbed response where the host matches the incoming URL's host or is nil or empty
-        let validHost = url.host == requestURL.host || url.host?.isEmpty != false
+        let validHost = url.host == requestURL.host || url.host.isNilOrEmpty
 
         // Include any stubbed response where the port matches the incoming URL's port or is nil
         let validPort = url.port == requestURL.port || url.port == nil
@@ -104,8 +104,8 @@ public struct StubRequest: Hashable, CustomStringConvertible {
         // Include any stubbed response where the path matches the incoming URL's path or is empty
         let validPath = url.trimmedPath == requestURL.trimmedPath || url.trimmedPath.isEmpty
 
-        // Include any stubbed response where the query matches the incoming URL' query or is nil or empty
-        let validQuery = url.query == requestURL.query || url.query?.isEmpty != false
+        // Include any stubbed response where the query matches the incoming URL's query or is nil or empty
+        let validQuery = url.query == requestURL.query || url.query.isNilOrEmpty
 
         return validScheme && validHost && validPort && validPath && validQuery
     }
@@ -181,6 +181,12 @@ public extension StubRequest {
 }
 
 // MARK: - Extensions
+
+private extension Optional where Wrapped == String {
+    var isNilOrEmpty: Bool {
+        return self?.isEmpty ?? true
+    }
+}
 
 private extension String {
     func trimmingSlashes() -> String {
