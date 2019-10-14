@@ -43,9 +43,9 @@ final class ParameterEncodingTests: XCTestCase {
         }
 
         for item in queryItems {
-            print(item.name, item.value)
+            print(item.name, String(describing: item.value))
         }
 
-        print(components?.percentEncodedQuery)
+        print(String(describing: components?.percentEncodedQuery))
     }
 }
