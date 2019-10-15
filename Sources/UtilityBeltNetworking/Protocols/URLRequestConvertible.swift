@@ -37,7 +37,7 @@ extension HTTPRequest: URLRequestConvertible {
             var request = URLRequest(url: url)
             request.httpMethod = self.method.rawValue
             request.setParameters(self.parameters, method: self.method, encoding: self.parameterEncoding)
-            
+
             return request
         } else {
             throw UBNetworkError.invalidURL(self.url)

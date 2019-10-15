@@ -27,7 +27,7 @@ final class MockServiceTests: XCTestCase {
 
     func testStubbingSameURL() {
         // TODO: This was for development, but it's something we should build out better tests for.
-        
+
         self.stub(self.fullURL, with: .encodable(self.mockData))
         self.stub(self.fullURL, with: .encodable(self.mockData))
         self.stub(self.fullURL, with: .encodable(self.mockData))

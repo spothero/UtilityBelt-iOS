@@ -19,15 +19,15 @@ extension URLRequest {
         case .defaultEncodingForMethod:
             // Get the default encoding for the method
             let encoding = method.defaultParameterEncoding
-            
+
             // Ensure that the default encoding isn't set to 'defaultEncodingForMethod', which would be a bug
             if case ParameterEncoding.defaultEncodingForMethod = encoding {
                 return
             }
-            
+
             // Since we're using the default encoding for the given method, recursively call this function with that encoding style
             self.setParameters(parameters, method: method, encoding: encoding)
-            
+
             return
         case .httpBody(.json):
             self.setValue("application/json", forHTTPHeaderField: .contentType)

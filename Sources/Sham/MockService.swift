@@ -21,7 +21,7 @@ public class MockService {
 
     /// A dictionary of stubbed responses keyed by stubbed requests.
     private var stubbedData = [StubRequest: StubResponse]()
-    
+
 //    /// A convenience array of stubbed requests, taken from stubbedData dictionary keys.
 //    private var stubbedRequests: [StubRequest] {
 //        return self.stubbedData.keys
@@ -51,7 +51,7 @@ public class MockService {
         // TODO: Add some capability of also setting up a URLSessionConfiguration via a register() method
         URLProtocol.registerClass(MockURLProtocol.self)
     }
-    
+
     /// Globally unregisters the MockURLProtocol from URLProtocol.
     public func unregister() {
         URLProtocol.unregisterClass(MockURLProtocol.self)
