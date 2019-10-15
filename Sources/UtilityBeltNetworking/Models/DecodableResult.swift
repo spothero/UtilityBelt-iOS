@@ -6,9 +6,9 @@ import Foundation
 public struct DecodableResult<T>: HTTPResult where T: Decodable {
     public let data: T?
     public let error: Error?
-    public let response: HTTPURLResponse
+    public let response: HTTPURLResponse?
 
-    public init(data: T?, response: HTTPURLResponse, error: Error? = nil) {
+    public init(data: T?, response: HTTPURLResponse?, error: Error? = nil) {
         self.data = data
         self.error = error
         self.response = response

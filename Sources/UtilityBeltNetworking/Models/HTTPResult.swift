@@ -14,20 +14,20 @@ public protocol HTTPResult {
     var error: Error? { get }
 
     /// The HTTP response returned by the request.
-    var response: HTTPURLResponse { get }
+    var response: HTTPURLResponse? { get }
 
     /// Initializes an HTTPResult.
-    init(data: DataType, response: HTTPURLResponse, error: Error?)
+    init(data: DataType, response: HTTPURLResponse?, error: Error?)
 }
 
 public extension HTTPResult {
     /// The status code returned by the request.
     var status: HTTPStatusCode {
-        return self.response.status
+        return self.response?.status ?? .undefined
     }
 
     /// The raw status code returned by the request.
     var statusCode: Int {
-        return self.response.statusCode
+        return self.response?.statusCode ?? HTTPStatusCode.undefined.rawValue
     }
 }

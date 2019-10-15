@@ -59,23 +59,16 @@ extension HTTPClient: HTTPRequesting {
             let request = try request.asURLRequest()
 
             let task = self.session.dataTask(with: request) { data, response, error in
-                var result: DataResult
-
-                if let httpResponse = response as? HTTPURLResponse {
-                    result = DataResult(data: data, response: httpResponse, error: error)
-                } else {
-                    // TODO: Return a custom error in this block
-                    assertionFailure("Unable to parse URLResponse into an HTTPURLResponse.")
-                    // TODO: Don't return an empty response?
-                    result = DataResult(data: data, response: .undefined(request.url!), error: UBNetworkError.invalidURLResponse)
-                }
+                let httpResponse = response as? HTTPURLResponse
+                let result = DataResult(data: data, response: httpResponse, error: error)
 
                 completion?(result)
             }
 
             task.resume()
         } catch {
-            // TODO: Fire off a completion with an error
+            let result = DataResult(data: nil, response: nil, error: error)
+            completion?(result)
         }
     }
 

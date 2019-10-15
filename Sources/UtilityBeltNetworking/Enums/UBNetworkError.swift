@@ -18,7 +18,7 @@ extension UBNetworkError: LocalizedError {
             return "Invalid URL string: '\(urlString)'."
         case let .invalidURL(.some(url)):
             return "Invalud URL: '\(url.absoluteString)'."
-        case let .invalidURL(.none):
+        case .invalidURL(.none):
             return "URL not found."
         case .invalidURLResponse:
             return "Invalid URL Response."
