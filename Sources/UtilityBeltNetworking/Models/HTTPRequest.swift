@@ -145,7 +145,7 @@ public class HTTPRequest {
     // TODO: Is there really any purpose to allowing a nil completion block?
     public func response(completion: DataTaskCompletion? = nil) {
         if let delegate = self.delegate {
-            self.delegate.response(for: self, completion: completion)
+            delegate.response(for: self, completion: completion)
         } else {
             completion?(.errorResult(UBNetworkError.httpClientNotInitialized))
         }
@@ -154,7 +154,7 @@ public class HTTPRequest {
     // TODO: Is there really any purpose to allowing a nil completion block?
     public func response<T>(completion: DecodableTaskCompletion<T>? = nil) {
         if let delegate = self.delegate {
-            self.delegate.response(for: self, completion: completion)
+            delegate.response(for: self, completion: completion)
         } else {
             completion?(.errorResult(UBNetworkError.httpClientNotInitialized))
         }
