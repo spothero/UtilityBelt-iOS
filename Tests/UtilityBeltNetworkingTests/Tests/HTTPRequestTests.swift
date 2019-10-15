@@ -8,6 +8,14 @@ final class HTTPRequestTests: XCTestCase {
     private static let testURLString = "https://postman-echo.com:8080/get"
     private static let testURL = URL(string: testURLString)
     private static let testURLWithQueryString = URL(string: "\(testURLString)?foo=bar&fizz=buzz")
+    
+    private static var defaultRequest: HTTPRequest {
+        return HTTPRequest()
+            .scheme("https")
+            .host("postman-echo.com")
+            .port(8080)
+            .path("get")
+    }
 
     private static let defaultTestParameters: [String: Any] = [
         "foo": "bar",
@@ -21,33 +29,33 @@ final class HTTPRequestTests: XCTestCase {
     }
 
     func testBuildRequest() {
-        let request = Self.createRequest(for: .get)
+        let request = Self.defaultRequest
+        
         XCTAssertEqual(request.url, Self.testURL?.urlWithoutQueryString)
     }
 
     func testBuildGetRequestWithSimpleQueryString() {
-        let request = Self.createRequest(for: .get, parameters: Self.defaultTestParameters)
+        let request = Self.defaultRequest
+            .parameters(Self.defaultTestParameters)
+        
         XCTAssertURLWithQueryStringEqual(request.url, Self.testURLWithQueryString)
     }
 
     func testBuildPostRequestWithNoQueryString() {
-        let request = Self.createRequest(for: .post, parameters: Self.defaultTestParameters)
+        let request = Self.defaultRequest
+            .method(.post)
+            .parameters(Self.defaultTestParameters)
+        
         XCTAssertEqual(request.url, Self.testURL?.urlWithoutQueryString)
     }
 
     func testBuildPostRequestWithQueryString() {
-        let request = Self.createRequest(for: .get, parameters: Self.defaultTestParameters)
+        let request = Self.defaultRequest
+            .method(.post)
+            .parameters(Self.defaultTestParameters)
+            .parameterEncoding(.queryString)
+        
         XCTAssertURLWithQueryStringEqual(request.url, Self.testURLWithQueryString)
-    }
-
-    private static func createRequest(for method: HTTPMethod, parameters: [String: Any]? = nil) -> HTTPRequest {
-        return HTTPRequest()
-            .method(method)
-            .scheme("https")
-            .host("postman-echo.com")
-            .port(8080)
-            .path("get")
-            .parameters(parameters)
     }
 }
 
