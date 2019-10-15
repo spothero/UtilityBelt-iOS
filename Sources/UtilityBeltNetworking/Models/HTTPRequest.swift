@@ -9,6 +9,9 @@ public class HTTPRequest {
     public private(set) var method: HTTPMethod = .get
     public private(set) var parameters: [String: Any]?
     public private(set) var parameterEncoding: ParameterEncoding = .defaultEncodingForMethod
+    
+    // TODO: Implement timeout in HTTPClient
+    public private(set) var timeout: TimeInterval?
 
     private weak var delegate: HTTPRequesting?
 
@@ -96,6 +99,12 @@ public class HTTPRequest {
     @discardableResult
     public func parameterEncoding(_ parameterEncoding: ParameterEncoding) -> Self {
         self.parameterEncoding = parameterEncoding
+        return self
+    }
+    
+    @discardableResult
+    public func timeout(_ timeout: TimeInterval?) -> Self {
+        self.timeout = timeout
         return self
     }
 

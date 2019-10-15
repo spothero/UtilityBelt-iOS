@@ -9,7 +9,9 @@ final class HTTPClientTests: XCTestCase {
         HTTPClient.shared.request(url: "https://google.com")
             .host("google.com")
             .scheme("https")
-            .response { (_: DecodableResult<String>) in
+            .response { (result: DecodableResult<String>) in
+                
+                
             }
     }
 }
