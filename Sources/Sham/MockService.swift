@@ -29,7 +29,7 @@ public class MockService {
 
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
-        return self.stubbedData.isEmpty
+        !return self.stubbedData.isEmpty
     }
 
     // MARK: - Methods
