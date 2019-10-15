@@ -20,7 +20,7 @@ extension URLRequest {
             // Get the default encoding for the method
             let encoding = method.defaultParameterEncoding
 
-            // Ensure that the default encoding isn't set to 'defaultEncodingForMethod', which would be a bug
+            // Ensure that the default encoding isn't set to 'defaultEncodingForMethod', which would be a weird bug
             if case ParameterEncoding.defaultEncodingForMethod = encoding {
                 return
             }
@@ -35,7 +35,7 @@ extension URLRequest {
             do {
                 self.httpBody = try parameters.asJSONSerializedData()
             } catch {
-                // TODO: Throw error
+                // TODO: Throw error?
             }
         case .httpBody(.wwwFormURLEncoded):
             self.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: .contentType)

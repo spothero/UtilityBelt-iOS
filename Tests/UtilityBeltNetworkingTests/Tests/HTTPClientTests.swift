@@ -5,13 +5,16 @@
 import XCTest
 
 final class HTTPClientTests: XCTestCase {
+    func testGetRequest() {
+        HTTPClient.shared.request(url: "https://postman-echo.com")
+            .path("get")
+    }
+
     func testNonsense() {
         HTTPClient.shared.request(url: "https://google.com")
             .host("google.com")
             .scheme("https")
-            .response { (result: DecodableResult<String>) in
-                
-                
+            .response { (_: DecodableResult<String>) in
             }
     }
 }

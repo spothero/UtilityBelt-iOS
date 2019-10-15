@@ -106,7 +106,7 @@ public struct StubRequest: Hashable, CustomStringConvertible {
 
         // Include any stubbed response where the query matches the incoming URL's query or is nil or empty
         let validQuery = url.query == requestURL.query || url.query.isNilOrEmpty
-        
+
         return validScheme && validHost && validPort && validPath && validQuery
     }
 }
