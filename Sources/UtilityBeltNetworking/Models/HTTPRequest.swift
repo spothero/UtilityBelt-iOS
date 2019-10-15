@@ -3,6 +3,8 @@
 import Foundation
 
 public class HTTPRequest {
+    // MARK: Properties
+    
     private var urlComponents = URLComponents()
 
     public private(set) var headers: [String: String] = [:]
@@ -31,11 +33,15 @@ public class HTTPRequest {
             return self.urlComponents.url
         }
     }
+    
+    // MARK: Methods: Initializers
 
     init(url: URLConvertible? = nil, delegate: HTTPRequesting? = nil) {
         self.delegate = delegate
         self.url(url)
     }
+    
+    // MARK: Methods: Declarative Setters
 
     @discardableResult
     public func method(_ method: HTTPMethod) -> HTTPRequest {
@@ -133,16 +139,36 @@ public class HTTPRequest {
         self.timeout = timeout
         return self
     }
+    
+    // MARK: Methods: Response
 
     // TODO: Is there really any purpose to allowing a nil completion block?
     public func response(completion: DataTaskCompletion? = nil) {
         self.delegate?.response(for: self, completion: completion)
 
-        // TODO: If there is no delegate, respond with an error
+        // TODO: If there is no delegate, respond with an error?
     }
 
     // TODO: Is there really any purpose to allowing a nil completion block?
     public func response<T>(completion: DecodableTaskCompletion<T>? = nil) {
         self.delegate?.response(for: self, completion: completion)
+
+        // TODO: If there is no delegate, respond with an error?
+    }
+}
+
+// MARK: Extension: URLRequestConvertible
+
+extension HTTPRequest: URLRequestConvertible {
+    public func asURLRequest() throws -> URLRequest {
+        if let url = self.url {
+            var request = URLRequest(url: url)
+            request.httpMethod = self.method.rawValue
+            request.setParameters(self.parameters, method: self.method, encoding: self.parameterEncoding)
+
+            return request
+        } else {
+            throw UBNetworkError.invalidURL(self.url)
+        }
     }
 }
