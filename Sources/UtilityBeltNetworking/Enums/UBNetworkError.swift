@@ -3,6 +3,7 @@
 import Foundation
 
 public enum UBNetworkError: Error {
+    case httpClientNotInitialized
     case invalidFilePath(String)
     case invalidURLString(String)
     case invalidURL(URL?)
@@ -12,6 +13,8 @@ public enum UBNetworkError: Error {
 extension UBNetworkError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .httpClientNotInitialized:
+            return "HTTPClient not initialized, request unable to send."
         case let .invalidFilePath(path):
             return "Invalid file path: '\(path)'."
         case let .invalidURLString(urlString):

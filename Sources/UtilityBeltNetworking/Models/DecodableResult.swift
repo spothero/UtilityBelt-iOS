@@ -13,4 +13,8 @@ public struct DecodableResult<T>: HTTPResult where T: Decodable {
         self.error = error
         self.response = response
     }
+    
+    public static func errorResult<T>(_ error: Error) -> DecodableResult<T> {
+        return DecodableResult<T>(data: nil, response: nil, error: error)
+    }
 }

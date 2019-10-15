@@ -67,8 +67,7 @@ extension HTTPClient: HTTPRequesting {
 
             task.resume()
         } catch {
-            let result = DataResult(data: nil, response: nil, error: error)
-            completion?(result)
+            completion?(.errorResult(error))
         }
     }
 
