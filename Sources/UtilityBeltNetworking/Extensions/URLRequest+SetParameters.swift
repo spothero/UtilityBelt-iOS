@@ -10,17 +10,25 @@ extension URLRequest {
     //       1, method without encoding: Use the default method's encoding.
     //       2. method with encoding: Use the method, but override the encoding.
     //       3. encoding without method: Doesn't matter what method, override the encoding.
-    mutating func setParameters(_ parameters: [String: Any]?, method: HTTPMethod, encoding: ParameterEncoding? = nil) {
-        let encoding = encoding ?? .defaultEncoding(for: method)
-        self.setParameters(parameters, encoding: encoding)
-    }
-
-    mutating func setParameters(_ parameters: [String: Any]?, encoding: ParameterEncoding) {
+    mutating func setParameters(_ parameters: [String: Any]?, method: HTTPMethod, encoding: ParameterEncoding = .defaultEncodingForMethod) {
         guard let url = self.url, let parameters = parameters else {
             return
         }
 
         switch encoding {
+        case .defaultEncodingForMethod:
+            // Get the default encoding for the method
+            let encoding = method.defaultParameterEncoding
+            
+            // Ensure that the default encoding isn't set to 'defaultEncodingForMethod', which would be a bug
+            if case ParameterEncoding.defaultEncodingForMethod = encoding {
+                return
+            }
+            
+            // Since we're using the default encoding for the given method, recursively call this function with that encoding style
+            self.setParameters(parameters, method: method, encoding: encoding)
+            
+            return
         case .httpBody(.json):
             self.setValue("application/json", forHTTPHeaderField: .contentType)
 
@@ -44,14 +52,9 @@ extension URLRequest {
         }
     }
 
-    mutating func setParameters(_ encodable: Encodable, method: HTTPMethod, encoding: ParameterEncoding? = nil) {
+    mutating func setParameters(_ encodable: Encodable, method: HTTPMethod, encoding: ParameterEncoding = .defaultEncodingForMethod) {
         let parameters = encodable.asParameters()
         self.setParameters(parameters, method: method, encoding: encoding)
-    }
-
-    mutating func setParameters(_ encodable: Encodable, encoding: ParameterEncoding) {
-        let parameters = encodable.asParameters()
-        self.setParameters(parameters, encoding: encoding)
     }
 }
 

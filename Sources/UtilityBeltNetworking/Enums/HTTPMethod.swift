@@ -24,3 +24,15 @@ public enum HTTPMethod: String, Equatable, Hashable {
     /// The TRACE method performs a message loop-back test along the path to the target resource.
     case trace = "TRACE"
 }
+
+extension HTTPMethod {
+    /// Returns the default parameter encoding for a given HTTP method.
+    var defaultParameterEncoding: ParameterEncoding {
+        switch self {
+        case .delete, .get, .head:
+            return .queryString
+        case .connect, .options, .patch, .post, .put, .trace:
+            return .httpBody(.json)
+        }
+    }
+}
