@@ -38,7 +38,7 @@ final class HTTPRequestTests: XCTestCase {
         let request = Self.defaultRequest
             .parameters(Self.defaultTestParameters)
         
-        XCTAssertURLWithQueryStringEqual(request.url, Self.testURLWithQueryString)
+        XCTAssertURLEqual(request.url, Self.testURLWithQueryString)
     }
 
     func testBuildPostRequestWithNoQueryString() {
@@ -55,15 +55,15 @@ final class HTTPRequestTests: XCTestCase {
             .parameters(Self.defaultTestParameters)
             .parameterEncoding(.queryString)
         
-        XCTAssertURLWithQueryStringEqual(request.url, Self.testURLWithQueryString)
+        XCTAssertURLEqual(request.url, Self.testURLWithQueryString)
     }
 }
 
-private func XCTAssertURLWithQueryStringEqual(_ urlA: URL?,
-                                              _ urlB: URL?,
-                                              _ message: String = "",
-                                              file: StaticString = #file,
-                                              line: UInt = #line) {
+private func XCTAssertURLEqual(_ urlA: URL?,
+                               _ urlB: URL?,
+                               _ message: String = "",
+                               file: StaticString = #file,
+                               line: UInt = #line) {
     XCTAssertEqual(urlA?.urlWithoutQueryString, urlB?.urlWithoutQueryString, message, file: file, line: line)
 
     XCTAssertURLQueryStringEqual(urlA?.query, urlB?.query, message, file: file, line: line)

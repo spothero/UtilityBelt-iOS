@@ -14,37 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBelt"
-               BuildableName = "UtilityBelt"
-               BlueprintName = "UtilityBelt"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "Sham"
                BuildableName = "Sham"
                BlueprintName = "Sham"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBeltNetworking"
-               BuildableName = "UtilityBeltNetworking"
-               BlueprintName = "UtilityBeltNetworking"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -68,8 +40,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      codeCoverageEnabled = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
             skipped = "NO"
@@ -79,17 +50,6 @@
                BlueprintIdentifier = "ShamTests"
                BuildableName = "ShamTests"
                BlueprintName = "ShamTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBeltNetworkingTests"
-               BuildableName = "UtilityBeltNetworkingTests"
-               BlueprintName = "UtilityBeltNetworkingTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -115,9 +75,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "UtilityBelt"
-            BuildableName = "UtilityBelt"
-            BlueprintName = "UtilityBelt"
+            BlueprintIdentifier = "Sham"
+            BuildableName = "Sham"
+            BlueprintName = "Sham"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
