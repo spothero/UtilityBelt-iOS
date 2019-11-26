@@ -14,7 +14,8 @@ let package = Package(
     ],
     products: [
         .library(name: "Sham", targets: ["Sham"]),
-        .library(name: "UtilityBelt", targets: ["UtilityBeltNetworking"]),
+        .library(name: "UtilityBelt", targets: ["UtilityBeltDebugging", "UtilityBeltNetworking"]),
+        .library(name: "UtilityBeltDebugging", targets: ["UtilityBeltDebugging"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
     ],
     dependencies: [],
@@ -24,6 +25,10 @@ let package = Package(
             dependencies: [
                 .target(name: "UtilityBeltNetworking"),
             ]
+        ),
+        .target(
+            name: "UtilityBeltDebugging",
+            dependencies: []
         ),
         .target(
             name: "UtilityBeltNetworking",
