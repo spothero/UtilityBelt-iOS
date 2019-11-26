@@ -36,7 +36,7 @@ public class HTTPClient {
     /// - Parameter headers: The HTTP headers for the request.
     /// - Parameter parameters: The dictionary of parameters to send in the query string or HTTP body.
     /// - Parameter encoding: The parameter encoding method. If nil, uses default for HTTP method.
-    public func request(url: URLConvertible,
+    public func request(_ url: URLConvertible,
                         method: HTTPMethod = .get,
                         headers: [String: String] = [:],
                         parameters: [String: Any]? = nil,
@@ -54,7 +54,7 @@ public class HTTPClient {
 // MARK: - Extension: HTTPRequesting
 
 extension HTTPClient: HTTPRequesting {
-    public func response(for request: URLRequestConvertible, completion: DataTaskCompletion? = nil) {
+    public func response(for request: URLRequestConvertible, queue: DispatchQueue = .main, completion: DataTaskCompletion? = nil) {
         do {
             let request = try request.asURLRequest()
 
@@ -62,7 +62,9 @@ extension HTTPClient: HTTPRequesting {
                 let httpResponse = response as? HTTPURLResponse
                 let result = DataResult(data: data, response: httpResponse, error: error)
 
-                completion?(result)
+                queue.async {
+                    completion?(result)
+                }
             }
 
             task.resume()
@@ -71,8 +73,8 @@ extension HTTPClient: HTTPRequesting {
         }
     }
 
-    public func response<T>(for request: URLRequestConvertible, completion: DecodableTaskCompletion<T>? = nil) {
-        self.response(for: request) { dataResult in
+    public func response<T>(for request: URLRequestConvertible, queue: DispatchQueue = .main, completion: DecodableTaskCompletion<T>? = nil) {
+        self.response(for: request, queue: queue) { dataResult in
             // TODO: Check the response.mimeType and ensure it is application/json, which is required for decoding
 
             // Initialize a nil decoded object to eventually pass into the DecodableResult

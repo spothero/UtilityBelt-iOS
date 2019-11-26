@@ -51,10 +51,40 @@ public class MockService {
         // TODO: Add some capability of also setting up a URLSessionConfiguration via a register() method
         URLProtocol.registerClass(MockURLProtocol.self)
     }
+    
+    public func register(in sessionConfiguration: URLSessionConfiguration) {
+        // Get the protocolClasses array out of the sessionConfiguration, or create an empty array
+        var protocolClasses = sessionConfiguration.protocolClasses ?? []
+        
+        // Insert the MockURLProtocol at the first position to handle mocking requests before any other URLProtocol classes
+        protocolClasses.insert(MockURLProtocol.self, at: 0)
+        
+        // Set protocolClasses on the sessionConfiguration to the new array
+        sessionConfiguration.protocolClasses = protocolClasses
+    }
 
     /// Globally unregisters the MockURLProtocol from URLProtocol.
     public func unregister() {
         URLProtocol.unregisterClass(MockURLProtocol.self)
+    }
+    
+    // TODO: This maybe doesn't make sense to have an unregister method for this. Remove?
+    public func unregister(from sessionConfiguration: URLSessionConfiguration) {
+        // If the protocolClasses array hasn't been initialized, we can just return
+        guard var protocolClasses = sessionConfiguration.protocolClasses else {
+            return
+        }
+        
+        // Get the index for MockURLProtocol, or return if no index is found
+        guard let index = protocolClasses.firstIndex(where: { $0 == MockURLProtocol.self }) else {
+            return
+        }
+        
+        // Remove MockURLProtocol from the protocolClasses of the sessionConfiguration
+        protocolClasses.remove(at: index)
+        
+        // Set protocolClasses on the sessionConfiguration to the new array, sans MockURLProtocol
+        sessionConfiguration.protocolClasses = protocolClasses
     }
 
     // MARK: Stubbing

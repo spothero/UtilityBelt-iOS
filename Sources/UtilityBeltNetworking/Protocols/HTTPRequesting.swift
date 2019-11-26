@@ -3,6 +3,6 @@
 import Foundation
 
 public protocol HTTPRequesting: AnyObject {
-    func response(for request: URLRequestConvertible, completion: DataTaskCompletion?)
-    func response<T>(for request: URLRequestConvertible, completion: DecodableTaskCompletion<T>?)
+    func response(for request: URLRequestConvertible, queue: DispatchQueue, completion: DataTaskCompletion?)
+    func response<T>(for request: URLRequestConvertible, queue: DispatchQueue, completion: DecodableTaskCompletion<T>?)
 }
