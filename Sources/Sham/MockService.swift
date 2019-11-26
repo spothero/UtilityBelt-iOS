@@ -1,6 +1,7 @@
 // Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 import Foundation
+import OSLog
 import UtilityBeltNetworking
 
 /// A service which contains stub requests and stub responses for use with the MockURLProtocol.
@@ -9,6 +10,12 @@ public class MockService {
 
     /// The shared instance of the service.
     public static let shared = MockService()
+    
+    // MARK: - Constants
+    
+    /// The default logger for all things Sham.
+    @available(iOS 10.0, macOS 12.0, tvOS 10.0, watchOS 3.0, *)
+    static let shamLog = OSLog(subsystem: "com.spothero.utilitybelt.sham", category: "Mocking")
 
     // MARK: - Properties
 
@@ -18,6 +25,9 @@ public class MockService {
     /// Whether or not the service should be intercepting and mocking all requests.
     /// If false, the service will throw an error when it receive a request it has no response for.
     public var isMockingAllRequests = true
+    
+    /// Whether or not the service should be logging mock requests.
+    public var isDebugLoggingEnabled = false
 
     /// A dictionary of stubbed responses keyed by stubbed requests.
     private var stubbedData = [StubRequest: StubResponse]()
@@ -63,16 +73,29 @@ public class MockService {
     /// Returns nil if there is no matching stubbed request found.
     /// - Parameter request: The request to match against stubbed requests.
     public func getResponse(for request: StubRequest) -> StubResponse? {
+        self.log("Attempting to stub request: \(request)")
+        
         // Check for a match with the exact URL
-        if let exactMatchResponse = self.stubbedData[request] {
-            return exactMatchResponse
+        var response = self.stubbedData[request]
+
+        // If response had no exact match, we need to find the closest match
+        if response == nil {
+            // Otherwise, find the first matching stubbed request/response pair for the given request
+            let firstStubbedDataPair = self.stubbedData.first { $0.key.canMockData(for: request) }
+            
+            // Return the stubbed response from the first stubbed data pair found, or return nil
+            response = firstStubbedDataPair?.value
         }
-
-        // Otherwise, find the first matching stubbed request/response pair for the given request
-        let firstStubbedDataPair = self.stubbedData.first { $0.key.canMockData(for: request) }
-
-        // Return the stubbed response from the first stubbed data pair found
-        return firstStubbedDataPair?.value
+        
+        // Log response debugging information
+        if let stubResponse = response {
+            self.log("Found stub response: \(stubResponse)")
+        } else {
+            self.log("No stub response found.")
+        }
+        
+        // Return the response
+        return response
     }
 
     /// Determines whether or not a matching request has been stubbed.
@@ -144,5 +167,17 @@ public class MockService {
     /// Clears all stubbed responses from the stub response collection.
     public func clearData() {
         self.stubbedData = [:]
+    }
+    
+    private func log(_ message: String) {
+        guard self.isDebugLoggingEnabled else {
+            return
+        }
+        
+        if #available(iOS 10.0, macOS 12.0, tvOS 10.0, watchOS 3.0, *) {
+            os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
+        } else {
+            print("[Sham] \(message)")
+        }
     }
 }
