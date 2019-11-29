@@ -56,6 +56,48 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "345796AE2391DF280009C62D"
+               BuildableName = "UtilityBeltDemo.app"
+               BlueprintName = "UtilityBeltDemo"
+               ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityBeltDataStorageTests"
+               BuildableName = "UtilityBeltDataStorageTests"
+               BlueprintName = "UtilityBeltDataStorageTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "345796DA2391DF470009C62D"
+               BuildableName = "UtilityBeltTests.xctest"
+               BlueprintName = "UtilityBeltTests"
+               ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "3471D5C9234BB4DB00729A46"
                BuildableName = "RunScriptHelper.framework"
                BlueprintName = "RunScriptHelper"
