@@ -19,7 +19,7 @@ extension CoreDataManagerTesting {
             XCTFail(error.localizedDescription, file: file, line: line)
         }
     }
-    
+
     func count(file: StaticString = #file, line: UInt = #line) {
         self.measureAndCatch {
             let userCount = try CoreDataManager.default.count(of: User.self)
@@ -27,10 +27,10 @@ extension CoreDataManagerTesting {
             XCTAssertEqual(userCount, 4, file: file, line: line)
         }
     }
-    
+
     func delete(file: StaticString = #file, line: UInt = #line) {
         XCTAssertEqual(self.storeType, .sqlite)
-        
+
         self.measureAndCatch {
             try CoreDataManager.default.deleteAll(of: User.self)
             let userExists = try CoreDataManager.default.exists(User.self)
@@ -38,7 +38,7 @@ extension CoreDataManagerTesting {
             XCTAssertFalse(userExists, file: file, line: line)
         }
     }
-    
+
     func exists(file: StaticString = #file, line: UInt = #line) {
         self.measureAndCatch {
             let userExists = try CoreDataManager.default.exists(User.self)
@@ -46,7 +46,7 @@ extension CoreDataManagerTesting {
             XCTAssertTrue(userExists, file: file, line: line)
         }
     }
-    
+
     func fetchAll(file: StaticString = #file, line: UInt = #line) {
         self.measureAndCatch {
             let users = try CoreDataManager.default.fetchAll(of: User.self)
@@ -55,7 +55,7 @@ extension CoreDataManagerTesting {
             XCTAssertEqual(users.count, 4, file: file, line: line)
         }
     }
-    
+
     private func loadData() throws {
         let alice = try User.newInstance()
         alice?.firstName = "Alice"

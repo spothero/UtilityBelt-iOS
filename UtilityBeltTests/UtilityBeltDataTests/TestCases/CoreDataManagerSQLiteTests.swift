@@ -8,7 +8,7 @@ import XCTest
 
 class CoreDataManagerSQLiteTests: XCTestCase, CoreDataManagerTesting {
     var storeType: NSPersistentContainer.StoreType = .sqlite
-    
+
     override func setUp() {
         super.setUp()
 

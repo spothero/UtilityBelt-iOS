@@ -44,3 +44,4 @@
 --exclude Package.swift
 --exclude Tests/LinuxMain.swift
 --exclude "Tests/*/XCTestManifests.swift"
+--exclude "**/*/*+CoreDataProperties.swift"

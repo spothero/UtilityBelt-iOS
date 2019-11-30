@@ -7,7 +7,7 @@ import XCTest
 
 class CoreDataManagerInMemoryTests: XCTestCase, CoreDataManagerTesting {
     var storeType: NSPersistentContainer.StoreType = .memory
-    
+
     override func setUp() {
         super.setUp()
 
