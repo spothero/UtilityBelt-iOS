@@ -1,10 +1,4 @@
-//
-//  ContentView.swift
-//  UtilityBeltDemo
-//
-//  Created by Brian Drelling on 11/29/19.
-//  Copyright © 2019 SpotHero, Inc. All rights reserved.
-//
+// Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 import SwiftUI
 

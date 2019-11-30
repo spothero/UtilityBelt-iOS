@@ -56,7 +56,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "345796AE2391DF280009C62D"
+               BlueprintIdentifier = "345796EA2391DFFF0009C62D"
                BuildableName = "UtilityBeltDemo.app"
                BlueprintName = "UtilityBeltDemo"
                ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
@@ -64,20 +64,6 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBeltDataStorageTests"
-               BuildableName = "UtilityBeltDataStorageTests"
-               BlueprintName = "UtilityBeltDataStorageTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "NO"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
@@ -132,6 +118,17 @@
                BuildableName = "UtilityBeltNetworkingTests"
                BlueprintName = "UtilityBeltNetworkingTests"
                ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "345796DA2391DF470009C62D"
+               BuildableName = "UtilityBeltTests.xctest"
+               BlueprintName = "UtilityBeltTests"
+               ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

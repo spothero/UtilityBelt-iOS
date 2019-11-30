@@ -10,17 +10,27 @@
 		345796DE2391DF470009C62D /* UtilityBeltTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345796DD2391DF470009C62D /* UtilityBeltTests.swift */; };
 		345796EE2391DFFF0009C62D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345796ED2391DFFF0009C62D /* AppDelegate.swift */; };
 		345796F02391DFFF0009C62D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345796EF2391DFFF0009C62D /* SceneDelegate.swift */; };
-		345796F22391DFFF0009C62D /* UtilityBeltDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 345796F12391DFFF0009C62D /* UtilityBeltDemo.xcdatamodeld */; };
 		345796F42391DFFF0009C62D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345796F32391DFFF0009C62D /* ContentView.swift */; };
 		345796F62391E0000009C62D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F52391E0000009C62D /* Assets.xcassets */; };
 		345796F92391E0000009C62D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F82391E0000009C62D /* Preview Assets.xcassets */; };
 		345796FC2391E0000009C62D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345796FA2391E0000009C62D /* LaunchScreen.storyboard */; };
+		34A49B3A2391EFE80006B1AA /* UtilityBelt.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34A49B372391EDD10006B1AA /* UtilityBelt.xcdatamodeld */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		34A49B322391EB0B0006B1AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 345796A72391DF280009C62D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 345796EA2391DFFF0009C62D;
+			remoteInfo = UtilityBeltDemo;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		345796DB2391DF470009C62D /* UtilityBeltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		345796DD2391DF470009C62D /* UtilityBeltTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UtilityBeltTests.swift; path = ../UtilityBeltTests.swift; sourceTree = "<group>"; };
-		345796DF2391DF470009C62D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		345796DD2391DF470009C62D /* UtilityBeltTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityBeltTests.swift; sourceTree = "<group>"; };
+		345796DF2391DF470009C62D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		345796EB2391DFFF0009C62D /* UtilityBeltDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UtilityBeltDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		345796ED2391DFFF0009C62D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		345796EF2391DFFF0009C62D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -29,6 +39,7 @@
 		345796F82391E0000009C62D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		345796FB2391E0000009C62D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		345796FD2391E0000009C62D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34A49B382391EDD10006B1AA /* UtilityBelt.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UtilityBelt.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,9 +63,10 @@
 		345796A62391DF280009C62D = {
 			isa = PBXGroup;
 			children = (
-				345796DC2391DF470009C62D /* UtilityBeltTests */,
 				345796EC2391DFFF0009C62D /* UtilityBeltDemo */,
+				345796DC2391DF470009C62D /* UtilityBeltTests */,
 				345796B02391DF280009C62D /* Products */,
+				34A49B342391EB5A0006B1AA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -83,7 +95,6 @@
 				345797012391E0420009C62D /* Config */,
 				345796F72391E0000009C62D /* Preview Content */,
 				345797022391E0470009C62D /* Resources */,
-				345796F12391DFFF0009C62D /* UtilityBeltDemo.xcdatamodeld */,
 				345797032391E0520009C62D /* Views */,
 			);
 			path = UtilityBeltDemo;
@@ -142,9 +153,17 @@
 		345797062391E0670009C62D /* TestCases */ = {
 			isa = PBXGroup;
 			children = (
+				34A49B372391EDD10006B1AA /* UtilityBelt.xcdatamodeld */,
 				345796DD2391DF470009C62D /* UtilityBeltTests.swift */,
 			);
 			path = TestCases;
+			sourceTree = "<group>";
+		};
+		34A49B342391EB5A0006B1AA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,8 +180,11 @@
 			buildRules = (
 			);
 			dependencies = (
+				34A49B332391EB0B0006B1AA /* PBXTargetDependency */,
 			);
 			name = UtilityBeltTests;
+			packageProductDependencies = (
+			);
 			productName = UtilityBeltTests;
 			productReference = 345796DB2391DF470009C62D /* UtilityBeltTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -196,7 +218,7 @@
 				TargetAttributes = {
 					345796DA2391DF470009C62D = {
 						CreatedOnToolsVersion = 11.1;
-						TestTargetID = 345796AE2391DF280009C62D;
+						TestTargetID = 345796EA2391DFFF0009C62D;
 					};
 					345796EA2391DFFF0009C62D = {
 						CreatedOnToolsVersion = 11.1;
@@ -248,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				345796DE2391DF470009C62D /* UtilityBeltTests.swift in Sources */,
+				34A49B3A2391EFE80006B1AA /* UtilityBelt.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,11 +281,18 @@
 				345796EE2391DFFF0009C62D /* AppDelegate.swift in Sources */,
 				345796F02391DFFF0009C62D /* SceneDelegate.swift in Sources */,
 				345796F42391DFFF0009C62D /* ContentView.swift in Sources */,
-				345796F22391DFFF0009C62D /* UtilityBeltDemo.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		34A49B332391EB0B0006B1AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 345796EA2391DFFF0009C62D /* UtilityBeltDemo */;
+			targetProxy = 34A49B322391EB0B0006B1AA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		345796FA2391E0000009C62D /* LaunchScreen.storyboard */ = {
@@ -503,11 +533,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		345796F12391DFFF0009C62D /* UtilityBeltDemo.xcdatamodeld */ = {
+		34A49B372391EDD10006B1AA /* UtilityBelt.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				34A49B382391EDD10006B1AA /* UtilityBelt.xcdatamodel */,
 			);
-			path = UtilityBeltDemo.xcdatamodeld;
+			currentVersion = 34A49B382391EDD10006B1AA /* UtilityBelt.xcdatamodel */;
+			path = UtilityBelt.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
