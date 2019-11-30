@@ -7,14 +7,15 @@ import PackageDescription
 let package = Package(
     name: "UtilityBelt",
     platforms: [
-        .iOS(.v8),          // minimum supported version via SPM
-        .macOS(.v10_10),    // minimum supported version via SPM
-        .tvOS(.v9),         // minimum supported version via SPM
-        .watchOS(.v2),      // minimum supported version via SPM
+        .iOS(.v10),         // supports NSPersistentContainer and os_log
+        .macOS(.v10_12),    // supports NSPersistentContainer and os_log
+        .tvOS(.v10),        // supports NSPersistentContainer and os_log
+        .watchOS(.v3),      // supports NSPersistentContainer and os_log
     ],
     products: [
         .library(name: "Sham", targets: ["Sham"]),
-        .library(name: "UtilityBelt", targets: ["UtilityBeltDebugging", "UtilityBeltNetworking"]),
+        .library(name: "UtilityBelt", targets: ["UtilityBeltData", "UtilityBeltDebugging", "UtilityBeltNetworking"]),
+        .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltDebugging", targets: ["UtilityBeltDebugging"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
     ],
@@ -25,6 +26,10 @@ let package = Package(
             dependencies: [
                 .target(name: "UtilityBeltNetworking"),
             ]
+        ),
+        .target(
+            name: "UtilityBeltData",
+            dependencies: []
         ),
         .target(
             name: "UtilityBeltDebugging",

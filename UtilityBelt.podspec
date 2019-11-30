@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   # Root Specification
   spec.name = 'UtilityBelt'
-  spec.version = '0.2.0'
+  spec.version = '0.4.0'
 
   spec.author   = { 'SpotHero' => 'ios@spothero.com' }
   spec.homepage = 'https://github.com/spothero/UtilityBelt-iOS'
@@ -16,6 +16,9 @@ Pod::Spec.new do |spec|
   spec.tvos.deployment_target = '9.0'
   spec.watchos.deployment_target = '2.0'
   spec.swift_versions = ['5.0', '5.1']
+
+  # Build Settings
+  spec.module_name = 'UtilityBeltNetworking' # Temporary for SPM compatibility
 
   # Subspecs
   # When we have Core files (files shared across multiple subspecs/modules), this subspec will be required

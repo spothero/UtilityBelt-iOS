@@ -14,38 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBeltNetworking"
-               BuildableName = "UtilityBeltNetworking"
-               BlueprintName = "UtilityBeltNetworking"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBeltNetworkingTests"
-               BuildableName = "UtilityBeltNetworkingTests"
-               BlueprintName = "UtilityBeltNetworkingTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3471D5C9234BB4DB00729A46"
-               BuildableName = "RunScriptHelper.framework"
-               BlueprintName = "RunScriptHelper"
-               ReferencedContainer = "container:RunScriptHelper.xcodeproj">
+               BlueprintIdentifier = "345796EA2391DFFF0009C62D"
+               BuildableName = "UtilityBeltDemo.app"
+               BlueprintName = "UtilityBeltDemo"
+               ReferencedContainer = "container:UtilityBeltTests.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -57,14 +29,13 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBeltNetworkingTests"
-               BuildableName = "UtilityBeltNetworkingTests"
-               BlueprintName = "UtilityBeltNetworkingTests"
-               ReferencedContainer = "container:">
+               BlueprintIdentifier = "34BE19EC2391FC1000ED5FC1"
+               BuildableName = "UtilityBeltDataTests.xctest"
+               BlueprintName = "UtilityBeltDataTests"
+               ReferencedContainer = "container:UtilityBeltTests.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -79,6 +50,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "345796EA2391DFFF0009C62D"
+            BuildableName = "UtilityBeltDemo.app"
+            BlueprintName = "UtilityBeltDemo"
+            ReferencedContainer = "container:UtilityBeltTests.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -86,15 +67,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3471D5C9234BB4DB00729A46"
-            BuildableName = "RunScriptHelper.framework"
-            BlueprintName = "RunScriptHelper"
-            ReferencedContainer = "container:RunScriptHelper.xcodeproj">
+            BlueprintIdentifier = "345796EA2391DFFF0009C62D"
+            BuildableName = "UtilityBeltDemo.app"
+            BlueprintName = "UtilityBeltDemo"
+            ReferencedContainer = "container:UtilityBeltTests.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
