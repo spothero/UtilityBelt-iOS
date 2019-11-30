@@ -13,7 +13,7 @@
 		345796F62391E0000009C62D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F52391E0000009C62D /* Assets.xcassets */; };
 		345796F92391E0000009C62D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F82391E0000009C62D /* Preview Assets.xcassets */; };
 		345796FC2391E0000009C62D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345796FA2391E0000009C62D /* LaunchScreen.storyboard */; };
-		34BE19F02391FC1000ED5FC1 /* UtilityBeltDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE19EF2391FC1000ED5FC1 /* UtilityBeltDataTests.swift */; };
+		34BE19F02391FC1000ED5FC1 /* CoreDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */; };
 		34BE19F82391FC8F00ED5FC1 /* UtilityBeltData in Frameworks */ = {isa = PBXBuildFile; productRef = 34BE19F72391FC8F00ED5FC1 /* UtilityBeltData */; };
 /* End PBXBuildFile section */
 
@@ -37,7 +37,7 @@
 		345796FB2391E0000009C62D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		345796FD2391E0000009C62D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34BE19ED2391FC1000ED5FC1 /* UtilityBeltDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		34BE19EF2391FC1000ED5FC1 /* UtilityBeltDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityBeltDataTests.swift; sourceTree = "<group>"; };
+		34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerTests.swift; sourceTree = "<group>"; };
 		34BE19F12391FC1000ED5FC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,7 +143,7 @@
 		34BE19EE2391FC1000ED5FC1 /* UtilityBeltDataTests */ = {
 			isa = PBXGroup;
 			children = (
-				34BE19EF2391FC1000ED5FC1 /* UtilityBeltDataTests.swift */,
+				34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */,
 				34BE19F12391FC1000ED5FC1 /* Info.plist */,
 			);
 			path = UtilityBeltDataTests;
@@ -263,7 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34BE19F02391FC1000ED5FC1 /* UtilityBeltDataTests.swift in Sources */,
+				34BE19F02391FC1000ED5FC1 /* CoreDataManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
