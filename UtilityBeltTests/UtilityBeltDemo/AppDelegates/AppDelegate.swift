@@ -18,8 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-    }
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {}
 
     // MARK: - Core Data stack
 
@@ -31,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          error conditions that could cause the creation of the store to fail.
          */
         let container = NSPersistentContainer(name: "UtilityBelt")
-        
+
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
@@ -47,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 assertionFailure("Unresolved error \(error), \(error.userInfo)")
             }
         }
-        
+
         return container
     }()
 

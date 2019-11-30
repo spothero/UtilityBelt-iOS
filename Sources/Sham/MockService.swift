@@ -172,7 +172,7 @@ public class MockService {
         guard self.isDebugLoggingEnabled else {
             return
         }
-        
+
         os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
     }
 }
