@@ -3,6 +3,8 @@
 import CoreData
 
 extension NSPersistentContainer {
+    /// Creates a mocked persistent container that stores data in memory instead of on disk.
+    /// - Parameter name: The name of the Data Model to persist.
     public static func mocked(name: String) -> NSPersistentContainer {
         let container = NSPersistentContainer(name: name) // , managedObjectModel: self.managedObjectModel)
         let description = NSPersistentStoreDescription()

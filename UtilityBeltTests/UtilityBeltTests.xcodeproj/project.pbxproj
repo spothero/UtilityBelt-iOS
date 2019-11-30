@@ -15,6 +15,10 @@
 		345796FC2391E0000009C62D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345796FA2391E0000009C62D /* LaunchScreen.storyboard */; };
 		34BE19F02391FC1000ED5FC1 /* CoreDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */; };
 		34BE19F82391FC8F00ED5FC1 /* UtilityBeltData in Frameworks */ = {isa = PBXBuildFile; productRef = 34BE19F72391FC8F00ED5FC1 /* UtilityBeltData */; };
+		34BE1A062392013700ED5FC1 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A042392013700ED5FC1 /* User+CoreDataClass.swift */; };
+		34BE1A072392013700ED5FC1 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A052392013700ED5FC1 /* User+CoreDataProperties.swift */; };
+		34BE1A1023920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A0E23920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld */; };
+		34BE1A1223920F0A00ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A0E23920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +43,9 @@
 		34BE19ED2391FC1000ED5FC1 /* UtilityBeltDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerTests.swift; sourceTree = "<group>"; };
 		34BE19F12391FC1000ED5FC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34BE1A042392013700ED5FC1 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
+		34BE1A052392013700ED5FC1 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		34BE1A0F23920E8000ED5FC1 /* UtilityBeltData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UtilityBeltData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,10 +150,45 @@
 		34BE19EE2391FC1000ED5FC1 /* UtilityBeltDataTests */ = {
 			isa = PBXGroup;
 			children = (
-				34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */,
-				34BE19F12391FC1000ED5FC1 /* Info.plist */,
+				34BE19FD2392002800ED5FC1 /* Config */,
+				34BE19FF2392003700ED5FC1 /* DataModels */,
+				34BE19FE2392003000ED5FC1 /* TestCases */,
 			);
 			path = UtilityBeltDataTests;
+			sourceTree = "<group>";
+		};
+		34BE19FD2392002800ED5FC1 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				34BE19F12391FC1000ED5FC1 /* Info.plist */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		34BE19FE2392003000ED5FC1 /* TestCases */ = {
+			isa = PBXGroup;
+			children = (
+				34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */,
+			);
+			path = TestCases;
+			sourceTree = "<group>";
+		};
+		34BE19FF2392003700ED5FC1 /* DataModels */ = {
+			isa = PBXGroup;
+			children = (
+				34BE1A08239201B900ED5FC1 /* Entities */,
+				34BE1A0E23920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld */,
+			);
+			path = DataModels;
+			sourceTree = "<group>";
+		};
+		34BE1A08239201B900ED5FC1 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				34BE1A042392013700ED5FC1 /* User+CoreDataClass.swift */,
+				34BE1A052392013700ED5FC1 /* User+CoreDataProperties.swift */,
+			);
+			path = Entities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				345796EE2391DFFF0009C62D /* AppDelegate.swift in Sources */,
+				34BE1A1223920F0A00ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */,
 				345796F02391DFFF0009C62D /* SceneDelegate.swift in Sources */,
 				345796F42391DFFF0009C62D /* ContentView.swift in Sources */,
 			);
@@ -264,6 +307,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BE19F02391FC1000ED5FC1 /* CoreDataManagerTests.swift in Sources */,
+				34BE1A1023920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */,
+				34BE1A072392013700ED5FC1 /* User+CoreDataProperties.swift in Sources */,
+				34BE1A062392013700ED5FC1 /* User+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,10 +492,9 @@
 		34BE19F42391FC1000ED5FC1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZW7QWR628D;
-				INFOPLIST_FILE = UtilityBeltDataTests/Info.plist;
+				INFOPLIST_FILE = UtilityBeltDataTests/Config/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -466,10 +511,9 @@
 		34BE19F52391FC1000ED5FC1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZW7QWR628D;
-				INFOPLIST_FILE = UtilityBeltDataTests/Info.plist;
+				INFOPLIST_FILE = UtilityBeltDataTests/Config/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -521,6 +565,19 @@
 			productName = UtilityBeltData;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		34BE1A0E23920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				34BE1A0F23920E8000ED5FC1 /* UtilityBeltData.xcdatamodel */,
+			);
+			currentVersion = 34BE1A0F23920E8000ED5FC1 /* UtilityBeltData.xcdatamodel */;
+			path = UtilityBeltData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 345796A72391DF280009C62D /* Project object */;
 }
