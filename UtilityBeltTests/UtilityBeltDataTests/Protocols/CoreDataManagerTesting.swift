@@ -10,13 +10,13 @@ protocol CoreDataManagerTesting: XCTestCase {
 }
 
 extension CoreDataManagerTesting {
-    func initialize() {
+    func initialize(file: StaticString = #file, line: UInt = #line) {
         CoreDataManager.defaultContainer = .mocked(name: "UtilityBeltData", storeType: self.storeType)
 
         do {
             try self.loadData()
         } catch {
-            XCTFail(error.localizedDescription)
+            XCTFail(error.localizedDescription, file: file, line: line)
         }
     }
     
@@ -35,7 +35,7 @@ extension CoreDataManagerTesting {
             try CoreDataManager.default.deleteAll(of: User.self)
             let userExists = try CoreDataManager.default.exists(User.self)
 
-            XCTAssertFalse(userExists)
+            XCTAssertFalse(userExists, file: file, line: line)
         }
     }
     
@@ -43,7 +43,7 @@ extension CoreDataManagerTesting {
         self.measureAndCatch {
             let userExists = try CoreDataManager.default.exists(User.self)
 
-            XCTAssertTrue(userExists)
+            XCTAssertTrue(userExists, file: file, line: line)
         }
     }
     
@@ -51,12 +51,12 @@ extension CoreDataManagerTesting {
         self.measureAndCatch {
             let users = try CoreDataManager.default.fetchAll(of: User.self)
 
-            XCTAssertNotNil(users)
-            XCTAssertEqual(users.count, 4)
+            XCTAssertNotNil(users, file: file, line: line)
+            XCTAssertEqual(users.count, 4, file: file, line: line)
         }
     }
     
-    private func loadData(file: StaticString = #file, line: UInt = #line) throws {
+    private func loadData() throws {
         let alice = try User.newInstance()
         alice?.firstName = "Alice"
         alice?.lastName = "Anderson"
