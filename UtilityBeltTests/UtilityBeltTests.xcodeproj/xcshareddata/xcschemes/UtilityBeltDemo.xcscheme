@@ -29,13 +29,12 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "345796DA2391DF470009C62D"
-               BuildableName = "UtilityBeltTests.xctest"
-               BlueprintName = "UtilityBeltTests"
+               BlueprintIdentifier = "34BE19EC2391FC1000ED5FC1"
+               BuildableName = "UtilityBeltDataTests.xctest"
+               BlueprintName = "UtilityBeltDataTests"
                ReferencedContainer = "container:UtilityBeltTests.xcodeproj">
             </BuildableReference>
          </TestableReference>

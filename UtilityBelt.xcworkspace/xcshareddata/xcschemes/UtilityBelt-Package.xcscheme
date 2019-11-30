@@ -42,6 +42,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityBeltData"
+               BuildableName = "UtilityBeltData"
+               BlueprintName = "UtilityBeltData"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "UtilityBeltNetworking"
                BuildableName = "UtilityBeltNetworking"
                BlueprintName = "UtilityBeltNetworking"
@@ -104,6 +118,17 @@
                BuildableName = "UtilityBeltNetworkingTests"
                BlueprintName = "UtilityBeltNetworkingTests"
                ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "34BE19EC2391FC1000ED5FC1"
+               BuildableName = "UtilityBeltDataTests.xctest"
+               BlueprintName = "UtilityBeltDataTests"
+               ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
