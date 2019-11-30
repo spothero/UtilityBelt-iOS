@@ -13,7 +13,8 @@
 		345796F62391E0000009C62D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F52391E0000009C62D /* Assets.xcassets */; };
 		345796F92391E0000009C62D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F82391E0000009C62D /* Preview Assets.xcassets */; };
 		345796FC2391E0000009C62D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345796FA2391E0000009C62D /* LaunchScreen.storyboard */; };
-		34BE19F02391FC1000ED5FC1 /* CoreDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */; };
+		345FE2762392411B0027D0FE /* CoreDataManagerSQLiteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345FE2752392411B0027D0FE /* CoreDataManagerSQLiteTests.swift */; };
+		34BE19F02391FC1000ED5FC1 /* CoreDataManagerInMemoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE19EF2391FC1000ED5FC1 /* CoreDataManagerInMemoryTests.swift */; };
 		34BE19F82391FC8F00ED5FC1 /* UtilityBeltData in Frameworks */ = {isa = PBXBuildFile; productRef = 34BE19F72391FC8F00ED5FC1 /* UtilityBeltData */; };
 		34BE1A062392013700ED5FC1 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A042392013700ED5FC1 /* User+CoreDataClass.swift */; };
 		34BE1A072392013700ED5FC1 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A052392013700ED5FC1 /* User+CoreDataProperties.swift */; };
@@ -40,8 +41,9 @@
 		345796F82391E0000009C62D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		345796FB2391E0000009C62D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		345796FD2391E0000009C62D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		345FE2752392411B0027D0FE /* CoreDataManagerSQLiteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerSQLiteTests.swift; sourceTree = "<group>"; };
 		34BE19ED2391FC1000ED5FC1 /* UtilityBeltDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerTests.swift; sourceTree = "<group>"; };
+		34BE19EF2391FC1000ED5FC1 /* CoreDataManagerInMemoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerInMemoryTests.swift; sourceTree = "<group>"; };
 		34BE19F12391FC1000ED5FC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34BE1A042392013700ED5FC1 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
 		34BE1A052392013700ED5FC1 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -168,7 +170,8 @@
 		34BE19FE2392003000ED5FC1 /* TestCases */ = {
 			isa = PBXGroup;
 			children = (
-				34BE19EF2391FC1000ED5FC1 /* CoreDataManagerTests.swift */,
+				34BE19EF2391FC1000ED5FC1 /* CoreDataManagerInMemoryTests.swift */,
+				345FE2752392411B0027D0FE /* CoreDataManagerSQLiteTests.swift */,
 			);
 			path = TestCases;
 			sourceTree = "<group>";
@@ -306,10 +309,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34BE19F02391FC1000ED5FC1 /* CoreDataManagerTests.swift in Sources */,
+				34BE19F02391FC1000ED5FC1 /* CoreDataManagerInMemoryTests.swift in Sources */,
 				34BE1A1023920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */,
 				34BE1A072392013700ED5FC1 /* User+CoreDataProperties.swift in Sources */,
 				34BE1A062392013700ED5FC1 /* User+CoreDataClass.swift in Sources */,
+				345FE2762392411B0027D0FE /* CoreDataManagerSQLiteTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
