@@ -5,41 +5,24 @@ import CoreData
 @testable import UtilityBeltDemo
 import XCTest
 
-class CoreDataManagerInMemoryTests: XCTestCase, UserDataLoading {
+class CoreDataManagerInMemoryTests: XCTestCase, CoreDataManagerTesting {
+    var storeType: NSPersistentContainer.StoreType = .memory
+    
     override func setUp() {
         super.setUp()
 
-        CoreDataManager.defaultContainer = .mocked(name: "UtilityBeltData", storeType: .memory)
-
-        do {
-            try self.loadData()
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
+        self.initialize()
     }
 
     func testCount() {
-        self.measureAndCatch {
-            let userCount = try CoreDataManager.default.count(of: User.self)
-
-            XCTAssertEqual(userCount, 4)
-        }
+        self.count()
     }
 
     func testExists() {
-        self.measureAndCatch {
-            let userExists = try CoreDataManager.default.exists(User.self)
-
-            XCTAssertTrue(userExists)
-        }
+        self.exists()
     }
 
     func testFetch() {
-        self.measureAndCatch {
-            let users = try CoreDataManager.default.fetchAll(of: User.self)
-
-            XCTAssertNotNil(users)
-            XCTAssertEqual(users.count, 4)
-        }
+        self.fetchAll()
     }
 }

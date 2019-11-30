@@ -4,6 +4,8 @@ import CoreData
 
 public extension NSPersistentContainer {
     /// The persistent container store type.
+    ///
+    /// Does **NOT** include the XML store type, which is only available on macOS 10.4+.
     enum StoreType {
         /// Stores data in binary.
         case binary
@@ -11,11 +13,6 @@ public extension NSPersistentContainer {
         case memory
         /// Stores data in a SQLite database.
         case sqlite
-
-        #if os(OSX)
-            /// Stores data in an XML file. Extremely slow and only available on macOS 10.4+.
-            case xml
-        #endif
 
         var rawValue: String {
             switch self {
@@ -25,10 +22,6 @@ public extension NSPersistentContainer {
                 return NSInMemoryStoreType
             case .sqlite:
                 return NSSQLiteStoreType
-            #if os(OSX)
-                case .xml:
-                    return NSXMLStoreType
-            #endif
             }
         }
     }
