@@ -14,7 +14,6 @@
 		345796F62391E0000009C62D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F52391E0000009C62D /* Assets.xcassets */; };
 		345796F92391E0000009C62D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F82391E0000009C62D /* Preview Assets.xcassets */; };
 		345796FC2391E0000009C62D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345796FA2391E0000009C62D /* LaunchScreen.storyboard */; };
-		34A49B3A2391EFE80006B1AA /* UtilityBelt.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34A49B372391EDD10006B1AA /* UtilityBelt.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,7 +38,6 @@
 		345796F82391E0000009C62D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		345796FB2391E0000009C62D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		345796FD2391E0000009C62D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		34A49B382391EDD10006B1AA /* UtilityBelt.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UtilityBelt.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,7 +151,6 @@
 		345797062391E0670009C62D /* TestCases */ = {
 			isa = PBXGroup;
 			children = (
-				34A49B372391EDD10006B1AA /* UtilityBelt.xcdatamodeld */,
 				345796DD2391DF470009C62D /* UtilityBeltTests.swift */,
 			);
 			path = TestCases;
@@ -270,7 +267,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				345796DE2391DF470009C62D /* UtilityBeltTests.swift in Sources */,
-				34A49B3A2391EFE80006B1AA /* UtilityBelt.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -531,19 +527,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		34A49B372391EDD10006B1AA /* UtilityBelt.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				34A49B382391EDD10006B1AA /* UtilityBelt.xcdatamodel */,
-			);
-			currentVersion = 34A49B382391EDD10006B1AA /* UtilityBelt.xcdatamodel */;
-			path = UtilityBelt.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 345796A72391DF280009C62D /* Project object */;
 }
