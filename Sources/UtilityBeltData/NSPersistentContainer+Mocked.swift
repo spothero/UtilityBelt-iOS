@@ -11,12 +11,12 @@ public extension NSPersistentContainer {
         case memory
         /// Stores data in a SQLite database.
         case sqlite
-        
+
         #if os(OSX)
-        /// Stores data in an XML file. Extremely slow and only available on macOS 10.4+.
-        case xml
+            /// Stores data in an XML file. Extremely slow and only available on macOS 10.4+.
+            case xml
         #endif
-        
+
         var rawValue: String {
             switch self {
             case .binary:
@@ -26,13 +26,13 @@ public extension NSPersistentContainer {
             case .sqlite:
                 return NSSQLiteStoreType
             #if os(OSX)
-            case .xml:
-                return NSXMLStoreType
+                case .xml:
+                    return NSXMLStoreType
             #endif
             }
         }
     }
-    
+
     /// Creates a mocked persistent container that stores data in memory instead of on disk.
     /// - Parameter name: The name of the Data Model to persist.
     static func mocked(name: String, storeType: StoreType = .memory) -> NSPersistentContainer {

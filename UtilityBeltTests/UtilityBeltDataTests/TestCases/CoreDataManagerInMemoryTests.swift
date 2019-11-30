@@ -5,13 +5,13 @@ import CoreData
 @testable import UtilityBeltDemo
 import XCTest
 
-class CoreDataManagerInMemoryTests: XCTestCase {
+class CoreDataManagerInMemoryTests: XCTestCase, UserDataLoading {
     override func setUp() {
         super.setUp()
-        
-        do {
-            CoreDataManager.defaultContainer = .mocked(name: "UtilityBeltData", storeType: .memory)
 
+        CoreDataManager.defaultContainer = .mocked(name: "UtilityBeltData", storeType: .memory)
+
+        do {
             try self.loadData()
         } catch {
             XCTFail(error.localizedDescription)
@@ -19,57 +19,27 @@ class CoreDataManagerInMemoryTests: XCTestCase {
     }
 
     func testCount() {
-        do {
+        self.measureAndCatch {
             let userCount = try CoreDataManager.default.count(of: User.self)
 
             XCTAssertEqual(userCount, 4)
-        } catch {
-            XCTFail(error.localizedDescription)
         }
     }
-    
+
     func testExists() {
-        do {
+        self.measureAndCatch {
             let userExists = try CoreDataManager.default.exists(User.self)
 
             XCTAssertTrue(userExists)
-        } catch {
-            XCTFail(error.localizedDescription)
         }
     }
 
     func testFetch() {
-        do {
+        self.measureAndCatch {
             let users = try CoreDataManager.default.fetchAll(of: User.self)
 
             XCTAssertNotNil(users)
             XCTAssertEqual(users.count, 4)
-        } catch {
-            XCTFail(error.localizedDescription)
         }
-    }
-
-    private func loadData(file: StaticString = #file, line: UInt = #line) throws {
-        let alice = try User.newInstance()
-        alice?.firstName = "Alice"
-        alice?.lastName = "Anderson"
-        alice?.email = "alice@spothero.com"
-
-        let bob = try User.newInstance()
-        bob?.firstName = "Bob"
-        bob?.lastName = "Barker"
-        bob?.email = "bob@spothero.com"
-
-        let carol = try User.newInstance()
-        carol?.firstName = "Carol"
-        carol?.lastName = "Chompers"
-        carol?.email = "carol@spothero.com"
-
-        let dave = try User.newInstance()
-        dave?.firstName = "Dave"
-        dave?.lastName = "Davison"
-        dave?.email = "dave@spothero.com"
-
-        try CoreDataManager.default.saveDefaultContext()
     }
 }
