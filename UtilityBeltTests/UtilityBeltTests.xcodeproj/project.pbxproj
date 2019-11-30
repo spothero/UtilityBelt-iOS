@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		345796DE2391DF470009C62D /* UtilityBeltTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345796DD2391DF470009C62D /* UtilityBeltTests.swift */; };
 		345796EE2391DFFF0009C62D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345796ED2391DFFF0009C62D /* AppDelegate.swift */; };
 		345796F02391DFFF0009C62D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345796EF2391DFFF0009C62D /* SceneDelegate.swift */; };
 		345796F42391DFFF0009C62D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345796F32391DFFF0009C62D /* ContentView.swift */; };
@@ -16,20 +15,7 @@
 		345796FC2391E0000009C62D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345796FA2391E0000009C62D /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		34A49B322391EB0B0006B1AA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 345796A72391DF280009C62D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 345796EA2391DFFF0009C62D;
-			remoteInfo = UtilityBeltDemo;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		345796DB2391DF470009C62D /* UtilityBeltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		345796DD2391DF470009C62D /* UtilityBeltTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityBeltTests.swift; sourceTree = "<group>"; };
-		345796DF2391DF470009C62D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		345796EB2391DFFF0009C62D /* UtilityBeltDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UtilityBeltDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		345796ED2391DFFF0009C62D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		345796EF2391DFFF0009C62D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,13 +27,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		345796D82391DF470009C62D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		345796E82391DFFF0009C62D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -62,7 +41,6 @@
 			isa = PBXGroup;
 			children = (
 				345796EC2391DFFF0009C62D /* UtilityBeltDemo */,
-				345796DC2391DF470009C62D /* UtilityBeltTests */,
 				345796B02391DF280009C62D /* Products */,
 				34A49B342391EB5A0006B1AA /* Frameworks */,
 			);
@@ -71,19 +49,9 @@
 		345796B02391DF280009C62D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				345796DB2391DF470009C62D /* UtilityBeltTests.xctest */,
 				345796EB2391DFFF0009C62D /* UtilityBeltDemo.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		345796DC2391DF470009C62D /* UtilityBeltTests */ = {
-			isa = PBXGroup;
-			children = (
-				345797052391E05F0009C62D /* Config */,
-				345797062391E0670009C62D /* TestCases */,
-			);
-			path = UtilityBeltTests;
 			sourceTree = "<group>";
 		};
 		345796EC2391DFFF0009C62D /* UtilityBeltDemo */ = {
@@ -140,22 +108,6 @@
 			path = AppDelegates;
 			sourceTree = "<group>";
 		};
-		345797052391E05F0009C62D /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				345796DF2391DF470009C62D /* Info.plist */,
-			);
-			path = Config;
-			sourceTree = "<group>";
-		};
-		345797062391E0670009C62D /* TestCases */ = {
-			isa = PBXGroup;
-			children = (
-				345796DD2391DF470009C62D /* UtilityBeltTests.swift */,
-			);
-			path = TestCases;
-			sourceTree = "<group>";
-		};
 		34A49B342391EB5A0006B1AA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,26 +118,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		345796DA2391DF470009C62D /* UtilityBeltTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 345796E22391DF470009C62D /* Build configuration list for PBXNativeTarget "UtilityBeltTests" */;
-			buildPhases = (
-				345796D72391DF470009C62D /* Sources */,
-				345796D82391DF470009C62D /* Frameworks */,
-				345796D92391DF470009C62D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				34A49B332391EB0B0006B1AA /* PBXTargetDependency */,
-			);
-			name = UtilityBeltTests;
-			packageProductDependencies = (
-			);
-			productName = UtilityBeltTests;
-			productReference = 345796DB2391DF470009C62D /* UtilityBeltTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		345796EA2391DFFF0009C62D /* UtilityBeltDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 345796FE2391E0000009C62D /* Build configuration list for PBXNativeTarget "UtilityBeltDemo" */;
@@ -213,10 +145,6 @@
 				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = "SpotHero, Inc.";
 				TargetAttributes = {
-					345796DA2391DF470009C62D = {
-						CreatedOnToolsVersion = 11.1;
-						TestTargetID = 345796EA2391DFFF0009C62D;
-					};
 					345796EA2391DFFF0009C62D = {
 						CreatedOnToolsVersion = 11.1;
 					};
@@ -236,19 +164,11 @@
 			projectRoot = "";
 			targets = (
 				345796EA2391DFFF0009C62D /* UtilityBeltDemo */,
-				345796DA2391DF470009C62D /* UtilityBeltTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		345796D92391DF470009C62D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		345796E92391DFFF0009C62D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -262,14 +182,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		345796D72391DF470009C62D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				345796DE2391DF470009C62D /* UtilityBeltTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		345796E72391DFFF0009C62D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -281,14 +193,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		34A49B332391EB0B0006B1AA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 345796EA2391DFFF0009C62D /* UtilityBeltDemo */;
-			targetProxy = 34A49B322391EB0B0006B1AA /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		345796FA2391E0000009C62D /* LaunchScreen.storyboard */ = {
@@ -416,46 +320,6 @@
 			};
 			name = Release;
 		};
-		345796E32391DF470009C62D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ZW7QWR628D;
-				INFOPLIST_FILE = UtilityBeltTests/Config/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.spothero.utilitybelt.tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UtilityBeltDemo.app/UtilityBeltDemo";
-			};
-			name = Debug;
-		};
-		345796E42391DF470009C62D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ZW7QWR628D;
-				INFOPLIST_FILE = UtilityBeltTests/Config/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.spothero.utilitybelt.tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UtilityBeltDemo.app/UtilityBeltDemo";
-			};
-			name = Release;
-		};
 		345796FF2391E0000009C62D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -504,15 +368,6 @@
 			buildConfigurations = (
 				345796CF2391DF290009C62D /* Debug */,
 				345796D02391DF290009C62D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		345796E22391DF470009C62D /* Build configuration list for PBXNativeTarget "UtilityBeltTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				345796E32391DF470009C62D /* Debug */,
-				345796E42391DF470009C62D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
