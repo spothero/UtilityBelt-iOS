@@ -14,7 +14,6 @@ public class MockService {
     // MARK: - Constants
     
     /// The default logger for all things Sham.
-    @available(iOS 10.0, macOS 12.0, tvOS 10.0, watchOS 3.0, *)
     static let shamLog = OSLog(subsystem: "com.spothero.utilitybelt.sham", category: "Mocking")
 
     // MARK: - Properties
@@ -174,10 +173,6 @@ public class MockService {
             return
         }
         
-        if #available(iOS 10.0, macOS 12.0, tvOS 10.0, watchOS 3.0, *) {
-            os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
-        } else {
-            print("[Sham] \(message)")
-        }
+        os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
     }
 }
