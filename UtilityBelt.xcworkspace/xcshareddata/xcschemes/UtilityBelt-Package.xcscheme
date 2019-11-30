@@ -56,6 +56,34 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "345796EA2391DFFF0009C62D"
+               BuildableName = "UtilityBeltDemo.app"
+               BlueprintName = "UtilityBeltDemo"
+               ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "345796DA2391DF470009C62D"
+               BuildableName = "UtilityBeltTests.xctest"
+               BlueprintName = "UtilityBeltTests"
+               ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "3471D5C9234BB4DB00729A46"
                BuildableName = "RunScriptHelper.framework"
                BlueprintName = "RunScriptHelper"
@@ -90,6 +118,17 @@
                BuildableName = "UtilityBeltNetworkingTests"
                BlueprintName = "UtilityBeltNetworkingTests"
                ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "345796DA2391DF470009C62D"
+               BuildableName = "UtilityBeltTests.xctest"
+               BlueprintName = "UtilityBeltTests"
+               ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

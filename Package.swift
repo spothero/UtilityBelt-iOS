@@ -10,7 +10,7 @@ let package = Package(
         .iOS(.v10),         // supports NSPersistentContainer and os_log
         .macOS(.v10_12),    // supports NSPersistentContainer and os_log
         .tvOS(.v10),        // supports NSPersistentContainer and os_log
-        .watchOS(.v3),      // supports NSPersistentContainer and os_log 
+        .watchOS(.v3),      // supports NSPersistentContainer and os_log
     ],
     products: [
         .library(name: "Sham", targets: ["Sham"]),
