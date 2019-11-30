@@ -12,11 +12,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         // Get the managed object context from the shared persistent container.
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-//            fatalError("Failed to convert UIApplication delegate into AppDelegate class.")
-//        }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("Failed to convert UIApplication delegate into AppDelegate class.")
+        }
 
-//        let context = appDelegate.persistentContainer.viewContext
+        let context = appDelegate.persistentContainer.viewContext
 
         // Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
         // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
