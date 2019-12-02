@@ -2,6 +2,8 @@
 
 import Foundation
 
+// swiftlint:disable missing_docs
+
 public protocol SecureStoreQueryable {
     var query: [String: Any] { get }
 }
