@@ -48,6 +48,13 @@ public class PasswordKeychainItem {
     /// [Source](https://developer.apple.com/documentation/security/ksecattraccessible)
     public var accessible: String?
     
+    /// Contains an account name.
+    ///
+    /// The attribute key for this property is `kSecAttrAccount`.
+    ///
+    /// [Source](https://developer.apple.com/documentation/security/ksecattraccount)
+    public var account: String?
+    
     /// Contains the user-editable comment for this item.
     ///
     /// The attribute key for this property is `kSecAttrComment`.
@@ -60,7 +67,7 @@ public class PasswordKeychainItem {
     /// The attribute key for this property is `kSecAttrCreationDate`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrcreationdate)
-    public internal(set) var creationDate: String?
+    public internal(set) var creationDate: Date?
     
     /// Represents the item's creator.
     /// This number is the unsigned integer representation of a four-character code (for example, 'aCrt').
@@ -68,7 +75,7 @@ public class PasswordKeychainItem {
     /// The attribute key for this property is `kSecAttrModificationDate`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrcreator)
-    public var creator: String?
+    public var creator: UInt8?
     
     /// Specifies a user-visible string describing this kind of item (for example, "Disk image password").
     ///
@@ -107,14 +114,14 @@ public class PasswordKeychainItem {
     /// The attribute key for this property is `kSecAttrModificationDate`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrmodificationdate)
-    public internal(set) var modificationDate: String?
+    public internal(set) var modificationDate: Date?
     
     /// Indicates whether the item is synchronized through iCloud.
     ///
     /// The attribute key for this property is `kSecAttrSynchronizable`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrsynchronizable)
-    public var synchronizable: String?
+    public var synchronizable: Bool?
     
     /// Represents the item's type.
     /// This number is the unsigned integer representation of a four-character code (for example, 'aTyp').
@@ -122,7 +129,7 @@ public class PasswordKeychainItem {
     /// The attribute key for this property is `kSecAttrType`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrtype)
-    public var type: Bool?
+    public var type: UInt8?
     
     // MARK: - Methods
     

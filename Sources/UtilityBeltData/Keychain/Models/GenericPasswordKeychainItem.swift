@@ -8,19 +8,12 @@ import Foundation
 public final class GenericPasswordKeychainItem: PasswordKeychainItem {
     // MARK: - Properties
     
-    /// Contains an account name.
-    ///
-    /// The attribute key for this property is `kSecAttrAccount`.
-    ///
-    /// [Source](https://developer.apple.com/documentation/security/ksecattraccount)
-    public var account: String?
-    
     /// Contains the user-defined attributes.
     ///
     /// The attribute key for this property is `kSecAttrGeneric`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrgeneric)
-    public var generic: String?
+    public var generic: Data?
     
     /// Represents the service associated with this item.
     ///

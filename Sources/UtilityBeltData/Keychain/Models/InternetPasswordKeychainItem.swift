@@ -27,21 +27,21 @@ public final class InternetPasswordKeychainItem: PasswordKeychainItem {
     /// The attribute key for this property is `kSecAttrProtocol`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrprotocol)
-    public var `protocol`: String?
+    public var `protocol`: Int?
     
     /// The authentication scheme.
     ///
     /// The attribute key for this property is `kSecAttrAuthenticationType`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrauthenticationtype)
-    public var authenticationType: String?
+    public var authenticationType: Int?
     
     /// The Internet port number.
     ///
     /// The attribute key for this property is `kSecAttrPort`.
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrport)
-    public var port: String?
+    public var port: Int?
     
     /// Represents a path, typically the path component of the URL.
     ///
