@@ -24,7 +24,7 @@ extension GenericPasswordQueryable: SecureStoreQueryable {
 
         query[String(kSecClass)] = KeychainClass.genericPassword.rawValue
 
-        query[KeychainAttribute.Password.service.rawValue] = self.service
+        query[KeychainAttribute.service.rawValue] = self.service
         // Access group if target environment is not simulator
         #if !targetEnvironment(simulator)
             if let accessGroup = accessGroup {
@@ -49,12 +49,12 @@ extension InternetPasswordQueryable: SecureStoreQueryable {
         var query: [String: Any] = [:]
         query[String(kSecClass)] = KeychainClass.internetPassword.rawValue
         
-        query[KeychainAttribute.Password.authenticationType.rawValue] = self.authenticationType.rawValue
-        query[KeychainAttribute.Password.path.rawValue] = self.path
-        query[KeychainAttribute.Password.port.rawValue] = self.port
-        query[KeychainAttribute.Password.protocol.rawValue] = self.protocol.rawValue
-        query[KeychainAttribute.Password.securityDomain.rawValue] = self.securityDomain
-        query[KeychainAttribute.Password.server.rawValue] = self.server
+        query[KeychainAttribute.authenticationType.rawValue] = self.authenticationType.rawValue
+        query[KeychainAttribute.path.rawValue] = self.path
+        query[KeychainAttribute.port.rawValue] = self.port
+        query[KeychainAttribute.protocol.rawValue] = self.protocol.rawValue
+        query[KeychainAttribute.securityDomain.rawValue] = self.securityDomain
+        query[KeychainAttribute.server.rawValue] = self.server
 
         return query
     }

@@ -20,7 +20,7 @@ public struct SecureStore {
 
         // Ask the secureStoreQueryable instance for the query to execute and append the account you’re looking for.
         var query = self.secureStoreQueryable.query
-        query[KeychainAttribute.Password.account.rawValue] = userAccount
+        query[KeychainAttribute.account.rawValue] = userAccount
 
         // Return the keychain item that matches the query.
         var status = SecItemCopyMatching(query as CFDictionary, nil)
@@ -92,7 +92,7 @@ public struct SecureStore {
 
     public func removeValue(for userAccount: String) throws {
         var query = self.secureStoreQueryable.query
-        query[KeychainAttribute.Password.account.rawValue] = userAccount
+        query[KeychainAttribute.account.rawValue] = userAccount
 
         // To remove a password, you perform SecItemDelete(_:) specifying the account you’re looking for.
         // If you successfully deleted the password or if no item was found, your job is done and you bail out.
