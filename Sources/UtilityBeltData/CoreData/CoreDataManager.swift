@@ -2,7 +2,6 @@
 
 import CoreData
 import Foundation
-import SwiftUI
 
 /// A helper class to assist with all CoreData operations.
 public class CoreDataManager {
