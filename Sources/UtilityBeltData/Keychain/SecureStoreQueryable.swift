@@ -36,8 +36,8 @@ public struct InternetPasswordQueryable {
     let port: Int
     let path: String
     let securityDomain: String
-    let internetProtocol: InternetProtocol
-    let internetAuthenticationType: InternetAuthenticationType
+    let internetProtocol: KeychainProtocolAttributeKey
+    let internetAuthenticationType: KeychainAuthenticationTypeAttributeKey
 }
 
 extension InternetPasswordQueryable: SecureStoreQueryable {

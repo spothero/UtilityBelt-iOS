@@ -4,7 +4,10 @@
 import XCTest
 
 class KeychainManagerTests: XCTestCase {
+    // swiftlint:disable:next implicitly_unwrapped_optional
     var secureStoreWithGenericPwd: SecureStore!
+    
+    // swiftlint:disable:next implicitly_unwrapped_optional
     var secureStoreWithInternetPwd: SecureStore!
 
     override func setUp() {
@@ -32,8 +35,8 @@ class KeychainManagerTests: XCTestCase {
     func testSaveGenericPassword() {
         do {
             try self.secureStoreWithGenericPwd.setValue("pwd_1234", for: "genericPassword")
-        } catch let e {
-            XCTFail("Saving generic password failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Saving generic password failed with \(error.localizedDescription).")
         }
     }
 
@@ -42,8 +45,8 @@ class KeychainManagerTests: XCTestCase {
             try self.secureStoreWithGenericPwd.setValue("pwd_1234", for: "genericPassword")
             let password = try secureStoreWithGenericPwd.getValue(for: "genericPassword")
             XCTAssertEqual("pwd_1234", password)
-        } catch let e {
-            XCTFail("Reading generic password failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Reading generic password failed with \(error.localizedDescription).")
         }
     }
 
@@ -53,8 +56,8 @@ class KeychainManagerTests: XCTestCase {
             try self.secureStoreWithGenericPwd.setValue("pwd_1235", for: "genericPassword")
             let password = try secureStoreWithGenericPwd.getValue(for: "genericPassword")
             XCTAssertEqual("pwd_1235", password)
-        } catch let e {
-            XCTFail("Updating generic password failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Updating generic password failed with \(error.localizedDescription).")
         }
     }
 
@@ -63,8 +66,8 @@ class KeychainManagerTests: XCTestCase {
             try self.secureStoreWithGenericPwd.setValue("pwd_1234", for: "genericPassword")
             try self.secureStoreWithGenericPwd.removeValue(for: "genericPassword")
             XCTAssertNil(try self.secureStoreWithGenericPwd.getValue(for: "genericPassword"))
-        } catch let e {
-            XCTFail("Saving generic password failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Saving generic password failed with \(error.localizedDescription).")
         }
     }
 
@@ -75,16 +78,16 @@ class KeychainManagerTests: XCTestCase {
             try self.secureStoreWithGenericPwd.removeAllValues()
             XCTAssertNil(try self.secureStoreWithGenericPwd.getValue(for: "genericPassword"))
             XCTAssertNil(try self.secureStoreWithGenericPwd.getValue(for: "genericPassword2"))
-        } catch let e {
-            XCTFail("Removing generic passwords failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Removing generic passwords failed with \(error.localizedDescription).")
         }
     }
 
     func testSaveInternetPassword() {
         do {
             try self.secureStoreWithInternetPwd.setValue("pwd_1234", for: "internetPassword")
-        } catch let e {
-            XCTFail("Saving Internet password failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Saving Internet password failed with \(error.localizedDescription).")
         }
     }
 
@@ -93,8 +96,8 @@ class KeychainManagerTests: XCTestCase {
             try self.secureStoreWithInternetPwd.setValue("pwd_1234", for: "internetPassword")
             let password = try secureStoreWithInternetPwd.getValue(for: "internetPassword")
             XCTAssertEqual("pwd_1234", password)
-        } catch let e {
-            XCTFail("Reading Internet password failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Reading Internet password failed with \(error.localizedDescription).")
         }
     }
 
@@ -104,8 +107,8 @@ class KeychainManagerTests: XCTestCase {
             try self.secureStoreWithInternetPwd.setValue("pwd_1235", for: "internetPassword")
             let password = try secureStoreWithInternetPwd.getValue(for: "internetPassword")
             XCTAssertEqual("pwd_1235", password)
-        } catch let e {
-            XCTFail("Updating Internet password failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Updating Internet password failed with \(error.localizedDescription).")
         }
     }
 
@@ -114,8 +117,8 @@ class KeychainManagerTests: XCTestCase {
             try self.secureStoreWithInternetPwd.setValue("pwd_1234", for: "internetPassword")
             try self.secureStoreWithInternetPwd.removeValue(for: "internetPassword")
             XCTAssertNil(try self.secureStoreWithInternetPwd.getValue(for: "internetPassword"))
-        } catch let e {
-            XCTFail("Removing Internet password failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Removing Internet password failed with \(error.localizedDescription).")
         }
     }
 
@@ -126,8 +129,8 @@ class KeychainManagerTests: XCTestCase {
             try self.secureStoreWithInternetPwd.removeAllValues()
             XCTAssertNil(try self.secureStoreWithInternetPwd.getValue(for: "internetPassword"))
             XCTAssertNil(try self.secureStoreWithInternetPwd.getValue(for: "internetPassword2"))
-        } catch let e {
-            XCTFail("Removing Internet passwords failed with \(e.localizedDescription).")
+        } catch {
+            XCTFail("Removing Internet passwords failed with \(error.localizedDescription).")
         }
     }
 }
