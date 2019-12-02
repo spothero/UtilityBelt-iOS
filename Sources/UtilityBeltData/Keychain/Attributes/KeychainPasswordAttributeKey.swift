@@ -27,6 +27,29 @@
 //    /// A key whose value is a string indicating the item's service.
 //    case service
 //
+//    public var rawValue: String {
+//        switch self {
+//        case .account:
+//            return String(kSecAttrAccount)
+//        case .authenticationType:
+//            return String(kSecAttrAuthenticationType)
+//        case .generic:
+//            return String(kSecAttrGeneric)
+//        case .path:
+//            return String(kSecAttrPath)
+//        case .port:
+//            return String(kSecAttrPort)
+//        case .protocol:
+//            return String(kSecAttrProtocol)
+//        case .securityDomain:
+//            return String(kSecAttrSecurityDomain)
+//        case .server:
+//            return String(kSecAttrServer)
+//        case .service:
+//            return String(kSecAttrService)
+//        }
+//    }
+//
 //    public init?(rawValue: String) {
 //        switch rawValue {
 //        case String(kSecAttrAccount):
@@ -49,29 +72,6 @@
 //            self = .service
 //        default:
 //            return nil
-//        }
-//    }
-//
-//    public var rawValue: String {
-//        switch self {
-//        case .account:
-//            return String(kSecAttrAccount)
-//        case .authenticationType:
-//            return String(kSecAttrAuthenticationType)
-//        case .generic:
-//            return String(kSecAttrGeneric)
-//        case .path:
-//            return String(kSecAttrPath)
-//        case .port:
-//            return String(kSecAttrPort)
-//        case .protocol:
-//            return String(kSecAttrProtocol)
-//        case .securityDomain:
-//            return String(kSecAttrSecurityDomain)
-//        case .server:
-//            return String(kSecAttrServer)
-//        case .service:
-//            return String(kSecAttrService)
 //        }
 //    }
 // }

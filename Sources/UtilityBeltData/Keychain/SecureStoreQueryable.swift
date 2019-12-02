@@ -52,16 +52,10 @@ extension InternetPasswordQueryable: SecureStoreQueryable {
         query[KeychainAttribute.Password.authenticationType.rawValue] = self.authenticationType.rawValue
         query[KeychainAttribute.Password.path.rawValue] = self.path
         query[KeychainAttribute.Password.port.rawValue] = self.port
-        query[KeychainAttribute.Password.protocol.rawValue] = self.protocol
+        query[KeychainAttribute.Password.protocol.rawValue] = self.protocol.rawValue
         query[KeychainAttribute.Password.securityDomain.rawValue] = self.securityDomain
         query[KeychainAttribute.Password.server.rawValue] = self.server
-//
-//        query[String(kSecAttrPort)] = self.port
-//        query[String(kSecAttrServer)] = self.server
-//        query[String(kSecAttrSecurityDomain)] = self.securityDomain
-//        query[String(kSecAttrPath)] = self.path
-//        query[String(kSecAttrProtocol)] = self.internetProtocol.rawValue
-//        query[String(kSecAttrAuthenticationType)] = self.internetAuthenticationType.rawValue
+
         return query
     }
 }

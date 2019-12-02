@@ -42,6 +42,39 @@
 //    /// A key whose value indicates the item's type.
 //    case type
 //
+//    public var rawValue: String {
+//        switch self {
+//        case .accessControl:
+//            return String(kSecAttrAccessControl)
+//        case .accessible:
+//            return String(kSecAttrAccessible)
+//        case .accessGroup:
+//            return String(kSecAttrAccessGroup)
+//        case .comment:
+//            return String(kSecAttrComment)
+//        case .creationDate:
+//            return String(kSecAttrCreationDate)
+//        case .creator:
+//            return String(kSecAttrCreator)
+//        case .description:
+//            return String(kSecAttrDescription)
+//        case .isInvisible:
+//            return String(kSecAttrIsInvisible)
+//        case .isNegative:
+//            return String(kSecAttrIsNegative)
+//        case .label:
+//            return String(kSecAttrLabel)
+//        case .modificationDate:
+//            return String(kSecAttrModificationDate)
+//        case .synchronizable:
+//            return String(kSecAttrSynchronizable)
+//        case .syncViewHint:
+//            return String(kSecAttrSyncViewHint)
+//        case .type:
+//            return String(kSecAttrType)
+//        }
+//    }
+//
 //    public init?(rawValue: String) {
 //        switch rawValue {
 //        #if os(OSX)
@@ -78,39 +111,6 @@
 //            self = .type
 //        default:
 //            return nil
-//        }
-//    }
-//
-//    public var rawValue: String {
-//        switch self {
-//        case .accessControl:
-//            return String(kSecAttrAccessControl)
-//        case .accessible:
-//            return String(kSecAttrAccessible)
-//        case .accessGroup:
-//            return String(kSecAttrAccessGroup)
-//        case .comment:
-//            return String(kSecAttrComment)
-//        case .creationDate:
-//            return String(kSecAttrCreationDate)
-//        case .creator:
-//            return String(kSecAttrCreator)
-//        case .description:
-//            return String(kSecAttrDescription)
-//        case .isInvisible:
-//            return String(kSecAttrIsInvisible)
-//        case .isNegative:
-//            return String(kSecAttrIsNegative)
-//        case .label:
-//            return String(kSecAttrLabel)
-//        case .modificationDate:
-//            return String(kSecAttrModificationDate)
-//        case .synchronizable:
-//            return String(kSecAttrSynchronizable)
-//        case .syncViewHint:
-//            return String(kSecAttrSyncViewHint)
-//        case .type:
-//            return String(kSecAttrType)
 //        }
 //    }
 // }

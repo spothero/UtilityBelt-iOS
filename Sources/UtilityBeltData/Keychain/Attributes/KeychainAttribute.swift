@@ -42,6 +42,39 @@ public struct KeychainAttribute {
         /// A key whose value indicates the item's type.
         case type
 
+        public var rawValue: String {
+            switch self {
+            case .accessControl:
+                return String(kSecAttrAccessControl)
+            case .accessible:
+                return String(kSecAttrAccessible)
+            case .accessGroup:
+                return String(kSecAttrAccessGroup)
+            case .comment:
+                return String(kSecAttrComment)
+            case .creationDate:
+                return String(kSecAttrCreationDate)
+            case .creator:
+                return String(kSecAttrCreator)
+            case .description:
+                return String(kSecAttrDescription)
+            case .isInvisible:
+                return String(kSecAttrIsInvisible)
+            case .isNegative:
+                return String(kSecAttrIsNegative)
+            case .label:
+                return String(kSecAttrLabel)
+            case .modificationDate:
+                return String(kSecAttrModificationDate)
+            case .synchronizable:
+                return String(kSecAttrSynchronizable)
+            case .syncViewHint:
+                return String(kSecAttrSyncViewHint)
+            case .type:
+                return String(kSecAttrType)
+            }
+        }
+
         public init?(rawValue: String) {
             #if os(OSX)
             // `kSecAttrAccess` only exists on macOS
@@ -84,39 +117,6 @@ public struct KeychainAttribute {
                 return nil
             }
         }
-
-        public var rawValue: String {
-            switch self {
-            case .accessControl:
-                return String(kSecAttrAccessControl)
-            case .accessible:
-                return String(kSecAttrAccessible)
-            case .accessGroup:
-                return String(kSecAttrAccessGroup)
-            case .comment:
-                return String(kSecAttrComment)
-            case .creationDate:
-                return String(kSecAttrCreationDate)
-            case .creator:
-                return String(kSecAttrCreator)
-            case .description:
-                return String(kSecAttrDescription)
-            case .isInvisible:
-                return String(kSecAttrIsInvisible)
-            case .isNegative:
-                return String(kSecAttrIsNegative)
-            case .label:
-                return String(kSecAttrLabel)
-            case .modificationDate:
-                return String(kSecAttrModificationDate)
-            case .synchronizable:
-                return String(kSecAttrSynchronizable)
-            case .syncViewHint:
-                return String(kSecAttrSyncViewHint)
-            case .type:
-                return String(kSecAttrType)
-            }
-        }
     }
 
     /// Attributes that can be set in Keychain Items of class `kSecClassGenericPassword` and `kSecClassInternetPassword`.
@@ -142,6 +142,29 @@ public struct KeychainAttribute {
         /// A key whose value is a string indicating the item's service.
         case service
 
+        public var rawValue: String {
+            switch self {
+            case .account:
+                return String(kSecAttrAccount)
+            case .authenticationType:
+                return String(kSecAttrAuthenticationType)
+            case .generic:
+                return String(kSecAttrGeneric)
+            case .path:
+                return String(kSecAttrPath)
+            case .port:
+                return String(kSecAttrPort)
+            case .protocol:
+                return String(kSecAttrProtocol)
+            case .securityDomain:
+                return String(kSecAttrSecurityDomain)
+            case .server:
+                return String(kSecAttrServer)
+            case .service:
+                return String(kSecAttrService)
+            }
+        }
+
         public init?(rawValue: String) {
             switch rawValue {
             case String(kSecAttrAccount):
@@ -164,29 +187,6 @@ public struct KeychainAttribute {
                 self = .service
             default:
                 return nil
-            }
-        }
-
-        public var rawValue: String {
-            switch self {
-            case .account:
-                return String(kSecAttrAccount)
-            case .authenticationType:
-                return String(kSecAttrAuthenticationType)
-            case .generic:
-                return String(kSecAttrGeneric)
-            case .path:
-                return String(kSecAttrPath)
-            case .port:
-                return String(kSecAttrPort)
-            case .protocol:
-                return String(kSecAttrProtocol)
-            case .securityDomain:
-                return String(kSecAttrSecurityDomain)
-            case .server:
-                return String(kSecAttrServer)
-            case .service:
-                return String(kSecAttrService)
             }
         }
     }

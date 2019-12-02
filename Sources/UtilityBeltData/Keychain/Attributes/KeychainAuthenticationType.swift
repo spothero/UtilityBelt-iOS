@@ -24,6 +24,27 @@ public enum KeychainAuthenticationType: RawRepresentable {
     /// Remote Password authentication.
     case rpa
 
+    public var rawValue: String {
+        switch self {
+        case .default:
+            return String(kSecAttrAuthenticationTypeDefault)
+        case .dpa:
+            return String(kSecAttrAuthenticationTypeDPA)
+        case .htmlForm:
+            return String(kSecAttrAuthenticationTypeHTMLForm)
+        case .httpBasic:
+            return String(kSecAttrAuthenticationTypeHTTPBasic)
+        case .httpDigest:
+            return String(kSecAttrAuthenticationTypeHTTPDigest)
+        case .msn:
+            return String(kSecAttrAuthenticationTypeMSN)
+        case .ntlm:
+            return String(kSecAttrAuthenticationTypeNTLM)
+        case .rpa:
+            return String(kSecAttrAuthenticationTypeRPA)
+        }
+    }
+
     public init?(rawValue: String) {
         switch rawValue {
         case String(kSecAttrAuthenticationTypeDefault):
@@ -44,27 +65,6 @@ public enum KeychainAuthenticationType: RawRepresentable {
             self = .rpa
         default:
             self = .default
-        }
-    }
-
-    public var rawValue: String {
-        switch self {
-        case .default:
-            return String(kSecAttrAuthenticationTypeDefault)
-        case .dpa:
-            return String(kSecAttrAuthenticationTypeDPA)
-        case .htmlForm:
-            return String(kSecAttrAuthenticationTypeHTMLForm)
-        case .httpBasic:
-            return String(kSecAttrAuthenticationTypeHTTPBasic)
-        case .httpDigest:
-            return String(kSecAttrAuthenticationTypeHTTPDigest)
-        case .msn:
-            return String(kSecAttrAuthenticationTypeMSN)
-        case .ntlm:
-            return String(kSecAttrAuthenticationTypeNTLM)
-        case .rpa:
-            return String(kSecAttrAuthenticationTypeRPA)
         }
     }
 }
