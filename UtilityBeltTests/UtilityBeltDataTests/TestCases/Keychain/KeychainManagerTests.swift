@@ -6,7 +6,7 @@ import XCTest
 class KeychainManagerTests: XCTestCase {
     // swiftlint:disable:next implicitly_unwrapped_optional
     var secureStoreWithGenericPwd: SecureStore!
-    
+
     // swiftlint:disable:next implicitly_unwrapped_optional
     var secureStoreWithInternetPwd: SecureStore!
 
@@ -16,12 +16,12 @@ class KeychainManagerTests: XCTestCase {
         let genericPwdQueryable = GenericPasswordQueryable(service: "MyService")
         secureStoreWithGenericPwd = SecureStore(secureStoreQueryable: genericPwdQueryable)
 
-        let internetPwdQueryable = InternetPasswordQueryable(server: "someServer",
-                                                             port: 8080,
+        let internetPwdQueryable = InternetPasswordQueryable(authenticationType: .httpBasic,
                                                              path: "somePath",
+                                                             port: 8080,
+                                                             protocol: .https,
                                                              securityDomain: "someDomain",
-                                                             internetProtocol: .https,
-                                                             internetAuthenticationType: .httpBasic)
+                                                             server: "someServer")
         secureStoreWithInternetPwd = SecureStore(secureStoreQueryable: internetPwdQueryable)
     }
 

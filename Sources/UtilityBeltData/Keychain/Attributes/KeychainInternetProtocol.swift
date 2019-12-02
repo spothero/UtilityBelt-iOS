@@ -2,11 +2,11 @@
 
 import Foundation
 
-/// Specifies the value of a keychain item's protocol.
+/// Specifies the value of an Internet Password Keychain Item's Internet Protocol.
 /// Maps to possible values for use with the `kSecAttrProtocol` key.
 ///
 /// [Source](https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values#1678890)
-public enum KeychainProtocolAttributeKey: RawRepresentable {
+public enum KeychainInternetProtocol: RawRepresentable {
     /// AFP over TCP.
     case afp
     /// AFP over AppleTalk.

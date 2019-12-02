@@ -2,11 +2,11 @@
 
 import Foundation
 
-/// Specifies the value of a keychain item's authentication scheme.
+/// Specifies the value of an Internet Password Keychain Item's authentication scheme.
 /// Maps to possible values for use with the `kSecAttrAuthenticationType` key.
 ///
 /// [Source](https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values#1679017)
-public enum KeychainAuthenticationTypeAttributeKey: RawRepresentable {
+public enum KeychainAuthenticationType: RawRepresentable {
     /// The default authentication type.
     case `default`
     /// Distributed Password authentication.

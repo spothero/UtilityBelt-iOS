@@ -21,12 +21,14 @@ public struct GenericPasswordQueryable {
 extension GenericPasswordQueryable: SecureStoreQueryable {
     public var query: [String: Any] {
         var query: [String: Any] = [:]
-        query[String(kSecClass)] = kSecClassGenericPassword
-        query[String(kSecAttrService)] = self.service
+
+        query[String(kSecClass)] = KeychainClass.genericPassword.rawValue
+
+        query[KeychainAttribute.Password.service.rawValue] = self.service
         // Access group if target environment is not simulator
         #if !targetEnvironment(simulator)
             if let accessGroup = accessGroup {
-                query[String(kSecAttrAccessGroup)] = accessGroup
+                query[KeychainAttribute.General.accessGroup.rawValue] = accessGroup
             }
         #endif
         return query
@@ -34,24 +36,32 @@ extension GenericPasswordQueryable: SecureStoreQueryable {
 }
 
 public struct InternetPasswordQueryable {
-    let server: String
-    let port: Int
+    let authenticationType: KeychainAuthenticationType
     let path: String
+    let port: Int
+    let `protocol`: KeychainInternetProtocol
     let securityDomain: String
-    let internetProtocol: KeychainProtocolAttributeKey
-    let internetAuthenticationType: KeychainAuthenticationTypeAttributeKey
+    let server: String
 }
 
 extension InternetPasswordQueryable: SecureStoreQueryable {
     public var query: [String: Any] {
         var query: [String: Any] = [:]
-        query[String(kSecClass)] = kSecClassInternetPassword
-        query[String(kSecAttrPort)] = self.port
-        query[String(kSecAttrServer)] = self.server
-        query[String(kSecAttrSecurityDomain)] = self.securityDomain
-        query[String(kSecAttrPath)] = self.path
-        query[String(kSecAttrProtocol)] = self.internetProtocol.rawValue
-        query[String(kSecAttrAuthenticationType)] = self.internetAuthenticationType.rawValue
+        query[String(kSecClass)] = KeychainClass.internetPassword.rawValue
+        
+        query[KeychainAttribute.Password.authenticationType.rawValue] = self.authenticationType.rawValue
+        query[KeychainAttribute.Password.path.rawValue] = self.path
+        query[KeychainAttribute.Password.port.rawValue] = self.port
+        query[KeychainAttribute.Password.protocol.rawValue] = self.protocol
+        query[KeychainAttribute.Password.securityDomain.rawValue] = self.securityDomain
+        query[KeychainAttribute.Password.server.rawValue] = self.server
+//
+//        query[String(kSecAttrPort)] = self.port
+//        query[String(kSecAttrServer)] = self.server
+//        query[String(kSecAttrSecurityDomain)] = self.securityDomain
+//        query[String(kSecAttrPath)] = self.path
+//        query[String(kSecAttrProtocol)] = self.internetProtocol.rawValue
+//        query[String(kSecAttrAuthenticationType)] = self.internetAuthenticationType.rawValue
         return query
     }
 }

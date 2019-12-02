@@ -6,7 +6,7 @@
 ///// Specifies the value of a keychain item's cryptographic key algorithm.
 ///// Maps to possible values for use with the `kSecAttrKeyType` key.
 /////
-///// [Source](https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values?language=objc#1679067)
+///// [Source](https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values#1679067)
 // public enum KeychainKeyTypeAttributeKey: RawRepresentable {
 //    /// Elliptic curve algorithm.
 //    @available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *)

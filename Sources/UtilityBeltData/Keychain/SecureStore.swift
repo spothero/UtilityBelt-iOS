@@ -11,17 +11,17 @@ public struct SecureStore {
     public init(secureStoreQueryable: SecureStoreQueryable) {
         self.secureStoreQueryable = secureStoreQueryable
     }
-    
+
     public func setValue(_ value: String, for userAccount: String) throws {
         // Check if it can encode the value to store into a Data type. If that’s not possible, it throws a conversion error.
         guard let encodedPassword = value.data(using: .utf8) else {
             throw SecureStoreError.string2DataConversionError
         }
-        
+
         // Ask the secureStoreQueryable instance for the query to execute and append the account you’re looking for.
-        var query = secureStoreQueryable.query
+        var query = self.secureStoreQueryable.query
         query[String(kSecAttrAccount)] = userAccount
-        
+
         // Return the keychain item that matches the query.
         var status = SecItemCopyMatching(query as CFDictionary, nil)
         switch status {
@@ -30,36 +30,36 @@ public struct SecureStore {
         case errSecSuccess:
             var attributesToUpdate: [String: Any] = [:]
             attributesToUpdate[String(kSecValueData)] = encodedPassword
-            
+
             status = SecItemUpdate(query as CFDictionary,
                                    attributesToUpdate as CFDictionary)
             if status != errSecSuccess {
-                throw error(from: status)
+                throw self.error(from: status)
             }
         // If it cannot find an item, the password for that account does not exist yet. You add the item by invoking SecItemAdd(_:_:).
         case errSecItemNotFound:
             query[String(kSecValueData)] = encodedPassword
-            
+
             status = SecItemAdd(query as CFDictionary, nil)
             if status != errSecSuccess {
-                throw error(from: status)
+                throw self.error(from: status)
             }
         default:
-            throw error(from: status)
+            throw self.error(from: status)
         }
     }
-    
+
     public func getValue(for userAccount: String) throws -> String? {
         // Ask secureStoreQueryable for the query to execute. Besides adding the account you’re interested in,
         // this enriches the query with other attributes and their related values. In particular,
         // you’re asking it to return a single result, to return all the attributes associated with that
         // specific item and to give you back the unencrypted data as a result.
-        var query = secureStoreQueryable.query
+        var query = self.secureStoreQueryable.query
         query[String(kSecMatchLimit)] = kSecMatchLimitOne
         query[String(kSecReturnAttributes)] = kCFBooleanTrue
         query[String(kSecReturnData)] = kCFBooleanTrue
         query[String(kSecAttrAccount)] = userAccount
-        
+
         // Use SecItemCopyMatching(_:_:) to perform the search. On completion,
         // queryResult will contain a reference to the found item, if available.
         // withUnsafeMutablePointer(to:_:) gives you access to an UnsafeMutablePointer
@@ -68,7 +68,7 @@ public struct SecureStore {
         let status = withUnsafeMutablePointer(to: &queryResult) {
             SecItemCopyMatching(query as CFDictionary, $0)
         }
-        
+
         switch status {
         // If the query succeeds, it means that it found an item. Since the result is represented
         // by a dictionary that contains all the attributes you’ve asked for,
@@ -78,41 +78,47 @@ public struct SecureStore {
                 let queriedItem = queryResult as? [String: Any],
                 let passwordData = queriedItem[String(kSecValueData)] as? Data,
                 let password = String(data: passwordData, encoding: .utf8)
-                else {
-                    throw SecureStoreError.data2StringConversionError
+            else {
+                throw SecureStoreError.data2StringConversionError
             }
             return password
         // If an item is not found, return a nil value.
         case errSecItemNotFound:
             return nil
         default:
-            throw error(from: status)
+            throw self.error(from: status)
         }
     }
-    
+
     public func removeValue(for userAccount: String) throws {
-        var query = secureStoreQueryable.query
+        var query = self.secureStoreQueryable.query
         query[String(kSecAttrAccount)] = userAccount
-        
+
         // To remove a password, you perform SecItemDelete(_:) specifying the account you’re looking for.
         // If you successfully deleted the password or if no item was found, your job is done and you bail out.
         // Otherwise, you throw an unhandled error in order to let the user know something went wrong.
         let status = SecItemDelete(query as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else {
-            throw error(from: status)
+
+        // If the status is anything other than success or not found, throw associated error
+        switch status {
+        case errSecSuccess,
+             errSecItemNotFound:
+            return
+        default:
+            throw self.error(from: status)
         }
     }
-    
+
     /// Removes all values from the Keychain.
     public func removeAllValues() throws {
-        let query = secureStoreQueryable.query
-        
+        let query = self.secureStoreQueryable.query
+
         let status = SecItemDelete(query as CFDictionary)
-        
-        // If the status is anything other than not found or success, throw associated error
+
+        // If the status is anything other than success or not found, throw associated error
         switch status {
-        case errSecItemNotFound,
-             errSecSuccess:
+        case errSecSuccess,
+             errSecItemNotFound:
             return
         default:
             throw self.error(from: status)
