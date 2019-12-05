@@ -149,7 +149,7 @@ public class CoreDataManager {
     /// Returns the persistent container's view context for convenient reference.
     private func managedContext() throws -> NSManagedObjectContext {
         guard let persistentContainer = self.persistentContainer else {
-            throw UBDataError.defaultPersistentContainerNotSet
+            throw UBCoreDataError.defaultPersistentContainerNotSet
         }
 
         return persistentContainer.viewContext

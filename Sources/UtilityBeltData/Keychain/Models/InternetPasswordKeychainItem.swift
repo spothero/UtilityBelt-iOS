@@ -60,10 +60,10 @@ public final class InternetPasswordKeychainItem: PasswordKeychainItem {
 
     // MARK: Initializers
 
-    public init(class keychainClass: KeychainClass, data: Data, account: String, server: String) {
+    public init(server: String, account: String, data: Data, accessGroup: String? = nil) {
         self.server = server
         
-        super.init(class: keychainClass, data: data, account: account)
+        super.init(class: .internetPassword, account: account, data: data, accessGroup: accessGroup)
     }
     
     // MARK: Converters

@@ -1,19 +1,11 @@
-// Copyright © 2019 SpotHero, Inc. All rights reserved.
+//
+//  File.swift
+//  
+//
+//  Created by Brian Drelling on 12/5/19.
+//
 
 import Foundation
-
-public enum UBDataError: Error {
-    case defaultPersistentContainerNotSet
-}
-
-extension UBDataError: LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case .defaultPersistentContainerNotSet:
-            return "CoreDataManager.defaultContainer must be set before calling CoreDataManager.default for any operations."
-        }
-    }
-}
 
 public enum SecureStoreError: Error {
     case string2DataConversionError

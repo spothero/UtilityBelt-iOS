@@ -155,7 +155,8 @@ public class KeychainItem {
 
     // MARK: Initializers
 
-    internal init(class keychainClass: KeychainClass, data: Data) {
+    internal init(class keychainClass: KeychainClass, data: Data, accessGroup: String? = nil) {
+        self.accessGroup = accessGroup
         self.class = keychainClass
         self.data = data
     }

@@ -26,10 +26,10 @@ public final class GenericPasswordKeychainItem: PasswordKeychainItem {
 
     // MARK: Initializers
 
-    public init(class keychainClass: KeychainClass, data: Data, account: String, service: String) {
+    public init(service: String, account: String, data: Data, accessGroup: String? = nil) {
         self.service = service
         
-        super.init(class: keychainClass, data: data, account: account)
+        super.init(class: .genericPassword, account: account,   data: data, accessGroup: accessGroup)
     }
     
     // MARK: Converters

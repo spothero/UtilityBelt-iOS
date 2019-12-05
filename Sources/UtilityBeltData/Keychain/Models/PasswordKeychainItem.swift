@@ -17,10 +17,10 @@ public class PasswordKeychainItem: KeychainItem {
 
     // MARK: Initializers
 
-    internal init(class keychainClass: KeychainClass, data: Data, account: String) {
+    internal init(class keychainClass: KeychainClass, account: String, data: Data, accessGroup: String? = nil) {
         self.account = account
         
-        super.init(class: keychainClass, data: data)
+        super.init(class: keychainClass, data: data, accessGroup: accessGroup)
     }
     
     // MARK: Converters
