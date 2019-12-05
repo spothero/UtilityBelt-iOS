@@ -22,7 +22,6 @@
 		34BE1A072392013700ED5FC1 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A052392013700ED5FC1 /* User+CoreDataProperties.swift */; };
 		34BE1A1023920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A0E23920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld */; };
 		34BE1A1223920F0A00ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A0E23920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld */; };
-		34DBB2DA2394C6AB004302DE /* KeychainManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DBB2D92394C6AB004302DE /* KeychainManagerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +52,6 @@
 		34BE1A042392013700ED5FC1 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
 		34BE1A052392013700ED5FC1 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		34BE1A0F23920E8000ED5FC1 /* UtilityBeltData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UtilityBeltData.xcdatamodel; sourceTree = "<group>"; };
-		34DBB2D92394C6AB004302DE /* KeychainManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,7 +192,6 @@
 		34BE19FE2392003000ED5FC1 /* TestCases */ = {
 			isa = PBXGroup;
 			children = (
-				34DBB2D82394C518004302DE /* Keychain */,
 				34DBB2D72394C50E004302DE /* CoreData */,
 			);
 			path = TestCases;
@@ -225,14 +222,6 @@
 				345FE2752392411B0027D0FE /* CoreDataManagerSQLiteTests.swift */,
 			);
 			path = CoreData;
-			sourceTree = "<group>";
-		};
-		34DBB2D82394C518004302DE /* Keychain */ = {
-			isa = PBXGroup;
-			children = (
-				34DBB2D92394C6AB004302DE /* KeychainManagerTests.swift */,
-			);
-			path = Keychain;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -357,7 +346,6 @@
 				34BE1A062392013700ED5FC1 /* User+CoreDataClass.swift in Sources */,
 				345FE2762392411B0027D0FE /* CoreDataManagerSQLiteTests.swift in Sources */,
 				345FE27B23924B6C0027D0FE /* XCTestCase+MeasureAndCatch.swift in Sources */,
-				34DBB2DA2394C6AB004302DE /* KeychainManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
