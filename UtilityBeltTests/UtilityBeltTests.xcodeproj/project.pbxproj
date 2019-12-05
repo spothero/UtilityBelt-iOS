@@ -15,10 +15,18 @@
 		345796FC2391E0000009C62D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345796FA2391E0000009C62D /* LaunchScreen.storyboard */; };
 		34BE19F02391FC1000ED5FC1 /* UtilityBeltDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE19EF2391FC1000ED5FC1 /* UtilityBeltDataTests.swift */; };
 		34BE19F82391FC8F00ED5FC1 /* UtilityBeltData in Frameworks */ = {isa = PBXBuildFile; productRef = 34BE19F72391FC8F00ED5FC1 /* UtilityBeltData */; };
+		34D6EBDD2399AC3E005429FC /* UtilityBeltKeychainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D6EBDC2399AC3E005429FC /* UtilityBeltKeychainTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		34BE19F22391FC1000ED5FC1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 345796A72391DF280009C62D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 345796EA2391DFFF0009C62D;
+			remoteInfo = UtilityBeltDemo;
+		};
+		34D6EBDF2399AC3E005429FC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 345796A72391DF280009C62D /* Project object */;
 			proxyType = 1;
@@ -39,6 +47,9 @@
 		34BE19ED2391FC1000ED5FC1 /* UtilityBeltDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BE19EF2391FC1000ED5FC1 /* UtilityBeltDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityBeltDataTests.swift; sourceTree = "<group>"; };
 		34BE19F12391FC1000ED5FC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34D6EBDA2399AC3E005429FC /* UtilityBeltKeychainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltKeychainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		34D6EBDC2399AC3E005429FC /* UtilityBeltKeychainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityBeltKeychainTests.swift; sourceTree = "<group>"; };
+		34D6EBDE2399AC3E005429FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +68,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		34D6EBD72399AC3E005429FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -65,6 +83,7 @@
 			children = (
 				345796EC2391DFFF0009C62D /* UtilityBeltDemo */,
 				34BE19EE2391FC1000ED5FC1 /* UtilityBeltDataTests */,
+				34D6EBDB2399AC3E005429FC /* UtilityBeltKeychainTests */,
 				345796B02391DF280009C62D /* Products */,
 				34A49B342391EB5A0006B1AA /* Frameworks */,
 			);
@@ -75,6 +94,7 @@
 			children = (
 				345796EB2391DFFF0009C62D /* UtilityBeltDemo.app */,
 				34BE19ED2391FC1000ED5FC1 /* UtilityBeltDataTests.xctest */,
+				34D6EBDA2399AC3E005429FC /* UtilityBeltKeychainTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -149,6 +169,31 @@
 			path = UtilityBeltDataTests;
 			sourceTree = "<group>";
 		};
+		34D6EBDB2399AC3E005429FC /* UtilityBeltKeychainTests */ = {
+			isa = PBXGroup;
+			children = (
+				34D6EBE52399AC5D005429FC /* Config */,
+				34D6EBE62399AC60005429FC /* TestCases */,
+			);
+			path = UtilityBeltKeychainTests;
+			sourceTree = "<group>";
+		};
+		34D6EBE52399AC5D005429FC /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				34D6EBDE2399AC3E005429FC /* Info.plist */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		34D6EBE62399AC60005429FC /* TestCases */ = {
+			isa = PBXGroup;
+			children = (
+				34D6EBDC2399AC3E005429FC /* UtilityBeltKeychainTests.swift */,
+			);
+			path = TestCases;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -190,6 +235,24 @@
 			productReference = 34BE19ED2391FC1000ED5FC1 /* UtilityBeltDataTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		34D6EBD92399AC3E005429FC /* UtilityBeltKeychainTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 34D6EBE32399AC3E005429FC /* Build configuration list for PBXNativeTarget "UtilityBeltKeychainTests" */;
+			buildPhases = (
+				34D6EBD62399AC3E005429FC /* Sources */,
+				34D6EBD72399AC3E005429FC /* Frameworks */,
+				34D6EBD82399AC3E005429FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				34D6EBE02399AC3E005429FC /* PBXTargetDependency */,
+			);
+			name = UtilityBeltKeychainTests;
+			productName = UtilityBeltKeychainTests;
+			productReference = 34D6EBDA2399AC3E005429FC /* UtilityBeltKeychainTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -204,6 +267,10 @@
 						CreatedOnToolsVersion = 11.1;
 					};
 					34BE19EC2391FC1000ED5FC1 = {
+						CreatedOnToolsVersion = 11.1;
+						TestTargetID = 345796EA2391DFFF0009C62D;
+					};
+					34D6EBD92399AC3E005429FC = {
 						CreatedOnToolsVersion = 11.1;
 						TestTargetID = 345796EA2391DFFF0009C62D;
 					};
@@ -224,6 +291,7 @@
 			targets = (
 				345796EA2391DFFF0009C62D /* UtilityBeltDemo */,
 				34BE19EC2391FC1000ED5FC1 /* UtilityBeltDataTests */,
+				34D6EBD92399AC3E005429FC /* UtilityBeltKeychainTests */,
 			);
 		};
 /* End PBXProject section */
@@ -240,6 +308,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BE19EB2391FC1000ED5FC1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34D6EBD82399AC3E005429FC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -267,6 +342,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		34D6EBD62399AC3E005429FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34D6EBDD2399AC3E005429FC /* UtilityBeltKeychainTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -274,6 +357,11 @@
 			isa = PBXTargetDependency;
 			target = 345796EA2391DFFF0009C62D /* UtilityBeltDemo */;
 			targetProxy = 34BE19F22391FC1000ED5FC1 /* PBXContainerItemProxy */;
+		};
+		34D6EBE02399AC3E005429FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 345796EA2391DFFF0009C62D /* UtilityBeltDemo */;
+			targetProxy = 34D6EBDF2399AC3E005429FC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -455,7 +543,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.spothero.UtilityBeltDataTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.spothero.utilitybelt.data.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -475,7 +563,47 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.spothero.UtilityBeltDataTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.spothero.utilitybelt.data.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UtilityBeltDemo.app/UtilityBeltDemo";
+			};
+			name = Release;
+		};
+		34D6EBE12399AC3E005429FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ZW7QWR628D;
+				INFOPLIST_FILE = UtilityBeltKeychainTests/Config/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.spothero.utilitybelt.keychain.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UtilityBeltDemo.app/UtilityBeltDemo";
+			};
+			name = Debug;
+		};
+		34D6EBE22399AC3E005429FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ZW7QWR628D;
+				INFOPLIST_FILE = UtilityBeltKeychainTests/Config/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.spothero.utilitybelt.keychain.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -509,6 +637,15 @@
 			buildConfigurations = (
 				34BE19F42391FC1000ED5FC1 /* Debug */,
 				34BE19F52391FC1000ED5FC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		34D6EBE32399AC3E005429FC /* Build configuration list for PBXNativeTarget "UtilityBeltKeychainTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				34D6EBE12399AC3E005429FC /* Debug */,
+				34D6EBE22399AC3E005429FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
