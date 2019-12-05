@@ -163,8 +163,8 @@
 		34BE19EE2391FC1000ED5FC1 /* UtilityBeltDataTests */ = {
 			isa = PBXGroup;
 			children = (
-				34BE19EF2391FC1000ED5FC1 /* UtilityBeltDataTests.swift */,
-				34BE19F12391FC1000ED5FC1 /* Info.plist */,
+				34D6EBE82399ACDF005429FC /* Config */,
+				34D6EBE72399ACD6005429FC /* TestCases */,
 			);
 			path = UtilityBeltDataTests;
 			sourceTree = "<group>";
@@ -192,6 +192,22 @@
 				34D6EBDC2399AC3E005429FC /* UtilityBeltKeychainTests.swift */,
 			);
 			path = TestCases;
+			sourceTree = "<group>";
+		};
+		34D6EBE72399ACD6005429FC /* TestCases */ = {
+			isa = PBXGroup;
+			children = (
+				34BE19EF2391FC1000ED5FC1 /* UtilityBeltDataTests.swift */,
+			);
+			path = TestCases;
+			sourceTree = "<group>";
+		};
+		34D6EBE82399ACDF005429FC /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				34BE19F12391FC1000ED5FC1 /* Info.plist */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -537,7 +553,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZW7QWR628D;
-				INFOPLIST_FILE = UtilityBeltDataTests/Info.plist;
+				INFOPLIST_FILE = UtilityBeltDataTests/Config/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -557,7 +573,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZW7QWR628D;
-				INFOPLIST_FILE = UtilityBeltDataTests/Info.plist;
+				INFOPLIST_FILE = UtilityBeltDataTests/Config/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
