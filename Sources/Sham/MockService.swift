@@ -1,7 +1,7 @@
 // Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 import Foundation
-import OSLog
+import os
 import UtilityBeltNetworking
 
 /// A service which contains stub requests and stub responses for use with the MockURLProtocol.
