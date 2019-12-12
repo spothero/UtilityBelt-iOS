@@ -87,6 +87,14 @@ extension KeychainAttribute: RawRepresentable {
     // MARK: RawValue
     
     public var rawValue: String {
+        #if os(OSX)
+        // `kSecAttrAccess` only exists on macOS
+        // Pulling this check out of the switch statement prevents bad formatting
+        if self == .access {
+            return String(kSecAttrAccess)
+        }
+        #endif
+        
         switch self {
         // Important
         case .class:
