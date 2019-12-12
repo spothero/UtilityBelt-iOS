@@ -62,7 +62,7 @@ public enum KeychainAttribute {
     case account
     /// A key whose value indicates the item's authentication scheme.
     case authenticationType
-    /// A key whose value is a string indicating the item's service.
+    /// A key whose value indicates the item's user-defined attributes.
     case generic
     /// A key whose value is a string indicating the item's path attribute.
     case path
