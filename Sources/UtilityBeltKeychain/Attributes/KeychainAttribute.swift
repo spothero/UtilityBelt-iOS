@@ -6,25 +6,24 @@ import Foundation
 ///
 /// [Source](https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values)
 public enum KeychainAttribute {
-    
     // MARK: Important
-    
+
     /// A key representing the keychain item's class, represented by values in the `kSecClass` key.
     case `class`
-    
+
     /// A key representing the keychain item's data, represented by values in the `kSecValueData` key.
     case data
-    
+
     // MARK: General
-    
+
     // Attributes that can be set in all Keychain Items.
     // Source: https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values#1678541
-    
+
     #if os(OSX)
-    /// A key whose value in an access instance indicating access control list settings for this item.
-    case access
+        /// A key whose value in an access instance indicating access control list settings for this item.
+        case access
     #endif
-    
+
     /// A key whose value in an access control instance indicating access control settings for the item.
     case accessControl
     /// A key whose value indicates when a keychain item is accessible.
@@ -53,9 +52,9 @@ public enum KeychainAttribute {
     case syncViewHint
     /// A key whose value indicates the item's type.
     case type
-    
+
     // MARK: Password
-    
+
     // Attributes that can be set in Keychain Items of class `kSecClassGenericPassword` and `kSecClassInternetPassword`.
     // Source: https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values#2882540
 
@@ -77,33 +76,28 @@ public enum KeychainAttribute {
     case server
     /// A key whose value is a string indicating the item's service.
     case service
-    
 }
 
 // MARK: - RawRepresentable
 
 extension KeychainAttribute: RawRepresentable {
-    
     // MARK: RawValue
-    
+
     public var rawValue: String {
-        #if os(OSX)
-        // `kSecAttrAccess` only exists on macOS
-        // Pulling this check out of the switch statement prevents bad formatting
-        if self == .access {
-            return String(kSecAttrAccess)
-        }
-        #endif
-        
         switch self {
+        #if os(OSX)
+            // swiftlint:disable:next switch_case_alignment
+            case .access:
+                return String(kSecAttrAccess)
+        #endif
+
         // Important
         case .class:
             return String(kSecClass)
         case .data:
             return String(kSecValueData)
-            
+
         // General
-            
         case .accessControl:
             return String(kSecAttrAccessControl)
         case .accessible:
@@ -132,9 +126,8 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecAttrSyncViewHint)
         case .type:
             return String(kSecAttrType)
-            
+
         // Password
-            
         case .account:
             return String(kSecAttrAccount)
         case .authenticationType:
@@ -155,28 +148,24 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecAttrService)
         }
     }
-    
+
     // MARK: Initializer
-    
+
     public init?(rawValue: String) {
-        #if os(OSX)
-        // `kSecAttrAccess` only exists on macOS
-        // Pulling this check out of the switch statement prevents bad formatting
-        if rawValue == String(kSecAttrAccess) {
-            return .access
-        }
-        #endif
-        
         switch rawValue {
+        #if os(OSX)
+            // swiftlint:disable:next switch_case_alignment
+            case String(kSecAttrAccess):
+                self = .access
+        #endif
+
         // Important
-            
         case String(kSecClass):
             self = .class
         case String(kSecValueData):
             self = .data
-            
+
         // General
-            
         case String(kSecAttrAccessControl):
             self = .accessControl
         case String(kSecAttrAccessible):
@@ -205,9 +194,8 @@ extension KeychainAttribute: RawRepresentable {
             self = .syncViewHint
         case String(kSecAttrType):
             self = .type
-            
+
         // Password
-            
         case String(kSecAttrAccount):
             self = .account
         case String(kSecAttrAuthenticationType):
