@@ -58,3 +58,9 @@ public enum KeychainClass: RawRepresentable {
         }
     }
 }
+
+extension KeychainClass: KeychainValueConvertible {
+    public var keychainValue: Any {
+        return self.rawValue
+    }
+}

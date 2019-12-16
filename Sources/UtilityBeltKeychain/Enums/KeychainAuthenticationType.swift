@@ -68,3 +68,9 @@ public enum KeychainAuthenticationType: RawRepresentable {
         }
     }
 }
+
+extension KeychainAuthenticationType: KeychainValueConvertible {
+    public var keychainValue: Any {
+        return self.rawValue
+    }
+}

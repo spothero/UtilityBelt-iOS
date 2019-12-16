@@ -206,3 +206,9 @@ public enum KeychainInternetProtocol: RawRepresentable {
         }
     }
 }
+
+extension KeychainInternetProtocol: KeychainValueConvertible {
+    public var keychainValue: Any {
+        return self.rawValue
+    }
+}
