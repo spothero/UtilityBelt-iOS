@@ -2,6 +2,4 @@
 
 import XCTest
 
-class UtilityBeltDataTests: XCTestCase {
-    
-}
+class UtilityBeltDataTests: XCTestCase {}
