@@ -10,10 +10,10 @@ class InternetPasswordTests: XCTestCase, PasswordKeychainTesting {
                             path: "somePath",
                             port: 8080,
                             securityDomain: "someDomain")
-    
+
     var firstPassword = "pwd_1234"
     var firstAccount = "internetPassword"
-    
+
     var secondPassword = "pwd_1235"
     var secondAccount = "internetPassword2"
 

@@ -5,10 +5,10 @@ import XCTest
 
 class GenericPasswordTests: XCTestCase, PasswordKeychainTesting {
     var keychain = Keychain(service: "MyService")
-    
+
     var firstPassword = "pwd_1234"
     var firstAccount = "genericPassword"
-    
+
     var secondPassword = "pwd_1235"
     var secondAccount = "genericPassword2"
 

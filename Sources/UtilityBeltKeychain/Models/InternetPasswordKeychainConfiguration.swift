@@ -73,22 +73,22 @@ final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
         self.path = path
         self.port = port
         self.securityDomain = securityDomain
-        
+
         super.init(class: .internetPassword, accessGroup: accessGroup)
     }
-    
+
     // MARK: Converters
-    
+
     override func asDictionary() -> [KeychainAttribute: Any?] {
         var query = super.asDictionary()
-        
+
         query[.authenticationType] = self.authenticationType?.rawValue
         query[.path] = self.path
         query[.port] = self.port
         query[.protocol] = self.protocol?.rawValue
         query[.securityDomain] = self.securityDomain
         query[.server] = self.server
-        
+
         return query
     }
 }

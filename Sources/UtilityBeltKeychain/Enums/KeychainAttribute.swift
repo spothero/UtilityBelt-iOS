@@ -73,7 +73,7 @@ public enum KeychainAttribute {
     case server
     /// A key whose value is a string indicating the item's service.
     case service
-    
+
     // MARK: Value
 
     /// A key whose value is the item's data.
@@ -82,9 +82,9 @@ public enum KeychainAttribute {
     case persistentReference
     /// A key whose value is a reference to the item.
     case reference
-    
+
     // MARK: Result
-    
+
     /// A key whose value is a Boolean indicating whether or not to return item attributes.
     case returnAttributes
     /// A key whose value is a Boolean indicating whether or not to return item data.
@@ -93,9 +93,9 @@ public enum KeychainAttribute {
     case returnPersistentReference
     /// A key whose value is a Boolean indicating whether or not to return a reference to an item.
     case returnReference
-    
+
     // MARK: Matching
-    
+
     // TODO: There are many more search attributes we could add!
     // Source: https://developer.apple.com/documentation/security/keychain_services/keychain_items/search_attribute_keys_and_values
 
@@ -169,7 +169,7 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecAttrServer)
         case .service:
             return String(kSecAttrService)
-            
+
         // Value
         case .data:
             return String(kSecValueData)
@@ -177,7 +177,7 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecValuePersistentRef)
         case .reference:
             return String(kSecValueRef)
-        
+
         // Return
         case .returnAttributes:
             return String(kSecReturnAttributes)
@@ -187,7 +187,7 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecReturnPersistentRef)
         case .returnReference:
             return String(kSecReturnRef)
-        
+
         // Matching
         case .matchLimit:
             return String(kSecMatchLimit)
@@ -257,7 +257,7 @@ extension KeychainAttribute: RawRepresentable {
             self = .server
         case String(kSecAttrService):
             self = .service
-            
+
         // Value
         case String(kSecValueData):
             self = .data
@@ -265,7 +265,7 @@ extension KeychainAttribute: RawRepresentable {
             self = .persistentReference
         case String(kSecValueRef):
             self = .reference
-            
+
         // Return
         case String(kSecReturnAttributes):
             self = .returnAttributes
@@ -275,7 +275,7 @@ extension KeychainAttribute: RawRepresentable {
             self = .returnPersistentReference
         case String(kSecReturnRef):
             self = .returnReference
-            
+
         // Matching
         case String(kSecMatchLimit):
             self = .matchLimit
