@@ -9,7 +9,7 @@ extension KeychainDictionary {
     func asKeychainQuery() -> CFDictionary {
         // Reduce the KeychainDictionary into a [String: Any] dictionary,
         // converting enum keys into their raw string values and ignoring all nil values.
-        let stringKeyedDictionary = self.reduce(into: [String: Any]()) { result, currentItem in
+        let stringKeyedDictionary = self.reduce(into: [:]) { result, currentItem in
             if let value = currentItem.value {
                 result[currentItem.key.rawValue] = value
             }
