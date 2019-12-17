@@ -6,13 +6,10 @@ import Foundation
 ///
 /// [Source](https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values)
 public enum KeychainAttribute {
-    // MARK: Important
+    // MARK: Class
 
     /// A key representing the keychain item's class, represented by values in the `kSecClass` key.
     case `class`
-
-    /// A key representing the keychain item's data, represented by values in the `kSecValueData` key.
-    case data
 
     // MARK: General
 
@@ -76,6 +73,34 @@ public enum KeychainAttribute {
     case server
     /// A key whose value is a string indicating the item's service.
     case service
+    
+    // MARK: Value
+
+    /// A key whose value is the item's data.
+    case data
+    /// A key whose value is a persistent reference to the item.
+    case persistentReference
+    /// A key whose value is a reference to the item.
+    case reference
+    
+    // MARK: Result
+    
+    /// A key whose value is a Boolean indicating whether or not to return item attributes.
+    case returnAttributes
+    /// A key whose value is a Boolean indicating whether or not to return item data.
+    case returnData
+    /// A key whose value is a Boolean indicating whether or not to return a persistent reference to an item.
+    case returnPersistentReference
+    /// A key whose value is a Boolean indicating whether or not to return a reference to an item.
+    case returnReference
+    
+    // MARK: Matching
+    
+    // TODO: There are many more search attributes we could add!
+    // Source: https://developer.apple.com/documentation/security/keychain_services/keychain_items/search_attribute_keys_and_values
+
+    /// A key whose value indicates the match limit.
+    case matchLimit
 }
 
 // MARK: - RawRepresentable
@@ -91,11 +116,9 @@ extension KeychainAttribute: RawRepresentable {
                 return String(kSecAttrAccess)
         #endif
 
-        // Important
+        // Class
         case .class:
             return String(kSecClass)
-        case .data:
-            return String(kSecValueData)
 
         // General
         case .accessControl:
@@ -146,6 +169,28 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecAttrServer)
         case .service:
             return String(kSecAttrService)
+            
+        // Value
+        case .data:
+            return String(kSecValueData)
+        case .persistentReference:
+            return String(kSecValuePersistentRef)
+        case .reference:
+            return String(kSecValueRef)
+        
+        // Return
+        case .returnAttributes:
+            return String(kSecReturnAttributes)
+        case .returnData:
+            return String(kSecReturnData)
+        case .returnPersistentReference:
+            return String(kSecReturnPersistentRef)
+        case .returnReference:
+            return String(kSecReturnRef)
+        
+        // Matching
+        case .matchLimit:
+            return String(kSecMatchLimit)
         }
     }
 
@@ -159,11 +204,9 @@ extension KeychainAttribute: RawRepresentable {
                 self = .access
         #endif
 
-        // Important
+        // Class
         case String(kSecClass):
             self = .class
-        case String(kSecValueData):
-            self = .data
 
         // General
         case String(kSecAttrAccessControl):
@@ -214,6 +257,29 @@ extension KeychainAttribute: RawRepresentable {
             self = .server
         case String(kSecAttrService):
             self = .service
+            
+        // Value
+        case String(kSecValueData):
+            self = .data
+        case String(kSecValuePersistentRef):
+            self = .persistentReference
+        case String(kSecValueRef):
+            self = .reference
+            
+        // Return
+        case String(kSecReturnAttributes):
+            self = .returnAttributes
+        case String(kSecReturnData):
+            self = .returnData
+        case String(kSecReturnPersistentRef):
+            self = .returnPersistentReference
+        case String(kSecReturnRef):
+            self = .returnReference
+            
+        // Matching
+        case String(kSecMatchLimit):
+            self = .matchLimit
+
         default:
             return nil
         }
