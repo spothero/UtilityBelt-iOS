@@ -18,20 +18,20 @@ final class GenericPasswordKeychainConfiguration: KeychainConfiguration {
     // MARK: - Methods
 
     // MARK: Initializers
-    
+
     init(service: String, accessGroup: String? = nil) {
         self.service = service
-        
+
         super.init(class: .genericPassword, accessGroup: accessGroup)
     }
-    
+
     // MARK: Converters
-    
+
     override func asDictionary() -> [KeychainAttribute: Any?] {
         var query = super.asDictionary()
-        
+
         query[.service] = self.service
-        
+
         return query
     }
 }
