@@ -14,10 +14,6 @@ internal extension Dictionary where Key == KeychainAttribute, Value == Any? {
             guard var value = value else {
                 continue
             }
-            
-            if let keychainConvertible = value as? KeychainValueConvertible {
-                value = keychainConvertible.keychainValue
-            }
 
             stringKeyedDictionary[key.rawValue] = value
             
