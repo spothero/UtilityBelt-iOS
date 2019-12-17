@@ -44,7 +44,7 @@ class KeychainConfiguration {
     func asDictionary() -> [KeychainAttribute: Any?] {
         var query = [KeychainAttribute: Any?]()
         
-        query[.class] = self.class
+        query[.class] = self.class.rawValue
         query[.accessGroup] = self.accessGroup
         
         return query
