@@ -64,34 +64,35 @@ public final class Keychain {
     ///   - value: The data to set in the keychain.
     ///   - account: The account to set the data for.
     public func setValue(_ data: Data, for account: String) throws {
-        // Ask the secureStoreQueryable instance for the query to execute and append the account you’re looking for.
+        // Get the query from the KeychainConfiguration as a dictionary
         var query = self.configuration.asDictionary()
         query[.account] = account
 
-        // Return the keychain item that matches the query.
-        var status = SecItemCopyMatching(query.asKeychainQuery(), nil)
-        switch status {
-        // If the query succeeds, it means a password for that account already exists.
-        // In this case, you replace the existing password’s value using SecItemUpdate(_:_:).
+        // Fetch the keychain item that matches the query
+        let matchStatus = SecItemCopyMatching(query.asKeychainQuery(), nil)
+        
+        switch matchStatus {
         case errSecSuccess:
-            var attributesToUpdate: KeychainDictionary = [:]
-            attributesToUpdate[.data] = data
-
-            status = SecItemUpdate(query.asKeychainQuery(),
-                                   attributesToUpdate.asKeychainQuery())
-            if status != errSecSuccess {
-                throw self.error(from: status)
+            // If a matching keychain item is found, replace the item
+            var keychainAttributes: KeychainDictionary = [:]
+            keychainAttributes[.data] = data
+            
+            let updateStatus = SecItemUpdate(query.asKeychainQuery(), keychainAttributes.asKeychainQuery())
+            
+            if updateStatus != errSecSuccess {
+                throw self.error(from: updateStatus)
             }
-        // If it cannot find an item, the password for that account does not exist yet. You add the item by invoking SecItemAdd(_:_:).
         case errSecItemNotFound:
+            // If a matching keychain item is not found, add the item
             query[.data] = data
-
-            status = SecItemAdd(query.asKeychainQuery(), nil)
-            if status != errSecSuccess {
-                throw self.error(from: status)
+            
+            let addStatus = SecItemAdd(query.asKeychainQuery(), nil)
+            
+            if addStatus != errSecSuccess {
+                throw self.error(from: addStatus)
             }
         default:
-            throw self.error(from: status)
+            throw self.error(from: matchStatus)
         }
     }
 
