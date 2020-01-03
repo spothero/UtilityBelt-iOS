@@ -47,7 +47,7 @@ public final class Keychain {
 
     // MARK: Key Access
 
-    /// Sets a String value for a given account in the keychain.
+    /// Stores a String value for a given account in the keychain.
     /// - Parameters:
     ///   - value: The data to set in the keychain.
     ///   - account: The account to set the data for.
@@ -59,7 +59,7 @@ public final class Keychain {
         try self.setValue(data, for: account)
     }
 
-    /// Sets a Data value for a given account in the keychain.
+    /// Stores a Data value for a given account in the keychain.
     /// - Parameters:
     ///   - value: The data to set in the keychain.
     ///   - account: The account to set the data for.
@@ -88,6 +88,7 @@ public final class Keychain {
             
             let addStatus = SecItemAdd(query.asKeychainQuery(), nil)
             
+            // If the operation to add a keychain item is unsuccessful, throw an error
             if addStatus != errSecSuccess {
                 throw self.error(from: addStatus)
             }
@@ -96,52 +97,49 @@ public final class Keychain {
         }
     }
 
-    /// Gets a Data value for a given account in the keychain.
+    /// Retrieves a Data value for a given account in the keychain.
     /// - Parameter account: The account to get the value from.
     public func getValue(for account: String) throws -> Data? {
-        // Ask secureStoreQueryable for the query to execute. Besides adding the account you’re interested in,
-        // this enriches the query with other attributes and their related values. In particular,
-        // you’re asking it to return a single result, to return all the attributes associated with that
-        // specific item and to give you back the unencrypted data as a result.
+        // Get the query from the KeychainConfiguration as a dictionary
         var query = self.configuration.asDictionary()
-        query[.matchLimit] = kSecMatchLimitOne
-        query[.returnAttributes] = true
-        query[.returnData] = true
         query[.account] = account
         
-        // Use SecItemCopyMatching(_:_:) to perform the search. On completion,
-        // queryResult will contain a reference to the found item, if available.
-        // withUnsafeMutablePointer(to:_:) gives you access to an UnsafeMutablePointer
-        // that you can use and modify inside the closure to store the result.
+        // Set the match limit to 1 result
+        query[.matchLimit] = kSecMatchLimitOne
+        
+        // Tell the query we want to return attributes and data for the item
+        query[.returnAttributes] = true
+        query[.returnData] = true
+        
+        // Will contain a reference to the matching item if found
         var queryResult: AnyObject?
-        let status = withUnsafeMutablePointer(to: &queryResult) {
+        
+        let matchStatus = withUnsafeMutablePointer(to: &queryResult) {
+            // Fetch the keychain item that matches the query
             SecItemCopyMatching(query.asKeychainQuery(), $0)
         }
         
-        switch status {
-            // If the query succeeds, it means that it found an item. Since the result is represented
-            // by a dictionary that contains all the attributes you’ve asked for,
-        // you need to extract the data first and then decode it into a Data type.
+        switch matchStatus {
         case errSecSuccess:
+            // If a matching keychain item is found, return the item's data
             let queriedItem = queryResult as? [String: Any]
             return queriedItem?[KeychainAttribute.data.rawValue] as? Data
-        // If an item is not found, return a nil value.
         case errSecItemNotFound:
+            // If a matchig keychain item is not found, return nil
             return nil
         default:
-            throw self.error(from: status)
+            throw self.error(from: matchStatus)
         }
     }
 
     /// Removes a value for a given account in the keychain.
     /// - Parameter account: The account to remove the value from.
     public func removeValue(for account: String) throws {
+        // Get the query from the KeychainConfiguration as a dictionary
         var query = self.configuration.asDictionary()
         query[.account] = account
-
-        // To remove a password, you perform SecItemDelete(_:) specifying the account you’re looking for.
-        // If you successfully deleted the password or if no item was found, your job is done and you bail out.
-        // Otherwise, you throw an unhandled error in order to let the user know something went wrong.
+        
+        // Attempt to delete the keychain item that matches the query
         let status = SecItemDelete(query.asKeychainQuery())
 
         // If the status is anything other than success or not found, throw associated error
@@ -156,16 +154,19 @@ public final class Keychain {
 
     /// Removes all values from the Keychain.
     public func removeAllValues() throws {
+        // Get the query from the KeychainConfiguration as a dictionary
         let query = self.configuration.asDictionary()
-        let status = SecItemDelete(query.asKeychainQuery())
+        
+        // Attempt to delete all keychain items for this configuration
+        let deleteStatus = SecItemDelete(query.asKeychainQuery())
 
         // If the status is anything other than success or not found, throw associated error
-        switch status {
+        switch deleteStatus {
         case errSecSuccess,
              errSecItemNotFound:
             return
         default:
-            throw self.error(from: status)
+            throw self.error(from: deleteStatus)
         }
     }
     
