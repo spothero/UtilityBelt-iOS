@@ -53,7 +53,7 @@ public final class Keychain {
     ///   - account: The account to set the data for.
     public func setValue(_ value: String, for account: String) throws {
         guard let data = value.data(using: .utf8) else {
-            throw UBKeychainError.couldNotConvertDataToString
+            throw UBKeychainError.couldNotConvertStringToData
         }
 
         try self.setValue(data, for: account)

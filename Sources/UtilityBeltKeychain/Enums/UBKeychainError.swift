@@ -3,15 +3,15 @@
 import Foundation
 
 public enum UBKeychainError: Error {
-    case couldNotConvertDataToString
+    case couldNotConvertStringToData
     case unhandled(message: String)
 }
 
 extension UBKeychainError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .couldNotConvertDataToString:
-            return "Could not convert data to string."
+        case .couldNotConvertStringToData:
+            return "Could not convert String to Data."
         case let .unhandled(message):
             return message
         }
