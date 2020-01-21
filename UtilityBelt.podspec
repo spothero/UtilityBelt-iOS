@@ -31,4 +31,10 @@ Pod::Spec.new do |spec|
     # s.dependency 'UtilityBelt/Core'
     s.source_files = 'Sources/UtilityBeltNetworking/**/*.swift'
   end
+  
+  spec.subspec 'Sham' do |s|
+    # When we have Core files (files shared across multiple subspecs/modules), this dependency will likely be required
+    # s.dependency 'UtilityBelt/Core'
+    s.source_files = 'Sources/Sham/**/*.swift'
+  end
 end
