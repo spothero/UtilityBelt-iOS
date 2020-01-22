@@ -1,4 +1,4 @@
-// Copyright © 2019 SpotHero, Inc. All rights reserved.
+// Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -7,7 +7,7 @@ public final class Keychain {
     // MARK: - Properties
 
     private let configuration: KeychainConfiguration
-    
+
     // MARK: - Methods
 
     // MARK: Initializers
@@ -70,24 +70,24 @@ public final class Keychain {
 
         // Fetch the keychain item that matches the query
         let matchStatus = SecItemCopyMatching(query.asKeychainQuery(), nil)
-        
+
         switch matchStatus {
         case errSecSuccess:
             // If a matching keychain item is found, replace the item
             var keychainAttributes: KeychainDictionary = [:]
             keychainAttributes[.data] = data
-            
+
             let updateStatus = SecItemUpdate(query.asKeychainQuery(), keychainAttributes.asKeychainQuery())
-            
+
             if updateStatus != errSecSuccess {
                 throw self.error(from: updateStatus)
             }
         case errSecItemNotFound:
             // If a matching keychain item is not found, add the item
             query[.data] = data
-            
+
             let addStatus = SecItemAdd(query.asKeychainQuery(), nil)
-            
+
             // If the operation to add a keychain item is unsuccessful, throw an error
             if addStatus != errSecSuccess {
                 throw self.error(from: addStatus)
@@ -103,22 +103,22 @@ public final class Keychain {
         // Get the query from the KeychainConfiguration as a dictionary
         var query = self.configuration.asDictionary()
         query[.account] = account
-        
+
         // Set the match limit to 1 result
         query[.matchLimit] = kSecMatchLimitOne
-        
+
         // Tell the query we want to return attributes and data for the item
         query[.returnAttributes] = true
         query[.returnData] = true
-        
+
         // Will contain a reference to the matching item if found
         var queryResult: AnyObject?
-        
+
         let matchStatus = withUnsafeMutablePointer(to: &queryResult) {
             // Fetch the keychain item that matches the query
             SecItemCopyMatching(query.asKeychainQuery(), $0)
         }
-        
+
         switch matchStatus {
         case errSecSuccess:
             // If a matching keychain item is found, return the item's data
@@ -138,7 +138,7 @@ public final class Keychain {
         // Get the query from the KeychainConfiguration as a dictionary
         var query = self.configuration.asDictionary()
         query[.account] = account
-        
+
         // Attempt to delete the keychain item that matches the query
         let status = SecItemDelete(query.asKeychainQuery())
 
@@ -156,7 +156,7 @@ public final class Keychain {
     public func removeAllValues() throws {
         // Get the query from the KeychainConfiguration as a dictionary
         let query = self.configuration.asDictionary()
-        
+
         // Attempt to delete all keychain items for this configuration
         let deleteStatus = SecItemDelete(query.asKeychainQuery())
 
@@ -169,7 +169,7 @@ public final class Keychain {
             throw self.error(from: deleteStatus)
         }
     }
-    
+
     private func error(from status: OSStatus) -> UBKeychainError {
         let message: String
 
