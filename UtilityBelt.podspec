@@ -19,6 +19,8 @@ Pod::Spec.new do |spec|
 
   # Build Settings
   spec.module_name = 'UtilityBeltNetworking' # Temporary for SPM compatibility
+  
+  spec.default_subspec = 'Networking'
 
   # Subspecs
   # When we have Core files (files shared across multiple subspecs/modules), this subspec will be required
