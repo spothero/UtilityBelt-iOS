@@ -2,5 +2,6 @@
 
 source 'https://rubygems.org'
 
-gem 'danger', '~> 6.1.0'
-gem 'danger-swiftlint', '~> 0.21.0'
+gem 'bundler', '~> 2.0.1'
+gem 'danger', '~> 6.2.0'
+gem 'danger-swiftlint', '~> 0.24.0'
