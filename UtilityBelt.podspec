@@ -38,7 +38,7 @@ Pod::Spec.new do |spec|
     # When we have Core files (files shared across multiple subspecs/modules), this dependency will likely be required
     # s.dependency 'UtilityBelt/Core'
     s.dependency 'UtilityBelt/Networking'
-    s.framework = 'XCTest'
     s.source_files = 'Sources/Sham/**/*.swift'
+    s.exclude_files = 'Sources/Sham/Extensions/XCTestCase+Stub.swift'
   end
 end
