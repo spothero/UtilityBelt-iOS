@@ -1,14 +1,14 @@
 Pod::Spec.new do |spec|
   # Root Specification
-  spec.name = 'UtilityBelt'
-  spec.version = '0.4.2'
+  spec.name = 'UtilityBeltNetworking'
+  spec.version = '0.5.0'
 
   spec.author   = { 'SpotHero' => 'ios@spothero.com' }
   spec.homepage = 'https://github.com/spothero/UtilityBelt-iOS'
   spec.license = 'Commercial'
   spec.source = { :git => 'https://github.com/spothero/UtilityBelt-iOS.git',
                   :tag => "#{spec.version}" }
-  spec.summary = 'UtilityBelt is a collection of common Swift utility files.'
+  spec.summary = 'Sham is the SpotHero API Mocking layer for stubbing network responses.'
 
   # Platform
   spec.ios.deployment_target = '10.0'
@@ -16,6 +16,10 @@ Pod::Spec.new do |spec|
   spec.tvos.deployment_target = '10.0'
   spec.watchos.deployment_target = '3.0'
   spec.swift_versions = ['5.0', '5.1']
+
+  # Build Settings
+  spec.module_name = 'UtilityBeltNetworking'
+  spec.source_files = 'Sources/UtilityBeltNetworking/**/*.swift'
 
   # Build Settings
   spec.module_name = 'UtilityBeltNetworking' # Temporary for SPM compatibility
