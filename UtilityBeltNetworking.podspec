@@ -20,29 +20,4 @@ Pod::Spec.new do |spec|
   # Build Settings
   spec.module_name = 'UtilityBeltNetworking'
   spec.source_files = 'Sources/UtilityBeltNetworking/**/*.swift'
-
-  # Build Settings
-  spec.module_name = 'UtilityBeltNetworking' # Temporary for SPM compatibility
-  
-  spec.default_subspec = 'Networking'
-
-  # Subspecs
-  # When we have Core files (files shared across multiple subspecs/modules), this subspec will be required
-  # spec.subspec 'Core' do |s|
-  #   s.source_files = 'Sources/UtilityBeltCore/**/*.swift'
-  # end
-
-  spec.subspec 'Networking' do |s|
-    # When we have Core files (files shared across multiple subspecs/modules), this dependency will likely be required
-    # s.dependency 'UtilityBelt/Core'
-    s.source_files = 'Sources/UtilityBeltNetworking/**/*.swift'
-  end
-  
-  spec.subspec 'Sham' do |s|
-    # When we have Core files (files shared across multiple subspecs/modules), this dependency will likely be required
-    # s.dependency 'UtilityBelt/Core'
-    s.dependency 'UtilityBelt/Networking'
-    s.source_files = 'Sources/Sham/**/*.swift'
-    s.exclude_files = 'Sources/Sham/Extensions/XCTestCase+Stub.swift'
-  end
 end
