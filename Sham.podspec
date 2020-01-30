@@ -18,8 +18,10 @@ Pod::Spec.new do |spec|
   spec.swift_versions = ['5.0', '5.1']
 
   # Build Settings
-  spec.module_name = 'Sham'
   spec.dependency = 'UtilityBeltNetworking'
+  spec.module_name = 'Sham'
+
+  # File Patterns
   spec.source_files = 'Sources/Sham/**/*.swift'
   spec.exclude_files = 'Sources/Sham/Extensions/XCTestCase+Stub.swift'
 end

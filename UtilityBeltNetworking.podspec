@@ -19,5 +19,7 @@ Pod::Spec.new do |spec|
 
   # Build Settings
   spec.module_name = 'UtilityBeltNetworking'
+
+  # File Patterns
   spec.source_files = 'Sources/UtilityBeltNetworking/**/*.swift'
 end
