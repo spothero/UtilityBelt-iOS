@@ -1,13 +1,28 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import CoreData
-import Foundation
 
-public extension NSManagedObject {
-    /// Creates a new instance of a managed object type.
-    /// - Parameter context: The Managed Object Context to use.
-    ///                      If nil, uses the currently set persistent container's context.
-    static func newInstance(in context: NSManagedObjectContext? = nil) throws -> Self? {
-        return try CoreDataManager.default.newInstance(of: Self.self, in: context)
+public extension NSPersistentContainer {
+    /// The persistent container store type.
+    ///
+    /// Does **NOT** include the XML store type, which is only available on macOS 10.4+.
+    enum StoreType {
+        /// Stores data in binary.
+        case binary
+        /// Stores data in-memory.
+        case memory
+        /// Stores data in a SQLite database.
+        case sqlite
+
+        var rawValue: String {
+            switch self {
+            case .binary:
+                return NSBinaryStoreType
+            case .memory:
+                return NSInMemoryStoreType
+            case .sqlite:
+                return NSSQLiteStoreType
+            }
+        }
     }
 }
