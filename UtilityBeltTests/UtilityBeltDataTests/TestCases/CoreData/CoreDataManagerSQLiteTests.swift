@@ -1,7 +1,6 @@
 // Copyright © 2019 SpotHero, Inc. All rights reserved.
 
 import CoreData
-import OSLog
 @testable import UtilityBeltData
 @testable import UtilityBeltDemo
 import XCTest
