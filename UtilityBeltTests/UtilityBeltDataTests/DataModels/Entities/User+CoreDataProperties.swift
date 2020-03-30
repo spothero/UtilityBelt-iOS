@@ -1,11 +1,4 @@
-//
-//  User+CoreDataProperties.swift
-//  UtilityBeltDataTests
-//
-//  Created by Brian Drelling on 11/30/19.
-//  Copyright © 2019 SpotHero, Inc. All rights reserved.
-//
-//
+// Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import Foundation
 import CoreData
