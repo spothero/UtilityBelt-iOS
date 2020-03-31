@@ -1,0 +1,65 @@
+---
+format_version: '8'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: ios
+trigger_map:
+- push_branch: master
+  workflow: test
+- pull_request_source_branch: "*"
+  pull_request_target_branch: master
+  workflow: test
+workflows:
+  prepare:
+    steps:
+    - authenticate-with-github-oauth:
+        inputs:
+        - access_token: "$GITHUB_ACCESS_TOKEN"
+        - username: "$GITHUB_USERNAME"
+    - git-clone: {}
+    - script:
+        title: Set GEM_CACHE_PATH Environment Variable
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -ev
+
+            # setup so we can cache ruby gems: https://devcenter.bitrise.io/builds/caching/caching-ruby-gems/
+            RBENV_DIR="`cd $(rbenv which ruby)/../..;pwd`"
+            echo "Gem cache directory: $RBENV_DIR"
+            envman add --key GEM_CACHE_PATH --value $RBENV_DIR
+    - cache-pull: {}
+  test:
+    before_run:
+    - prepare
+    steps:
+    - script:
+        title: swift build
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            swift build
+    - script:
+        title: swift test
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            swift test
+    after_run:
+    - deploy
+  deploy:
+    steps:
+    - deploy-to-bitrise-io:
+        inputs:
+        - notify_user_groups: admins
+    - cache-push:
+        run_if: ".IsPR"
+        inputs:
+        - cache_paths: |-
+            $BITRISE_CACHE_DIR
+            $GEM_CACHE_PATH
+            ./.build
+            ./.swiftpm
+app:
+  envs:
+  - GITHUB_USERNAME: spothero-ios-ci
