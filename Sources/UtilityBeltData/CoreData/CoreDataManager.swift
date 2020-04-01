@@ -52,7 +52,7 @@ public class CoreDataManager {
                                           with predicate: NSPredicate? = nil,
                                           in context: NSManagedObjectContext? = nil) throws -> Int {
         let context = try (context ?? self.managedContext())
-        
+
         // Instead of using T.fetchRequest(), we build the FetchRequest so we don't need to cast the result
         let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
         fetchRequest.includesPropertyValues = false
@@ -93,14 +93,14 @@ public class CoreDataManager {
     /// - Parameter context: The managed object context to perform the delete operation in. If nil, uses the current default context.
     ///
     /// Batch delete requests are only compatible with the SQLite store type.
-    /// 
+    ///
     /// **Sources**
     /// - [Implementing Batch Deletes](https://developer.apple.com/library/archive/featuredarticles/CoreData_Batch_Guide/BatchDeletes/BatchDeletes.html)
     public func deleteAll<T: NSManagedObject>(of type: T.Type,
                                               with predicate: NSPredicate? = nil,
                                               in context: NSManagedObjectContext? = nil) throws {
         let context = try (context ?? self.managedContext())
-        
+
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: T.self))
         fetchRequest.predicate = predicate
 
