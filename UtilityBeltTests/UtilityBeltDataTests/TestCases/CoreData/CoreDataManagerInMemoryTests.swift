@@ -18,6 +18,10 @@ class CoreDataManagerInMemoryTests: XCTestCase, CoreDataManagerTesting {
         self.count()
     }
 
+    func testDelete() {
+        self.delete()
+    }
+
     func testExists() {
         self.exists()
     }

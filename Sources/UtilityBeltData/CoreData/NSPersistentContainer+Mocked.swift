@@ -6,7 +6,7 @@ public extension NSPersistentContainer {
     /// Creates a mocked persistent container that stores data in memory instead of on disk.
     /// - Parameter name: The name of the Data Model to persist.
     static func mocked(name: String, storeType: StoreType = .memory) -> NSPersistentContainer {
-        let container = NSPersistentContainer(name: name) // , managedObjectModel: self.managedObjectModel)
+        let container = NSPersistentContainer(name: name) 
         let description = NSPersistentStoreDescription()
 
         // Storing in memory will prevent saving of data between runs

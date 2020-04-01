@@ -29,8 +29,6 @@ extension CoreDataManagerTesting {
     }
 
     func delete(file: StaticString = #file, line: UInt = #line) {
-        XCTAssertEqual(self.storeType, .sqlite)
-
         self.measureAndCatch {
             try CoreDataManager.default.deleteAll(of: User.self)
             let userExists = try CoreDataManager.default.exists(User.self)

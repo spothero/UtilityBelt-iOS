@@ -46,15 +46,20 @@ public class CoreDataManager {
 
     /// Returns the count of a given managed object.
     /// - Parameter type: The type of managed object to count.
+    /// - Parameter predicate: The predicate to filter the request by.
+    /// - Parameter context: The managed object context to perform the count operation in. If nil, uses the current default context.
     public func count<T: NSManagedObject>(of type: T.Type,
-                                          with predicate: NSPredicate? = nil) throws -> Int {
-        // TODO: Figure out why T.fetchRequest() doesn't work here
+                                          with predicate: NSPredicate? = nil,
+                                          in context: NSManagedObjectContext? = nil) throws -> Int {
+        let context = try (context ?? self.managedContext())
+        
+        // Instead of using T.fetchRequest(), we build the FetchRequest so we don't need to cast the result
         let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
         fetchRequest.includesPropertyValues = false
         fetchRequest.includesSubentities = false
         fetchRequest.predicate = predicate
 
-        let count = try self.managedContext().count(for: fetchRequest)
+        let count = try context.count(for: fetchRequest)
 
         // If the fetched objects were not found, ensure that we return 0
         return (count != NSNotFound) ? count : 0
@@ -84,33 +89,47 @@ public class CoreDataManager {
 
     /// Deletes all objects of a given entity type.
     /// - Parameter type: The entity type to batch delete.
+    /// - Parameter predicate: The predicate to filter the request by.
+    /// - Parameter context: The managed object context to perform the delete operation in. If nil, uses the current default context.
     ///
     /// Batch delete requests are only compatible with the SQLite store type.
+    /// 
+    /// **Sources**
+    /// - [Implementing Batch Deletes](https://developer.apple.com/library/archive/featuredarticles/CoreData_Batch_Guide/BatchDeletes/BatchDeletes.html)
     public func deleteAll<T: NSManagedObject>(of type: T.Type,
-                                              with predicate: NSPredicate? = nil) throws {
+                                              with predicate: NSPredicate? = nil,
+                                              in context: NSManagedObjectContext? = nil) throws {
+        let context = try (context ?? self.managedContext())
+        
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: T.self))
         fetchRequest.predicate = predicate
 
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
 
-        try self.managedContext().executeAndMergeChanges(using: deleteRequest)
+        try context.executeAndMergeChanges(using: deleteRequest)
 
-        try self.managedContext().save()
+        try context.save()
     }
 
     // MARK: Exists
 
     /// Checks whether a given type of entity exists.
     /// - Parameter type: The type of entity to check existence for.
+    /// - Parameter predicate: The predicate to filter the request by.
+    /// - Parameter context: The managed object context to use when checking for existence of a given object type.
+    ///                      If nil, uses the current default context.
     public func exists<T: NSManagedObject>(_ type: T.Type,
-                                           with predicate: NSPredicate? = nil) throws -> Bool {
-        return try self.count(of: type, with: predicate) > 0
+                                           with predicate: NSPredicate? = nil,
+                                           in context: NSManagedObjectContext? = nil) throws -> Bool {
+        return try self.count(of: type, with: predicate, in: context) > 0
     }
 
     // MARK: Fetch
 
     /// Fetches all managed objects of a given type.
     /// - Parameter type: The type of entity to fetch all results for.
+    /// - Parameter predicate: The predicate to filter the request by.
+    /// - Parameter context: The managed object context to perform the fetch operation in. If nil, uses the current default context.
     public func fetchAll<T: NSManagedObject>(of type: T.Type,
                                              with predicate: NSPredicate? = nil,
                                              in context: NSManagedObjectContext? = nil) throws -> [T] {
