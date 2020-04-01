@@ -7,7 +7,7 @@ extension XCTestCase {
     func measureAndCatch(file: StaticString = #file,
                          line: UInt = #line,
                          block: () throws -> Void) {
-        measure {
+        self.measure {
             do {
                 try block()
             } catch {

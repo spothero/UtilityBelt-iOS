@@ -1,16 +1,23 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
+import CoreData
 import Foundation
 
 public enum UBCoreDataError: Error {
-    case defaultPersistentContainerNotSet
+    case managedObjectContextNotFound
+    case objectHasNoManagedObjectContext(NSManagedObject)
+    case sharedCoreDataOperatorNotInitialized
 }
 
 extension UBCoreDataError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .defaultPersistentContainerNotSet:
-            return "CoreDataManager.defaultContainer must be set before calling CoreDataManager.default for any operations."
+        case .managedObjectContextNotFound:
+            return "No managed object context found."
+        case let .objectHasNoManagedObjectContext(managedObject):
+            return "The managed object context for the managed object '\(managedObject.entity)' is nil."
+        case .sharedCoreDataOperatorNotInitialized:
+            return "CoreDataOperator.shared is not initialized."
         }
     }
 }

@@ -5,13 +5,13 @@ import CoreData
 @testable import UtilityBeltDemo
 import XCTest
 
-class CoreDataManagerSQLiteTests: XCTestCase, CoreDataManagerTesting {
-    var storeType: NSPersistentContainer.StoreType = .sqlite
+class CoreDataOperatorSQLiteTests: XCTestCase, CoreDataOperatorTesting {
+    var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .sqlite)
 
     override func setUp() {
         super.setUp()
 
-        self.initialize()
+        self.loadData()
     }
 
     func testCount() {

@@ -8,6 +8,6 @@ public extension NSManagedObject {
     /// - Parameter context: The Managed Object Context to use.
     ///                      If nil, uses the currently set persistent container's context.
     static func newInstance(in context: NSManagedObjectContext? = nil) throws -> Self? {
-        return try CoreDataManager.default.newInstance(of: Self.self, in: context)
+        return try CoreDataOperator.shared.newInstance(of: Self.self, in: context)
     }
 }

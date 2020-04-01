@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		340C44B22432A27E0004A510 /* CoreDataManagerInMemoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340C44B02432A27E0004A510 /* CoreDataManagerInMemoryTests.swift */; };
-		340C44B32432A27E0004A510 /* CoreDataManagerSQLiteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340C44B12432A27E0004A510 /* CoreDataManagerSQLiteTests.swift */; };
+		340C44B22432A27E0004A510 /* CoreDataOperatorInMemoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340C44B02432A27E0004A510 /* CoreDataOperatorInMemoryTests.swift */; };
+		340C44B32432A27E0004A510 /* CoreDataOperatorSQLiteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340C44B12432A27E0004A510 /* CoreDataOperatorSQLiteTests.swift */; };
 		340C44B52432A2880004A510 /* UtilityBeltDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340C44B42432A2880004A510 /* UtilityBeltDataTests.swift */; };
 		3451094523A82408006E98DB /* GenericPasswordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3451094323A82408006E98DB /* GenericPasswordTests.swift */; };
 		3451094623A82408006E98DB /* InternetPasswordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3451094423A82408006E98DB /* InternetPasswordTests.swift */; };
@@ -21,7 +21,7 @@
 		345796F92391E0000009C62D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 345796F82391E0000009C62D /* Preview Assets.xcassets */; };
 		345796FC2391E0000009C62D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345796FA2391E0000009C62D /* LaunchScreen.storyboard */; };
 		345FE27B23924B6C0027D0FE /* XCTestCase+MeasureAndCatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345FE27A23924B6C0027D0FE /* XCTestCase+MeasureAndCatch.swift */; };
-		345FE28023924EC50027D0FE /* CoreDataManagerTesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345FE27F23924EC50027D0FE /* CoreDataManagerTesting.swift */; };
+		345FE28023924EC50027D0FE /* CoreDataOperatorTesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345FE27F23924EC50027D0FE /* CoreDataOperatorTesting.swift */; };
 		34BE19F82391FC8F00ED5FC1 /* UtilityBeltData in Frameworks */ = {isa = PBXBuildFile; productRef = 34BE19F72391FC8F00ED5FC1 /* UtilityBeltData */; };
 		34BE1A062392013700ED5FC1 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A042392013700ED5FC1 /* User+CoreDataClass.swift */; };
 		34BE1A072392013700ED5FC1 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A052392013700ED5FC1 /* User+CoreDataProperties.swift */; };
@@ -48,8 +48,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		340C44B02432A27E0004A510 /* CoreDataManagerInMemoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManagerInMemoryTests.swift; sourceTree = "<group>"; };
-		340C44B12432A27E0004A510 /* CoreDataManagerSQLiteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManagerSQLiteTests.swift; sourceTree = "<group>"; };
+		340C44B02432A27E0004A510 /* CoreDataOperatorInMemoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataOperatorInMemoryTests.swift; sourceTree = "<group>"; };
+		340C44B12432A27E0004A510 /* CoreDataOperatorSQLiteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataOperatorSQLiteTests.swift; sourceTree = "<group>"; };
 		340C44B42432A2880004A510 /* UtilityBeltDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityBeltDataTests.swift; sourceTree = "<group>"; };
 		3451094323A82408006E98DB /* GenericPasswordTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericPasswordTests.swift; sourceTree = "<group>"; };
 		3451094423A82408006E98DB /* InternetPasswordTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetPasswordTests.swift; sourceTree = "<group>"; };
@@ -65,7 +65,7 @@
 		345796FD2391E0000009C62D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		345FE2752392411B0027D0FE /* CoreDataManagerSQLiteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerSQLiteTests.swift; sourceTree = "<group>"; };
 		345FE27A23924B6C0027D0FE /* XCTestCase+MeasureAndCatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MeasureAndCatch.swift"; sourceTree = "<group>"; };
-		345FE27F23924EC50027D0FE /* CoreDataManagerTesting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerTesting.swift; sourceTree = "<group>"; };
+		345FE27F23924EC50027D0FE /* CoreDataOperatorTesting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataOperatorTesting.swift; sourceTree = "<group>"; };
 		34BE19ED2391FC1000ED5FC1 /* UtilityBeltDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BE19F12391FC1000ED5FC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34BE1A042392013700ED5FC1 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -113,8 +113,8 @@
 		340C44AF2432A27E0004A510 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				340C44B02432A27E0004A510 /* CoreDataManagerInMemoryTests.swift */,
-				340C44B12432A27E0004A510 /* CoreDataManagerSQLiteTests.swift */,
+				340C44B02432A27E0004A510 /* CoreDataOperatorInMemoryTests.swift */,
+				340C44B12432A27E0004A510 /* CoreDataOperatorSQLiteTests.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -222,7 +222,7 @@
 		345FE27C23924B810027D0FE /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				345FE27F23924EC50027D0FE /* CoreDataManagerTesting.swift */,
+				345FE27F23924EC50027D0FE /* CoreDataOperatorTesting.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -459,10 +459,10 @@
 			files = (
 				34BE1A1023920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */,
 				34BE1A072392013700ED5FC1 /* User+CoreDataProperties.swift in Sources */,
-				345FE28023924EC50027D0FE /* CoreDataManagerTesting.swift in Sources */,
+				345FE28023924EC50027D0FE /* CoreDataOperatorTesting.swift in Sources */,
 				34BE1A062392013700ED5FC1 /* User+CoreDataClass.swift in Sources */,
-				340C44B32432A27E0004A510 /* CoreDataManagerSQLiteTests.swift in Sources */,
-				340C44B22432A27E0004A510 /* CoreDataManagerInMemoryTests.swift in Sources */,
+				340C44B32432A27E0004A510 /* CoreDataOperatorSQLiteTests.swift in Sources */,
+				340C44B22432A27E0004A510 /* CoreDataOperatorInMemoryTests.swift in Sources */,
 				345FE27B23924B6C0027D0FE /* XCTestCase+MeasureAndCatch.swift in Sources */,
 				340C44B52432A2880004A510 /* UtilityBeltDataTests.swift in Sources */,
 			);

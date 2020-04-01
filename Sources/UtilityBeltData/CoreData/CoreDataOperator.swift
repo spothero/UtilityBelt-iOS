@@ -4,42 +4,51 @@ import CoreData
 import Foundation
 
 /// A helper class to assist with all CoreData operations.
-public class CoreDataManager {
-    // MARK: - Default Instance
+public class CoreDataOperator {
+    // MARK: - Shared Instance
 
-    /// The default instance of CoreDataManager.
-    /// Until the default container is set, any operations on this instance will fail due to missing context.
-    /// This is initialized with an empty persistent container
-    public private(set) static var `default` = CoreDataManager()
-
-    /// The default persistent container to use when referencing the default instance of CoreDataManager.
-    public static var defaultContainer: NSPersistentContainer? {
-        get {
-            return self.default.persistentContainer
-        }
-        set {
-            self.default.persistentContainer = newValue
-        }
-    }
+    /// The shared instance of `CoreDataManager`.
+    ///
+    /// Users must call one of the static `initializeSharedContext` methods on this class before
+    /// operations will work without requiring a passed-in context.
+    public private(set) static var shared = CoreDataOperator()
 
     // MARK: - Properties
 
-    /// The persistent container to use for all requests. Must be set prior to performing any operations.
-    private var persistentContainer: NSPersistentContainer?
+    /// The default managed object context for all requests.
+    private var defaultContext: NSManagedObjectContext?
 
     // MARK: - Methods
 
     // MARK: Initializers
 
-    /// Initializes a new CoreDataManger with no persistent container.
-    /// This is only used for the static default instance of this class.
-    /// All operations on the default instance will fail until the default container is set.
-    private init() {}
+    private init() {
+        self.defaultContext = nil
+    }
 
-    /// Initializes a new CoreDataManager.
-    /// - Parameter container: The persistent container to use for all operations.
-    public required init(container: NSPersistentContainer) {
-        self.persistentContainer = container
+    /// Initializes a new `CoreDataOperator` with a given managed object context.
+    /// - Parameter context: The managed object context to use for all operations.
+    public required init(context: NSManagedObjectContext) {
+        self.defaultContext = context
+    }
+
+    /// Initializes a new `CoreDataOperator` using the view context from a given `NSPersistentContainer`.
+    /// - Parameter persistentContainer: The persistent container that owns the view context to use for all operations.
+    public convenience init(persistentContainer: NSPersistentContainer) {
+        self.init(context: persistentContainer.viewContext)
+    }
+
+    /// Initializes the shared `CoreDataOperator` instance's default managed object context.
+    /// - Parameter context: The managed object context to use for all operations.
+    public static func initializeSharedContext(_ context: NSManagedObjectContext) {
+        Self.shared.defaultContext = context
+    }
+
+    /// Initializes the shared `CoreDataOperator` instance's default managed object context
+    /// using the view context from a given `NSPersistentContainer`.
+    /// - Parameter persistentContainer: The persistent container that owns the view context to use for all operations.
+    public static func initializeSharedContext(from persistentContainer: NSPersistentContainer) {
+        Self.shared.defaultContext = persistentContainer.viewContext
     }
 
     // MARK: Count
@@ -51,7 +60,9 @@ public class CoreDataManager {
     public func count<T: NSManagedObject>(of type: T.Type,
                                           with predicate: NSPredicate? = nil,
                                           in context: NSManagedObjectContext? = nil) throws -> Int {
-        let context = try (context ?? self.managedContext())
+        guard let context = context ?? self.defaultContext else {
+            throw UBCoreDataError.managedObjectContextNotFound
+        }
 
         // Instead of using T.fetchRequest(), we build the FetchRequest so we don't need to cast the result
         let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
@@ -71,17 +82,21 @@ public class CoreDataManager {
     /// - Parameter type: The managed object subclass type to create.
     /// - Parameter context: The managed object context to create the object in. If nil, uses the current default context.
     public func newInstance<T: NSManagedObject>(of type: T.Type, in context: NSManagedObjectContext? = nil) throws -> T? {
-        let context = try (context ?? self.managedContext())
+        guard let context = context ?? self.defaultContext else {
+            throw UBCoreDataError.managedObjectContextNotFound
+        }
 
         return NSEntityDescription.insertNewObject(forEntityName: String(describing: T.self), into: context) as? T
     }
 
     // MARK: Delete
 
-    /// Deletes a single object.
+    /// Deletes a single managed object.
     /// - Parameter object: The object to delete.
     public func delete<T: NSManagedObject>(_ object: T) throws {
-        let context = try (object.managedObjectContext ?? self.managedContext())
+        guard let context = object.managedObjectContext else {
+            throw UBCoreDataError.objectHasNoManagedObjectContext(object)
+        }
 
         context.delete(object)
         try context.save()
@@ -99,7 +114,9 @@ public class CoreDataManager {
     public func deleteAll<T: NSManagedObject>(of type: T.Type,
                                               with predicate: NSPredicate? = nil,
                                               in context: NSManagedObjectContext? = nil) throws {
-        let context = try (context ?? self.managedContext())
+        guard let context = context ?? self.defaultContext else {
+            throw UBCoreDataError.managedObjectContextNotFound
+        }
 
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: T.self))
         fetchRequest.predicate = predicate
@@ -133,7 +150,9 @@ public class CoreDataManager {
     public func fetchAll<T: NSManagedObject>(of type: T.Type,
                                              with predicate: NSPredicate? = nil,
                                              in context: NSManagedObjectContext? = nil) throws -> [T] {
-        let context = try (context ?? self.managedContext())
+        guard let context = context ?? self.defaultContext else {
+            throw UBCoreDataError.managedObjectContextNotFound
+        }
 
         // Instead of using T.fetchRequest(), we build the FetchRequest so we don't need to cast the result
         let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
@@ -152,25 +171,18 @@ public class CoreDataManager {
 
     /// Saves the default managed object context.
     public func saveDefaultContext() throws {
-        try self.save(context: self.managedContext())
+        try self.save(context: self.defaultContext)
     }
 
     /// Saves a managed object context if there are changes.
     /// - Parameter context: The managed object context to save.
     private func save(context: NSManagedObjectContext?) throws {
-        if context?.hasChanges == true {
-            try context?.save()
-        }
-    }
-
-    // MARK: Utilities
-
-    /// Returns the persistent container's view context for convenient reference.
-    private func managedContext() throws -> NSManagedObjectContext {
-        guard let persistentContainer = self.persistentContainer else {
-            throw UBCoreDataError.defaultPersistentContainerNotSet
+        guard let context = context else {
+            throw UBCoreDataError.managedObjectContextNotFound
         }
 
-        return persistentContainer.viewContext
+        if context.hasChanges == true {
+            try context.save()
+        }
     }
 }

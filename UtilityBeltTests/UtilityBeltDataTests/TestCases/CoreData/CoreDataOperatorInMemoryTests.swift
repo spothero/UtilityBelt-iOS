@@ -5,13 +5,13 @@ import CoreData
 @testable import UtilityBeltDemo
 import XCTest
 
-class CoreDataManagerInMemoryTests: XCTestCase, CoreDataManagerTesting {
-    var storeType: NSPersistentContainer.StoreType = .memory
+class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
+    var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .memory)
 
     override func setUp() {
         super.setUp()
 
-        self.initialize()
+        self.loadData()
     }
 
     func testCount() {
