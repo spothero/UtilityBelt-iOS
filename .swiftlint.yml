@@ -117,3 +117,5 @@ excluded: # what folders should be excluded from analysis?
   - .swiftpm
   - Tests/LinuxMain.swift
   - "Tests/*/XCTestManifests.swift"
+  # Core Data
+  - UtilityBeltTests/UtilityBeltDataTests/DataModels
