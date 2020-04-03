@@ -1,4 +1,4 @@
-// Copyright © 2019 SpotHero, Inc. All rights reserved.
+// Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -23,7 +23,7 @@ extension URLRequest {
             // This should never occur
             break
         case .httpBody(.json):
-            self.setValue("application/json", forHTTPHeaderField: .contentType)
+            self.setValue(HTTPBodyEncoding.json.rawValue, forHTTPHeaderField: .contentType)
 
             do {
                 self.httpBody = try parameters.asJSONSerializedData()
@@ -31,7 +31,7 @@ extension URLRequest {
                 // TODO: Throw error?
             }
         case .httpBody(.wwwFormURLEncoded):
-            self.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: .contentType)
+            self.setValue(HTTPBodyEncoding.wwwFormURLEncoded.rawValue, forHTTPHeaderField: .contentType)
 
             var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
             urlComponents?.setQueryItems(with: parameters)

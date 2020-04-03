@@ -1,4 +1,4 @@
-// Copyright © 2019 SpotHero, Inc. All rights reserved.
+// Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 /// HTTP headers are components of the header section of request and response messages.
 ///
@@ -174,7 +174,7 @@ public enum HTTPHeader: String {
     case proxyAuthenticate = "Proxy-Authenticate"
 
     ///
-    case refresh = "Reresh"
+    case refresh = "Refresh"
 
     /// If an entity is temporarily unavailable, this instructs the client to try again later.
     /// Value could be a specified period of time (in seconds) or a HTTP-date.

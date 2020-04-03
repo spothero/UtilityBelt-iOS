@@ -1,4 +1,4 @@
-// Copyright © 2019 SpotHero, Inc. All rights reserved.
+// Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 @testable import Sham
 import UtilityBeltNetworking
@@ -78,7 +78,7 @@ final class MockServiceTests: XCTestCase {
 
         let hasData = MockService.shared.hasStub(for: .post(self.fullURL))
 
-        XCTAssertFalse(MockService.shared.hasStubs)
+        XCTAssertTrue(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
     }
 
@@ -88,7 +88,7 @@ final class MockServiceTests: XCTestCase {
 
         let hasData = MockService.shared.hasStub(for: self.schemeOnlyURL)
 
-        XCTAssertTrue(MockService.shared.hasStubs)
+        XCTAssertFalse(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
     }
 
@@ -98,7 +98,7 @@ final class MockServiceTests: XCTestCase {
 
         let hasData = MockService.shared.hasStub(for: self.queryOnlyURL)
 
-        XCTAssertTrue(MockService.shared.hasStubs)
+        XCTAssertFalse(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
     }
 
