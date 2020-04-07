@@ -8,7 +8,7 @@ public enum ParameterEncoding {
     case queryString
 
     /// Returns the default encoding for a given HTTP method.
-    static func defaultEncoding(for method: HTTPMethod) -> ParameterEncoding {
+    public static func defaultEncoding(for method: HTTPMethod) -> ParameterEncoding {
         switch method {
         case .delete, .get, .head:
             return .queryString
