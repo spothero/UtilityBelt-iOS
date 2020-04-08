@@ -14,13 +14,13 @@ extension UBNetworkError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .invalidFilePath(path):
-            return "Invalid file path: '\(path)'."
+            return "Invalid file path '\(path)'."
         case let .invalidURLString(urlString):
-            return "Invalid URL string: '\(urlString)'."
+            return "Invalid URL string '\(urlString)'."
         case .invalidURLResponse:
             return "Invalid URL Response."
         case let .unableToDecode(objectName):
-            return "Unable to decode object of type '\(objectName)'."
+            return "Unable to decode '\(objectName)'."
         case .unexpectedError:
             return "An unexpected error has occurred."
         }
