@@ -3,7 +3,7 @@
 import Foundation
 
 /// A completion handler for requests that return raw data results.
-public typealias DataTaskCompletion = (DataResponse<Data, Error>) -> Void
+public typealias DataTaskCompletion = DecodableTaskCompletion<Data>
 
 /// A completion handler for requests that return decoded object results.
 public typealias DecodableTaskCompletion<T: Decodable> = (DataResponse<T, Error>) -> Void
@@ -33,7 +33,7 @@ public class HTTPClient {
     // MARK: Request
 
     /// Creates and sends a request, fetching raw data from an endpoint.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries. 
+    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request.
     /// - Parameter parameters: The dictionary of parameters to send in the query string or HTTP body.
@@ -46,19 +46,23 @@ public class HTTPClient {
                         encoding: ParameterEncoding? = nil,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
         guard let url = try? url.asURL() else {
-            // TODO: Throw error
+            let result: Result<Data, Error> = .failure(UBNetworkError.unexpectedError)
+            let response = DataResponse(request: nil, response: nil, data: nil, result: result)
+            completion?(response)
             return nil
         }
 
         guard let request = self.configuredURLRequest(url: url, method: method, parameters: parameters, encoding: encoding) else {
-            // TODO: Throw error
+            let result: Result<Data, Error> = .failure(UBNetworkError.unexpectedError)
+            let response = DataResponse(request: nil, response: nil, data: nil, result: result)
+            completion?(response)
             return nil
         }
 
         let task = self.session.dataTask(with: request) { data, urlResponse, error in
             // Convert the URLResponse into an HTTPURLResponse object.
             // If it cannot be converted, use the undefined HTTPURLResponse object
-            let httpResponse = (urlResponse as? HTTPURLResponse) ?? .undefined(url)
+            let httpResponse = urlResponse as? HTTPURLResponse
 
             // Create a result object for improved handling of the response
             let result: Result<Data, Error> = {
@@ -82,7 +86,7 @@ public class HTTPClient {
         }
 
         task.resume()
-        
+
         return task
     }
 
@@ -100,7 +104,9 @@ public class HTTPClient {
                            encoding: ParameterEncoding? = nil,
                            completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? where T: Decodable {
         guard let url = try? url.asURL() else {
-            // TODO: Throw error
+            let result: Result<T, Error> = .failure(UBNetworkError.unexpectedError)
+            let response = DataResponse(request: nil, response: nil, data: nil, result: result)
+            completion?(response)
             return nil
         }
 
