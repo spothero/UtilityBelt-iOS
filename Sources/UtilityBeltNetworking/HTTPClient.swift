@@ -33,24 +33,26 @@ public class HTTPClient {
     // MARK: Request
 
     /// Creates and sends a request, fetching raw data from an endpoint.
+    /// Returns a `URLSessionTask`, which allows for cancellation and retries. 
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request.
     /// - Parameter parameters: The dictionary of parameters to send in the query string or HTTP body.
     /// - Parameter encoding: The parameter encoding method. If nil, uses default for HTTP method.
     /// - Parameter completion: The completion block to call when the request is completed, regardless of error.
+    @discardableResult
     public func request(_ url: URLConvertible,
                         method: HTTPMethod,
                         parameters: [String: Any]? = nil,
                         encoding: ParameterEncoding? = nil,
-                        completion: DataTaskCompletion? = nil) {
+                        completion: DataTaskCompletion? = nil) -> URLSessionTask? {
         guard let url = try? url.asURL() else {
             // TODO: Throw error
-            return
+            return nil
         }
 
         guard let request = self.configuredURLRequest(url: url, method: method, parameters: parameters, encoding: encoding) else {
             // TODO: Throw error
-            return
+            return nil
         }
 
         let task = self.session.dataTask(with: request) { data, urlResponse, error in
@@ -80,25 +82,29 @@ public class HTTPClient {
         }
 
         task.resume()
+        
+        return task
     }
 
     /// Creates and sends a request, fetching raw data from an endpoint that is decoded into a Decodable object.
+    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request.
     /// - Parameter parameters: The dictionary of parameters to send in the query string or HTTP body.
     /// - Parameter encoding: The parameter encoding method. If nil, uses default for HTTP method.
     /// - Parameter completion: The completion block to call when the request is completed, regardless of error.
+    @discardableResult
     public func request<T>(_ url: URLConvertible,
                            method: HTTPMethod,
                            parameters: [String: Any]? = nil,
                            encoding: ParameterEncoding? = nil,
-                           completion: DecodableTaskCompletion<T>? = nil) where T: Decodable {
+                           completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? where T: Decodable {
         guard let url = try? url.asURL() else {
             // TODO: Throw error
-            return
+            return nil
         }
 
-        self.request(url, method: method, parameters: parameters, encoding: encoding) { dataResponse in
+        return self.request(url, method: method, parameters: parameters, encoding: encoding) { dataResponse in
             // TODO: Check the response.mimeType and ensure it is application/json, which is required for decoding
 
             // Create a result object for improved handling of the response
