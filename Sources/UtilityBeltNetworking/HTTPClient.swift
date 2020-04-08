@@ -3,10 +3,10 @@
 import Foundation
 
 /// A completion handler for requests that return raw data results.
-public typealias DataTaskCompletion = (DataResult) -> Void
+public typealias DataTaskCompletion = (DataResponse<Data, Error>) -> Void
 
 /// A completion handler for requests that return decoded object results.
-public typealias DecodableTaskCompletion<T> = (DecodableResult<T>) -> Void where T: Decodable
+public typealias DecodableTaskCompletion<T: Decodable> = (DataResponse<T, Error>) -> Void
 
 /// A lightweight HTTP Client that supports data tasks
 public class HTTPClient {
@@ -55,18 +55,30 @@ public class HTTPClient {
             return nil
         }
 
-        let task = self.session.dataTask(with: request) { data, response, error in
-            var result: DataResult
+        let task = self.session.dataTask(with: request) { data, urlResponse, error in
+            // Convert the URLResponse into an HTTPURLResponse object.
+            // If it cannot be converted, use the undefined HTTPURLResponse object
+            let httpResponse = (urlResponse as? HTTPURLResponse) ?? .undefined(url)
 
-            if let httpResponse = response as? HTTPURLResponse {
-                result = DataResult(data: data, response: httpResponse, error: error)
-            } else {
-                // TODO: Return a custom error in this block
-                assertionFailure("Unable to parse URLResponse into an HTTPURLResponse.")
-                result = DataResult(data: data, response: .undefined(url), error: UBNetworkError.invalidURLResponse)
-            }
+            // Create a result object for improved handling of the response
+            let result: Result<Data, Error> = {
+                if let data = data {
+                    return .success(data)
+                } else if let error = error {
+                    return .failure(error)
+                } else {
+                    return .failure(UBNetworkError.unexpectedError)
+                }
+            }()
 
-            completion?(result)
+            // Create the DataResponse object containing all necessary information from the response
+            let dataResponse = DataResponse(request: request,
+                                            response: httpResponse,
+                                            data: data,
+                                            result: result)
+
+            // Fire the completion!
+            completion?(dataResponse)
         }
 
         task.resume()
@@ -92,23 +104,31 @@ public class HTTPClient {
             return nil
         }
 
-        return self.request(url, method: method, parameters: parameters, encoding: encoding) { rawResult in
+        return self.request(url, method: method, parameters: parameters, encoding: encoding) { dataResponse in
             // TODO: Check the response.mimeType and ensure it is application/json, which is required for decoding
 
-            // Initialize a nil decoded object to eventually pass into the DecodableResult
-            var decodedObject: T?
+            // Create a result object for improved handling of the response
+            let result: Result<T, Error> = {
+                switch dataResponse.result {
+                case let .success(data):
+                    if let decodedObject = try? JSONDecoder().decode(T.self, from: data) {
+                        return .success(decodedObject)
+                    } else {
+                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self)))
+                    }
+                case let .failure(error):
+                    return .failure(error)
+                }
+            }()
 
-            // If there is data in the raw result, attempt to decode it
-            if let data = rawResult.data {
-                decodedObject = try? JSONDecoder().decode(T.self, from: data)
-            }
+            // Create the DataResponse object containing all necessary information from the response
+            let response = DataResponse(request: dataResponse.request,
+                                        response: dataResponse.response,
+                                        data: dataResponse.data,
+                                        result: result)
 
-            // Create the DecodableResult object with the new decodedObject (if successfully decoded),
-            // as well as the response and status from the previous result
-            let result = DecodableResult(data: decodedObject, response: rawResult.response)
-
-            // Fire the completion handler
-            completion?(result)
+            // Fire the completion!
+            completion?(response)
         }
     }
 
