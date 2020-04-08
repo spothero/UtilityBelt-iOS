@@ -25,7 +25,7 @@ public class CoreDataOperator {
     /// Initializes a new `CoreDataOperator` with no default managed object context.
     /// This is only used for the shared instance of this class, which requires
     /// one of the `initializeSharedContext` methods to be called before most operations will succeed.
-    private init() { }
+    private init() {}
 
     /// Initializes a new `CoreDataOperator` with a given managed object context.
     /// - Parameter context: The managed object context to use for all operations.
@@ -38,7 +38,7 @@ public class CoreDataOperator {
     public convenience init(persistentContainer: NSPersistentContainer) {
         self.init(context: persistentContainer.viewContext)
     }
-    
+
     // MARK: Shared Instance Initializers
 
     /// Initializes the shared `CoreDataOperator` instance's default managed object context.
