@@ -123,7 +123,7 @@ public class HTTPClient {
                         let decodedObject = try decoder.decode(T.self, from: data)
                         return .success(decodedObject)
                     } catch {
-                        return .failure(error)
+                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self)))
                     }
                 case let .failure(error):
                     return .failure(error)
