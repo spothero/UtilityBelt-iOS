@@ -2,10 +2,9 @@
 
 import Foundation
 
-/// A convenience protocol allowing the passing of Strings and other URL compatible classes
-/// to be used in places where a URL is typically required.
+/// A convenience protocol for converting an object into a `URL`.
 public protocol URLConvertible {
-    /// Returns a URL representation of this object.
+    /// Returns a `URL` representation of this object.
     func asURL() throws -> URL
 }
 
