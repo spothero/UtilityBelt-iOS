@@ -10,14 +10,14 @@ extension URLRequest {
     mutating func setValue(_ value: String?, forHTTPHeaderField field: HTTPHeader) {
         self.setValue(value, forHTTPHeaderField: field.rawValue)
     }
-    
+
     /// Sets values for header fields in a given dictionary.
     /// - Parameter headers: The dictionary of HTTP headers to set.
     mutating func setHeaders(_ headers: HTTPHeaderDictionaryConvertible?) {
         guard let headers = headers?.asHeaderDictionary() else {
             return
         }
-        
+
         for header in headers {
             self.setValue(header.value, forHTTPHeaderField: header.key.rawValue)
         }

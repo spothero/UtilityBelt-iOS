@@ -11,27 +11,27 @@ public typealias DecodableTaskCompletion<T: Decodable> = (DataResponse<T, Error>
 /// A lightweight HTTP Client that supports data tasks
 public class HTTPClient {
     // MARK: - Shared Instance
-    
+
     /// The shared HTTP Client instance.
     public static let shared = HTTPClient()
-    
+
     // MARK: - Properties
-    
+
     /// The URLSession that is used for all requests.
     private let session: URLSession
-    
+
     // MARK: - Methods
-    
+
     // MARK: Initializers
-    
+
     /// Initializes a new HTTPClient with a given URLSession.
     /// - Parameter session: The URLSession to use for all requests.
     public init(session: URLSession = .shared) {
         self.session = session
     }
-    
+
     // MARK: Request
-    
+
     /// Creates and sends a request, fetching raw data from an endpoint.
     /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
@@ -39,7 +39,7 @@ public class HTTPClient {
     /// - Parameter parameters: The dictionary of parameters to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to be with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses default for HTTP method.
-    /// - Parameter completion: The completion block to call when the request is completed. 
+    /// - Parameter completion: The completion block to call when the request is completed.
     @discardableResult
     public func request(_ url: URLConvertible,
                         method: HTTPMethod,
@@ -52,16 +52,17 @@ public class HTTPClient {
             method: method,
             parameters: parameters,
             headers: headers,
-            encoding: encoding) else {
-                completion?(.failure(UBNetworkError.unexpectedError))
-                return nil
+            encoding: encoding
+        ) else {
+            completion?(.failure(UBNetworkError.unexpectedError))
+            return nil
         }
-        
+
         let task = self.session.dataTask(with: request) { data, urlResponse, error in
             // Convert the URLResponse into an HTTPURLResponse object.
             // If it cannot be converted, use the undefined HTTPURLResponse object
             let httpResponse = urlResponse as? HTTPURLResponse
-            
+
             // Create a result object for improved handling of the response
             let result: Result<Data, Error> = {
                 if let data = data {
@@ -72,22 +73,22 @@ public class HTTPClient {
                     return .failure(UBNetworkError.unexpectedError)
                 }
             }()
-            
+
             // Create the DataResponse object containing all necessary information from the response
             let dataResponse = DataResponse(request: request,
                                             response: httpResponse,
                                             data: data,
                                             result: result)
-            
+
             // Fire the completion!
             completion?(dataResponse)
         }
-        
+
         task.resume()
-        
+
         return task
     }
-    
+
     /// Creates and sends a request, fetching raw data from an endpoint that is decoded into a Decodable object.
     /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
@@ -110,36 +111,37 @@ public class HTTPClient {
             method: method,
             parameters: parameters,
             headers: headers,
-            encoding: encoding) { dataResponse in
-                // TODO: Check the response.mimeType and ensure it is application/json, which is required for decoding
-                
-                // Create a result object for improved handling of the response
-                let result: Result<T, Error> = {
-                    switch dataResponse.result {
-                    case let .success(data):
-                        do {
-                            let decodedObject = try decoder.decode(T.self, from: data)
-                            return .success(decodedObject)
-                        } catch let error {
+            encoding: encoding
+        ) { dataResponse in
+            // TODO: Check the response.mimeType and ensure it is application/json, which is required for decoding
+
+            // Create a result object for improved handling of the response
+            let result: Result<T, Error> = {
+                switch dataResponse.result {
+                case let .success(data):
+                    do {
+                        let decodedObject = try decoder.decode(T.self, from: data)
+                        return .success(decodedObject)
+                    } catch {
 //                            return .failure(UBNetworkError.unableToDecode(String(describing: T.self)))
-                            return .failure(error)
-                        }
-                    case let .failure(error):
                         return .failure(error)
                     }
-                }()
-                
-                // Create the DataResponse object containing all necessary information from the response
-                let response = DataResponse(request: dataResponse.request,
-                                            response: dataResponse.response,
-                                            data: dataResponse.data,
-                                            result: result)
-                
-                // Fire the completion!
-                completion?(response)
+                case let .failure(error):
+                    return .failure(error)
+                }
+            }()
+
+            // Create the DataResponse object containing all necessary information from the response
+            let response = DataResponse(request: dataResponse.request,
+                                        response: dataResponse.response,
+                                        data: dataResponse.data,
+                                        result: result)
+
+            // Fire the completion!
+            completion?(response)
         }
     }
-    
+
     /// Creates a configured URLRequest.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request.
@@ -154,15 +156,15 @@ public class HTTPClient {
         guard let url = try? url.asURL() else {
             return nil
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        
+
         request.setHeaders(headers)
-        
+
         // Parameters must be set after setting headers, because encoding dictates (and therefore overrides) the Content-Type header
         request.setParameters(parameters, method: method, encoding: encoding)
-        
+
         return request
     }
 }

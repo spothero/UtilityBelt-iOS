@@ -14,4 +14,4 @@ extension String: HTTPHeaderConvertible {
     }
 }
 
-extension HTTPHeader: HTTPHeaderConvertible { }
+extension HTTPHeader: HTTPHeaderConvertible {}
