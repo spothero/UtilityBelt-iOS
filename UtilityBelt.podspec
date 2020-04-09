@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   # Root Specification
   spec.name = 'UtilityBelt'
-  spec.version = '0.4.3'
+  spec.version = '0.4.5'
 
   spec.author   = { 'SpotHero' => 'ios@spothero.com' }
   spec.homepage = 'https://github.com/spothero/UtilityBelt-iOS'
