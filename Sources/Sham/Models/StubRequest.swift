@@ -206,11 +206,11 @@ private extension URL {
     }
 
     func hasQueryStringEqualTo(url otherURL: URL) -> Bool {
-        // Split the query string apart by key/value pairs, then sort and rejoin
+        // Split the query string apart by key/value pairs, then sort
         let selfQuery = self.query?.split(separator: "&").sorted(by: { $0 < $1 })
         let requestQuery = otherURL.query?.split(separator: "&").sorted(by: { $0 < $1 })
 
-        // Compare the full strings to ensure they match
+        // Compare the query arrays to ensure they match
         return selfQuery == requestQuery
     }
 }
