@@ -5,6 +5,18 @@ import Foundation
 extension URLComponents {
     mutating func setQueryItems(with parameters: [String: Any]) {
         self.queryItems = parameters.flatMap { self.evaluatedQueryItems(for: $0) }
+
+        // This will encode the query parameters following RFC 3986
+        self.percentEncodedQuery = self.queryItems?.compactMap {
+            guard
+                let escapedName = $0.name.addingPercentEncoding(withAllowedCharacters: .rfc3986Unreserved),
+                let escapedValue = $0.value?.addingPercentEncoding(withAllowedCharacters: .rfc3986Unreserved) else {
+                    return nil
+            }
+
+            return "\(escapedName)=\(escapedValue)"
+        }
+        .joined(separator: "&")
     }
 
     private func evaluatedQueryItems(for parameter: (key: String, value: Any)) -> [URLQueryItem] {
