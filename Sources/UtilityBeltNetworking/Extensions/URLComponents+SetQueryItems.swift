@@ -11,7 +11,7 @@ extension URLComponents {
             guard
                 let escapedName = $0.name.addingPercentEncoding(withAllowedCharacters: .rfc3986Unreserved),
                 let escapedValue = $0.value?.addingPercentEncoding(withAllowedCharacters: .rfc3986Unreserved) else {
-                    return nil
+                return nil
             }
 
             return "\(escapedName)=\(escapedValue)"
