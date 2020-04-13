@@ -93,19 +93,19 @@ public struct StubRequest: Hashable, CustomStringConvertible {
         }
 
         // Include any stubbed response where the scheme matches the incoming URL's scheme or is nil or empty
-        let validScheme = url.scheme == requestURL.scheme || url.scheme.isNilOrEmpty
+        let validScheme = url.scheme.isNilOrEmpty || url.scheme == requestURL.scheme
 
         // Include any stubbed response where the host matches the incoming URL's host or is nil or empty
-        let validHost = url.host == requestURL.host || url.host.isNilOrEmpty
+        let validHost = url.host.isNilOrEmpty || url.host == requestURL.host
 
         // Include any stubbed response where the port matches the incoming URL's port or is nil
-        let validPort = url.port == requestURL.port || url.port == nil
+        let validPort = url.port == nil || url.port == requestURL.port
 
         // Include any stubbed response where the path matches the incoming URL's path or is empty
-        let validPath = url.trimmedPath == requestURL.trimmedPath || url.trimmedPath.isEmpty
+        let validPath = url.trimmedPath.isEmpty || url.trimmedPath == requestURL.trimmedPath
 
         // Include any stubbed response where the query matches the incoming URL's query or is nil or empty
-        let validQuery = url.query == requestURL.query || url.query.isNilOrEmpty
+        let validQuery = url.query.isNilOrEmpty || url.hasQueryStringEqualTo(url: requestURL)
 
         return validScheme && validHost && validPort && validPath && validQuery
     }
@@ -203,5 +203,14 @@ private extension URL {
         // In order for a URL to be considered valid for stubbing,
         // it must have a non-empty path or a non-nil and non-empty host
         return !self.path.isEmpty || self.host?.isEmpty == false
+    }
+
+    func hasQueryStringEqualTo(url otherURL: URL) -> Bool {
+        // Split the query string apart by key/value pairs, then sort and rejoin
+        let selfQuery = self.query?.split(separator: "&").sorted(by: { $0 < $1 }).joined(separator: "&")
+        let requestQuery = otherURL.query?.split(separator: "&").sorted(by: { $0 < $1 }).joined(separator: "&")
+
+        // Compare the full strings to ensure they match
+        return selfQuery == requestQuery
     }
 }
