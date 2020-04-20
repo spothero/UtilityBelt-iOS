@@ -3,6 +3,7 @@
 import CoreData
 import Foundation
 
+@available(iOS 10.0, watchOS 3.0, *)
 public extension NSManagedObject {
     /// Creates a new instance of a managed object using the shared instance of the `CoreDataOperator` class.
     /// - Parameter context: The Managed Object Context to use.

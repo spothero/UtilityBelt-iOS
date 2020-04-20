@@ -1,9 +1,10 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
-#if canImport(XCTest)
+#if !os(watchOS) && canImport(XCTest)
 
     import CoreData
 
+    @available(iOS 10.0, watchOS 3.0, *)
     public extension CoreDataOperator {
         /// Creates a mocked `CoreDataOperator` for use with testing.
         /// - Parameter name: The name of the Data Model to persist.
