@@ -4,20 +4,32 @@ import CoreData
 import Foundation
 
 /// A helper class to assist with all CoreData operations.
+@available(iOS 10.0, watchOS 3.0, *)
 public class CoreDataOperator {
     // MARK: - Shared Instance
 
-    /// The shared instance of `CoreDataManager`.
+    /// The shared instance of `CoreDataOperator`.
     ///
     /// Users must call one of the static `initializeSharedContext` methods on this class before
     /// operations will work without requiring a passed-in context.
     public private(set) static var shared = CoreDataOperator()
 
     // MARK: - Properties
+    
+    /// The container in charge of the Core Data stack.
+    private var persistentContainer: NSPersistentContainer?
 
     /// The default managed object context for all requests.
-    private var defaultContext: NSManagedObjectContext?
-
+    public var defaultContext: NSManagedObjectContext? {
+        return self.persistentContainer?.viewContext
+    }
+    
+    /// The URLs for each persistent store in the current Core Data stack.
+    public var persistentStoreFileURLs: [URL] {
+        let stores = self.persistentContainer?.persistentStoreCoordinator.persistentStores
+        return stores?.compactMap { $0.url } ?? []
+    }
+    
     // MARK: - Methods
 
     // MARK: Initializers
@@ -27,33 +39,95 @@ public class CoreDataOperator {
     /// one of the `initializeSharedContext` methods to be called before most operations will succeed.
     private init() {}
 
-    /// Initializes a new `CoreDataOperator` with a given managed object context.
-    /// - Parameter context: The managed object context to use for all operations.
-    public required init(context: NSManagedObjectContext) {
-        self.defaultContext = context
-    }
-
     /// Initializes a new `CoreDataOperator` using the view context from a given `NSPersistentContainer`.
     /// - Parameter persistentContainer: The persistent container that owns the view context to use for all operations.
-    public convenience init(persistentContainer: NSPersistentContainer) {
-        self.init(context: persistentContainer.viewContext)
+    init(persistentContainer: NSPersistentContainer) {
+        self.persistentContainer = persistentContainer
     }
 
     // MARK: Shared Instance Initializers
-
-    /// Initializes the shared `CoreDataOperator` instance's default managed object context.
-    /// - Parameter context: The managed object context to use for all operations.
-    public static func initializeSharedContext(_ context: NSManagedObjectContext) {
-        Self.shared.defaultContext = context
+    
+    /// Initializes a new Core Data stack using the passed in arguments to create a `NSPersistentContainer`.
+    ///
+    /// Ensure `clearCoreData` is called before subsequent calls to this method.
+    /// - Parameters:
+    ///   - modelName: The name of the model (.momd) file to use.
+    ///   - databaseURL: The URL where the database should be persisted. If no URL is given, all data will be stored in memory.
+    ///   - bundle: The bundle used to lookup the Core Data model file. Defaults to `.main`.
+    public func initializeCoreDataStack(modelName: String, databaseURL: URL?, bundle: Bundle = .main) {
+        guard let url = bundle.url(forResource: modelName, withExtension: "momd") else {
+            fatalError("Failed to find \(modelName).momd in bundle \(bundle).")
+        }
+        
+        guard let managedObjectModel = NSManagedObjectModel(contentsOf: url) else {
+            fatalError("Failed to initialize managed object model with contents of url: \(url)")
+        }
+        
+        let container = NSPersistentContainer(name: "CoreData", managedObjectModel: managedObjectModel)
+        let description = NSPersistentStoreDescription()
+        description.url = databaseURL
+        
+        let storeType: NSPersistentContainer.StoreType = databaseURL != nil ? .sqlite : .memory
+        description.type = storeType.rawValue
+        
+        // Set the following options to enable Automatic Lightweight Migration.
+        // https://developer.apple.com/documentation/coredata/using_lightweight_migration
+        description.setOption(NSNumber(true), forKey: NSMigratePersistentStoresAutomaticallyOption)
+        description.setOption(NSNumber(true), forKey: NSInferMappingModelAutomaticallyOption)
+        
+        container.persistentStoreDescriptions = [description]
+        
+        container.loadPersistentStores { description, error in
+            // Check if the data store matches
+            precondition(description.type == storeType.rawValue)
+            
+            // Check if creating container wrong
+            if let error = error {
+                fatalError("Failed to create persistent container. \(error.localizedDescription)")
+            }
+        }
+        self.persistentContainer = container
     }
-
-    /// Initializes the shared `CoreDataOperator` instance's default managed object context
-    /// using the view context from a given `NSPersistentContainer`.
-    /// - Parameter persistentContainer: The persistent container that owns the view context to use for all operations.
-    public static func initializeSharedContext(from persistentContainer: NSPersistentContainer) {
-        Self.shared.defaultContext = persistentContainer.viewContext
+    
+    // MARK: Temporary Context
+    
+    /// Creates a new `NSManagedObjectContext` with a private queue concurreny type and whose parent is the `defaultContext`.
+    /// A temporary context can be used to perform work off the main thread and later be merged back into the `defaultContext`.
+    public func createTemporaryContext() -> NSManagedObjectContext {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = self.defaultContext
+        return context
     }
-
+    
+    // MARK: Clearing Core Data
+    
+    /// Removes all persistent stores from the coordinator and removes them from the file system.
+    ///
+    /// **Note that this method is useful for testing, but should not be used on events such as a user logout.** In those such events,
+    /// you may want to remove all data from your persistent store, but should not remove the persistent store from the file system.
+    ///
+    /// After calling this method, `initializeSharedContext` must be called again prior to performing any other operations.
+    public func resetCoreData() {
+        guard let container = self.persistentContainer else {
+            // Nothing to tear down, there is no persistent container.
+            return
+        }
+        
+        for store in container.persistentStoreCoordinator.persistentStores {
+            // Remove the store from the persistent store coordiator.
+            try? container.persistentStoreCoordinator.remove(store)
+            
+            // Try to find the path to the store and remove it from the file system.
+            if
+                let path = store.url?.path,
+                FileManager.default.fileExists(atPath: path) {
+                    try? FileManager.default.removeItem(atPath: path)
+            }
+        }
+        
+        self.persistentContainer = nil
+    }
+    
     // MARK: Count
 
     /// Returns the count of a given managed object.
@@ -110,7 +184,7 @@ public class CoreDataOperator {
     /// - Parameter predicate: The predicate to filter the request by.
     /// - Parameter context: The managed object context to perform the delete operation in. If nil, uses the current default context.
     ///
-    /// Batch delete requests are only compatible with the SQLite store type.
+    /// If the context's persistent store is an SQLite store, a batch request will be used.
     ///
     /// **Sources**
     /// - [Implementing Batch Deletes](https://developer.apple.com/library/archive/featuredarticles/CoreData_Batch_Guide/BatchDeletes/BatchDeletes.html)
@@ -121,13 +195,27 @@ public class CoreDataOperator {
             throw UBCoreDataError.managedObjectContextNotFound
         }
 
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: T.self))
-        fetchRequest.predicate = predicate
+        // Batch requests are only compatible on SQLite stores.
+        let useBatchRequest = context.persistentStoreCoordinator?.persistentStores.first?.type == NSSQLiteStoreType
+        
+        if useBatchRequest {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: T.self))
+            fetchRequest.includesPropertyValues = false
+            fetchRequest.predicate = predicate
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
 
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-
-        try context.executeAndMergeChanges(using: deleteRequest)
-
+            try context.executeAndMergeChanges(using: deleteRequest)
+        } else {
+            let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
+            fetchRequest.includesPropertyValues = false
+            fetchRequest.predicate = predicate
+            
+            let results = try context.fetch(fetchRequest)
+            for object in results {
+                context.delete(object)
+            }
+        }
+        
         try context.save()
     }
 
@@ -145,47 +233,107 @@ public class CoreDataOperator {
     }
 
     // MARK: Fetch
-
-    /// Fetches all managed objects of a given type.
-    /// - Parameter type: The type of entity to fetch all results for.
-    /// - Parameter predicate: The predicate to filter the request by.
-    /// - Parameter context: The managed object context to perform the fetch operation in. If nil, uses the current default context.
-    public func fetchAll<T: NSManagedObject>(of type: T.Type,
-                                             with predicate: NSPredicate? = nil,
-                                             in context: NSManagedObjectContext? = nil) throws -> [T] {
+    
+    /// Fetches a single managed object of a given type.
+    /// - Parameters:
+    ///   - type: The type of entity to fetch.
+    ///   - predicate: The predicate to filter the request by.
+    ///   - context: The managed object context to perform the fetch operation in. If nil, uses the current default context.
+    public func fetch<T: NSManagedObject>(_ type: T.Type,
+                                          with predicate: NSPredicate? = nil,
+                                          in context: NSManagedObjectContext? = nil) throws -> T? {
         guard let context = context ?? self.defaultContext else {
             throw UBCoreDataError.managedObjectContextNotFound
         }
-
+        
+        guard try self.count(of: type, with: predicate, in: context) <= 1 else {
+            assertionFailure("The fetch request returned more than 1 object.")
+            return nil
+        }
+        
         // Instead of using T.fetchRequest(), we build the FetchRequest so we don't need to cast the result
         let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
         fetchRequest.predicate = predicate
-
+        fetchRequest.fetchLimit = 1
+        
+        let results = try context.fetch(fetchRequest)
+        return results.first
+    }
+    
+    /// Allows fetching multiple managed objects of a given type.
+    /// - Parameters:
+    ///   - type: The type of entity to fetch all results for.
+    ///   - predicate: The predicate to filter the request by.
+    ///   - sortDescriptors: The descriptors used to sort results.
+    ///   - fetchLimit: The limit of items to fetch. Defaults to nil, which results in no limit.
+    ///   - fetchBatchSize: The limit to set on the batch size. Defaults to nil, which results in no limit.
+    ///   - context: The managed object context to perform the fetch operation in. If nil, uses the current default context.
+    public func fetchMultiple<T: NSManagedObject>(of type: T.Type,
+                                                  with predicate: NSPredicate? = nil,
+                                                  sortDescriptors: [NSSortDescriptor]? = nil,
+                                                  fetchLimit: Int? = nil,
+                                                  fetchBatchSize: Int? = nil,
+                                                  in context: NSManagedObjectContext? = nil) throws -> [T] {
+        guard let context = context ?? self.defaultContext else {
+            throw UBCoreDataError.managedObjectContextNotFound
+        }
+        
+        // Instead of using T.fetchRequest(), we build the FetchRequest so we don't need to cast the result
+        let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = sortDescriptors
+        
+        if let fetchLimit = fetchLimit {
+            fetchRequest.fetchLimit = fetchLimit
+        }
+        
+        if let fetchBatchSize = fetchBatchSize {
+            fetchRequest.fetchBatchSize = fetchBatchSize
+        }
+        
         return try context.fetch(fetchRequest)
     }
 
     // MARK: Save
 
-    /// Saves the managed object context for a given object.
-    /// - Parameter object: The object used to get a managed object context to save.
-    public func save<T: NSManagedObject>(_ object: T) throws {
-        try self.save(context: object.managedObjectContext)
-    }
-
     /// Saves the default managed object context.
     public func saveDefaultContext() throws {
-        try self.save(context: self.defaultContext)
+        guard let context = self.defaultContext, context.hasChanges else {
+            return
+        }
+        try context.save()
     }
 
-    /// Saves a managed object context if there are changes.
-    /// - Parameter context: The managed object context to save.
-    private func save(context: NSManagedObjectContext?) throws {
-        guard let context = context else {
-            throw UBCoreDataError.managedObjectContextNotFound
+    /// Saves the passed in context if there are changes and merges the changes with the `defaultContext`.
+    /// If the passed in context is not a child of the `defaultContext`, this method does nothing.
+    /// - Parameters:
+    ///   - context: The context to save.
+    public func saveAndMerge(context: NSManagedObjectContext) {
+        guard let mainContext = self.defaultContext else {
+            // The main context has not been setup.
+            return
         }
 
-        if context.hasChanges == true {
-            try context.save()
+        guard context !== mainContext else {
+            // This is the main context, not a child. Just return.
+            return
+        }
+
+        guard context.parent === mainContext else {
+            // The given context is not a child of the main context, so we cannot merge changes up.
+            return
+        }
+
+        guard context.hasChanges else {
+            // There are no changes to save, just return.
+            return
+        }
+
+        context.perform {
+            // Save the child context. This will push changes up to the parent.
+            try? context.save()
+            // Save the parent context. This will push changes to the persistent store.
+            try? mainContext.save()
         }
     }
 }
