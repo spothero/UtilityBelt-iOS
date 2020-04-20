@@ -1,6 +1,7 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
-#if canImport(XCTest)
+#if !os(watchOS) && canImport(XCTest)
+
     import UtilityBeltNetworking
     import XCTest
 
@@ -19,4 +20,5 @@
             MockService.shared.stub(urlRequest, with: response)
         }
     }
+
 #endif

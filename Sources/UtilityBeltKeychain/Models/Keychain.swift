@@ -173,7 +173,7 @@ public final class Keychain {
     private func error(from status: OSStatus) -> UBKeychainError {
         let message: String
 
-        if #available(iOS 11.3, *) {
+        if #available(iOS 11.3, watchOS 4.3, *) {
             message = SecCopyErrorMessageString(status, nil) as String? ?? NSLocalizedString("Unhandled Error", comment: "")
         } else {
             // Unfortunately, we most likely can't get anything meaningful out of the OSStatus here
