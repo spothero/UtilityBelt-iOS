@@ -15,7 +15,7 @@ public class CoreDataOperator {
     public private(set) static var shared = CoreDataOperator()
 
     // MARK: - Properties
-    
+
     /// The container in charge of the Core Data stack.
     private var persistentContainer: NSPersistentContainer?
 
@@ -23,13 +23,13 @@ public class CoreDataOperator {
     public var defaultContext: NSManagedObjectContext? {
         return self.persistentContainer?.viewContext
     }
-    
+
     /// The URLs for each persistent store in the current Core Data stack.
     public var persistentStoreFileURLs: [URL] {
         let stores = self.persistentContainer?.persistentStoreCoordinator.persistentStores
         return stores?.compactMap { $0.url } ?? []
     }
-    
+
     // MARK: - Methods
 
     // MARK: Initializers
@@ -46,7 +46,7 @@ public class CoreDataOperator {
     }
 
     // MARK: Shared Instance Initializers
-    
+
     /// Initializes a new Core Data stack using the passed in arguments to create a `NSPersistentContainer`.
     ///
     /// Ensure `clearCoreData` is called before subsequent calls to this method.
@@ -58,29 +58,29 @@ public class CoreDataOperator {
         guard let url = bundle.url(forResource: modelName, withExtension: "momd") else {
             fatalError("Failed to find \(modelName).momd in bundle \(bundle).")
         }
-        
+
         guard let managedObjectModel = NSManagedObjectModel(contentsOf: url) else {
             fatalError("Failed to initialize managed object model with contents of url: \(url)")
         }
-        
+
         let container = NSPersistentContainer(name: "CoreData", managedObjectModel: managedObjectModel)
         let description = NSPersistentStoreDescription()
         description.url = databaseURL
-        
+
         let storeType: NSPersistentContainer.StoreType = databaseURL != nil ? .sqlite : .memory
         description.type = storeType.rawValue
-        
+
         // Set the following options to enable Automatic Lightweight Migration.
         // https://developer.apple.com/documentation/coredata/using_lightweight_migration
         description.setOption(NSNumber(true), forKey: NSMigratePersistentStoresAutomaticallyOption)
         description.setOption(NSNumber(true), forKey: NSInferMappingModelAutomaticallyOption)
-        
+
         container.persistentStoreDescriptions = [description]
-        
+
         container.loadPersistentStores { description, error in
             // Check if the data store matches
             precondition(description.type == storeType.rawValue)
-            
+
             // Check if creating container wrong
             if let error = error {
                 fatalError("Failed to create persistent container. \(error.localizedDescription)")
@@ -88,9 +88,9 @@ public class CoreDataOperator {
         }
         self.persistentContainer = container
     }
-    
+
     // MARK: Temporary Context
-    
+
     /// Creates a new `NSManagedObjectContext` with a private queue concurreny type and whose parent is the `defaultContext`.
     /// A temporary context can be used to perform work off the main thread and later be merged back into the `defaultContext`.
     public func createTemporaryContext() -> NSManagedObjectContext {
@@ -98,9 +98,9 @@ public class CoreDataOperator {
         context.parent = self.defaultContext
         return context
     }
-    
+
     // MARK: Clearing Core Data
-    
+
     /// Removes all persistent stores from the coordinator and removes them from the file system.
     ///
     /// **Note that this method is useful for testing, but should not be used on events such as a user logout.** In those such events,
@@ -112,22 +112,22 @@ public class CoreDataOperator {
             // Nothing to tear down, there is no persistent container.
             return
         }
-        
+
         for store in container.persistentStoreCoordinator.persistentStores {
             // Remove the store from the persistent store coordiator.
             try? container.persistentStoreCoordinator.remove(store)
-            
+
             // Try to find the path to the store and remove it from the file system.
             if
                 let path = store.url?.path,
                 FileManager.default.fileExists(atPath: path) {
-                    try? FileManager.default.removeItem(atPath: path)
+                try? FileManager.default.removeItem(atPath: path)
             }
         }
-        
+
         self.persistentContainer = nil
     }
-    
+
     // MARK: Count
 
     /// Returns the count of a given managed object.
@@ -197,7 +197,7 @@ public class CoreDataOperator {
 
         // Batch requests are only compatible on SQLite stores.
         let useBatchRequest = context.persistentStoreCoordinator?.persistentStores.first?.type == NSSQLiteStoreType
-        
+
         if useBatchRequest {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: T.self))
             fetchRequest.includesPropertyValues = false
@@ -209,13 +209,13 @@ public class CoreDataOperator {
             let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
             fetchRequest.includesPropertyValues = false
             fetchRequest.predicate = predicate
-            
+
             let results = try context.fetch(fetchRequest)
             for object in results {
                 context.delete(object)
             }
         }
-        
+
         try context.save()
     }
 
@@ -233,7 +233,7 @@ public class CoreDataOperator {
     }
 
     // MARK: Fetch
-    
+
     /// Fetches a single managed object of a given type.
     /// - Parameters:
     ///   - type: The type of entity to fetch.
@@ -245,21 +245,21 @@ public class CoreDataOperator {
         guard let context = context ?? self.defaultContext else {
             throw UBCoreDataError.managedObjectContextNotFound
         }
-        
+
         guard try self.count(of: type, with: predicate, in: context) <= 1 else {
             assertionFailure("The fetch request returned more than 1 object.")
             return nil
         }
-        
+
         // Instead of using T.fetchRequest(), we build the FetchRequest so we don't need to cast the result
         let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
         fetchRequest.predicate = predicate
         fetchRequest.fetchLimit = 1
-        
+
         let results = try context.fetch(fetchRequest)
         return results.first
     }
-    
+
     /// Allows fetching multiple managed objects of a given type.
     /// - Parameters:
     ///   - type: The type of entity to fetch all results for.
@@ -277,20 +277,20 @@ public class CoreDataOperator {
         guard let context = context ?? self.defaultContext else {
             throw UBCoreDataError.managedObjectContextNotFound
         }
-        
+
         // Instead of using T.fetchRequest(), we build the FetchRequest so we don't need to cast the result
         let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = sortDescriptors
-        
+
         if let fetchLimit = fetchLimit {
             fetchRequest.fetchLimit = fetchLimit
         }
-        
+
         if let fetchBatchSize = fetchBatchSize {
             fetchRequest.fetchBatchSize = fetchBatchSize
         }
-        
+
         return try context.fetch(fetchRequest)
     }
 
