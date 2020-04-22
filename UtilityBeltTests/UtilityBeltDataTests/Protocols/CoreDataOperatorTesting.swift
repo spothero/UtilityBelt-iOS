@@ -37,7 +37,7 @@ extension CoreDataOperatorTesting {
 
     func fetchAll(file: StaticString = #file, line: UInt = #line) {
         self.measureAndCatch {
-            let users = try self.coreDataOperator.fetchAll(of: User.self)
+            let users = try self.coreDataOperator.fetchMultiple(of: User.self)
 
             XCTAssertNotNil(users, file: file, line: line)
             XCTAssertEqual(users.count, 4, file: file, line: line)
