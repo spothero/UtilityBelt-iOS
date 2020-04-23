@@ -58,7 +58,7 @@ public class HTTPClient {
             return nil
         }
 
-        let task = self.session.dataTask(with: request) { data, urlResponse, error in
+        let completion: ((Data?, URLResponse?, Error?) -> Void) = { data, urlResponse, error in
             // Convert the URLResponse into an HTTPURLResponse object.
             // If it cannot be converted, use the undefined HTTPURLResponse object
             let httpResponse = urlResponse as? HTTPURLResponse
@@ -84,6 +84,13 @@ public class HTTPClient {
             completion?(dataResponse)
         }
 
+        let task: URLSessionTask
+        if let delegate = self.session.delegate as? BackgroundSessionDelegate {
+            delegate.completion = completion
+            task = self.session.downloadTask(with: request)
+        } else {
+            task = self.session.dataTask(with: request, completionHandler: completion)
+        }
         task.resume()
 
         return task
