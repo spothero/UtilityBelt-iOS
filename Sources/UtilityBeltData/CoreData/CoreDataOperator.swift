@@ -86,6 +86,9 @@ public class CoreDataOperator {
                 fatalError("Failed to create persistent container. \(error.localizedDescription)")
             }
         }
+        
+        container.viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
+        
         self.persistentContainer = container
     }
 
