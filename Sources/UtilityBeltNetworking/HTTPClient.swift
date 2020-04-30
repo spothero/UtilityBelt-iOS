@@ -19,9 +19,6 @@ public class HTTPClient {
 
     /// The URLSession that is used for all requests.
     private let session: URLSession
-    
-    /// The protocol to handle session delegate responses, if needed.
-    private weak var sessionDelegate: HTTPSessionDelegate?
 
     // MARK: - Methods
 
@@ -30,10 +27,8 @@ public class HTTPClient {
     /// Initializes a new HTTPClient with a given URLSession.
     /// - Parameters:
     ///   - session: The URLSession to use for all requests.
-    ///   - delegate: [optional] The session to handle the responses, if needed.
-    public init(session: URLSession = .shared, delegate: HTTPSessionDelegate? = nil) {
+    public init(session: URLSession = .shared) {
         self.session = session
-        self.sessionDelegate = delegate
     }
 
     // MARK: Request
@@ -91,7 +86,7 @@ public class HTTPClient {
         }
 
         let task: URLSessionTask
-        if let delegate = self.sessionDelegate {
+        if let delegate = self.session.delegate as? HTTPSessionDelegate {
             delegate.completion = completion
             task = self.session.downloadTask(with: request)
         } else {

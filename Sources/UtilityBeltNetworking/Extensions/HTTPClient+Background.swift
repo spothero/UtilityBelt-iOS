@@ -7,6 +7,6 @@ public extension HTTPClient {
     /// - Parameter identifier: The identifier for the backgrounded request configuration.
     static func background(withIdentifier identifier: String) -> HTTPClient {
         let sessionDelegate = HTTPBackgroundSessionDelegate()
-        return HTTPClient(session: .background(withIdentifier: identifier, delegate: sessionDelegate), delegate: sessionDelegate)
+        return HTTPClient(session: .background(withIdentifier: identifier, delegate: sessionDelegate))
     }
 }
