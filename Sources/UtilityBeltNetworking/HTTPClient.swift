@@ -86,8 +86,9 @@ public class HTTPClient {
         }
 
         let task: URLSessionTask
-        // When a background request is made, it must use a delegate.
-        // Using a data task with cause an assertion failure.
+        // When a background request is made, it must use a delegate
+        // and be a download or upload task. Using a data task will fail
+        // and using a completion will cause an assertion failure.
         if let delegate = self.session.delegate as? HTTPSessionDelegate {
             delegate.completion = completion
             task = self.session.downloadTask(with: request)
