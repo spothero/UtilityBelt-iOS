@@ -21,7 +21,7 @@ public class HTTPClient {
     private let session: URLSession
     
     /// The protocol to handle session delegate responses, if needed.
-    private let sessionDelegate: HTTPSessionDelegate?
+    private weak var sessionDelegate: HTTPSessionDelegate?
 
     // MARK: - Methods
 
