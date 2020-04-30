@@ -11,16 +11,11 @@ public class HTTPBackgroundSessionDelegate: NSObject, HTTPSessionDelegate {
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         do {
             let data = try Data(contentsOf: location)
-            DispatchQueue.main.async {
-                self.completion?(data, nil, nil)
-                self.completion = nil
-            }
+            self.completion?(data, nil, nil)
         } catch {
-            DispatchQueue.main.async {
-                self.completion?(nil, nil, error)
-                self.completion = nil
-            }
+            self.completion?(nil, nil, error)
         }
+        self.completion = nil
     }
     
 }
