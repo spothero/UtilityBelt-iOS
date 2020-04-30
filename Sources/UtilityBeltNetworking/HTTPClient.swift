@@ -25,8 +25,7 @@ public class HTTPClient {
     // MARK: Initializers
 
     /// Initializes a new HTTPClient with a given URLSession.
-    /// - Parameters:
-    ///   - session: The URLSession to use for all requests.
+    /// - Parameter session: The URLSession to use for all requests.
     public init(session: URLSession = .shared) {
         self.session = session
     }
