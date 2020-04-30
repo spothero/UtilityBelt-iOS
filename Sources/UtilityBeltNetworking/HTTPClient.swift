@@ -54,7 +54,9 @@ public class HTTPClient {
             headers: headers,
             encoding: encoding
         ) else {
-            completion?(.failure(UBNetworkError.unexpectedError))
+            DispatchQueue.main.async {
+                completion?(.failure(UBNetworkError.unexpectedError))
+            }
             return nil
         }
 
@@ -79,9 +81,11 @@ public class HTTPClient {
                                             response: httpResponse,
                                             data: data,
                                             result: result)
-
-            // Fire the completion!
-            completion?(dataResponse)
+            
+            DispatchQueue.main.async {
+                // Fire the completion!
+                completion?(dataResponse)
+            }
         }
 
         task.resume()
