@@ -19,15 +19,21 @@ public class HTTPClient {
 
     /// The URLSession that is used for all requests.
     private let session: URLSession
+    
+    /// The protocol to handle session delegate responses, if needed.
+    private let sessionDelegate: HTTPSessionDelegate?
 
     // MARK: - Methods
 
     // MARK: Initializers
 
     /// Initializes a new HTTPClient with a given URLSession.
-    /// - Parameter session: The URLSession to use for all requests.
-    public init(session: URLSession = .shared) {
+    /// - Parameters:
+    ///   - session: The URLSession to use for all requests.
+    ///   - delegate: [optional] The session to handle the responses, if needed.
+    public init(session: URLSession = .shared, delegate: HTTPSessionDelegate? = nil) {
         self.session = session
+        self.sessionDelegate = delegate
     }
 
     // MARK: Request
@@ -58,7 +64,7 @@ public class HTTPClient {
             return nil
         }
 
-        let completion: ((Data?, URLResponse?, Error?) -> Void) = { data, urlResponse, error in
+        let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
             // Convert the URLResponse into an HTTPURLResponse object.
             // If it cannot be converted, use the undefined HTTPURLResponse object
             let httpResponse = urlResponse as? HTTPURLResponse
@@ -85,7 +91,7 @@ public class HTTPClient {
         }
 
         let task: URLSessionTask
-        if let delegate = self.session.delegate as? BackgroundSessionDelegate {
+        if let delegate = self.sessionDelegate {
             delegate.completion = completion
             task = self.session.downloadTask(with: request)
         } else {

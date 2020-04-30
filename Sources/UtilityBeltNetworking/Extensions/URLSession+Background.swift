@@ -4,7 +4,10 @@ import Foundation
 
 extension URLSession {
     /// A URLSession set up to work with in the background on top of the default settings.
-    static var background: URLSession {
-        return URLSession(configuration: .background, delegate: BackgroundSessionDelegate(), delegateQueue: nil)
+    /// - Parameter identifier: The identifier for the backgrounded request configuration.
+    static func background(withIdentifier identifier: String, delegate: HTTPSessionDelegate) -> URLSession {
+        return URLSession(configuration: .background(withIdentifier: identifier),
+                          delegate: delegate,
+                          delegateQueue: nil)
     }
 }
