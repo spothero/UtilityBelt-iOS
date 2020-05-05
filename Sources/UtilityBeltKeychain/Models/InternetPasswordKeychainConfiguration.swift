@@ -7,7 +7,7 @@ import Foundation
 /// [Source](https://developer.apple.com/documentation/security/ksecclassinternetpassword)
 final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
     // MARK: - Properties
-
+    
     /// The authentication scheme.
     /// Optional.
     ///
@@ -15,7 +15,7 @@ final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrauthenticationtype)
     let authenticationType: KeychainAuthenticationType?
-
+    
     /// Represents a path, typically the path component of the URL.
     /// Optional.
     ///
@@ -23,7 +23,7 @@ final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrpath)
     let path: String?
-
+    
     /// The Internet port number.
     /// Optional.
     ///
@@ -31,7 +31,7 @@ final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrport)
     let port: Int?
-
+    
     /// The internet protocol.
     /// Optional.
     ///
@@ -39,7 +39,7 @@ final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrprotocol)
     let `protocol`: KeychainInternetProtocol?
-
+    
     /// The Internet security domain.
     /// Optional.
     ///
@@ -47,7 +47,7 @@ final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrsecuritydomain)
     let securityDomain: String?
-
+    
     /// The server's domain name or IP address.
     /// Required.
     ///
@@ -55,11 +55,11 @@ final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattrserver)
     let server: String
-
+    
     // MARK: - Methods
-
+    
     // MARK: Initializers
-
+    
     init(server: String,
          protocol: KeychainInternetProtocol = .https,
          authenticationType: KeychainAuthenticationType = .default,
@@ -73,22 +73,22 @@ final class InternetPasswordKeychainConfiguration: KeychainConfiguration {
         self.path = path
         self.port = port
         self.securityDomain = securityDomain
-
+        
         super.init(class: .internetPassword, accessGroup: accessGroup)
     }
-
+    
     // MARK: Converters
-
+    
     override func asDictionary() -> [KeychainAttribute: Any?] {
         var query = super.asDictionary()
-
+        
         query[.authenticationType] = self.authenticationType?.rawValue
         query[.path] = self.path
         query[.port] = self.port
         query[.protocol] = self.protocol?.rawValue
         query[.securityDomain] = self.securityDomain
         query[.server] = self.server
-
+        
         return query
     }
 }

@@ -7,20 +7,20 @@ import Foundation
 /// [Source](https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values)
 public enum KeychainAttribute {
     // MARK: Class
-
+    
     /// A key representing the keychain item's class, represented by values in the `kSecClass` key.
     case `class`
-
+    
     // MARK: General
-
+    
     // Attributes that can be set in all Keychain Items.
     // Source: https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values#1678541
-
+    
     #if os(OSX)
         /// A key whose value in an access instance indicating access control list settings for this item.
         case access
     #endif
-
+    
     /// A key whose value in an access control instance indicating access control settings for the item.
     case accessControl
     /// A key whose value indicates when a keychain item is accessible.
@@ -49,12 +49,12 @@ public enum KeychainAttribute {
     case syncViewHint
     /// A key whose value indicates the item's type.
     case type
-
+    
     // MARK: Password
-
+    
     // Attributes that can be set in Keychain Items of class `kSecClassGenericPassword` and `kSecClassInternetPassword`.
     // Source: https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values#2882540
-
+    
     /// A key whose value is a string indicating the item's account name.
     case account
     /// A key whose value indicates the item's authentication scheme.
@@ -73,18 +73,18 @@ public enum KeychainAttribute {
     case server
     /// A key whose value is a string indicating the item's service.
     case service
-
+    
     // MARK: Value
-
+    
     /// A key whose value is the item's data.
     case data
     /// A key whose value is a persistent reference to the item.
     case persistentReference
     /// A key whose value is a reference to the item.
     case reference
-
+    
     // MARK: Result
-
+    
     /// A key whose value is a Boolean indicating whether or not to return item attributes.
     case returnAttributes
     /// A key whose value is a Boolean indicating whether or not to return item data.
@@ -93,12 +93,12 @@ public enum KeychainAttribute {
     case returnPersistentReference
     /// A key whose value is a Boolean indicating whether or not to return a reference to an item.
     case returnReference
-
+    
     // MARK: Matching
-
+    
     // TODO: There are many more search attributes we could add!
     // Source: https://developer.apple.com/documentation/security/keychain_services/keychain_items/search_attribute_keys_and_values
-
+    
     /// A key whose value indicates the match limit.
     case matchLimit
 }
@@ -107,7 +107,7 @@ public enum KeychainAttribute {
 
 extension KeychainAttribute: RawRepresentable {
     // MARK: RawValue
-
+    
     public var rawValue: String {
         switch self {
         #if os(OSX)
@@ -115,11 +115,11 @@ extension KeychainAttribute: RawRepresentable {
             case .access:
                 return String(kSecAttrAccess)
         #endif
-
+            
         // Class
         case .class:
             return String(kSecClass)
-
+            
         // General
         case .accessControl:
             return String(kSecAttrAccessControl)
@@ -149,7 +149,7 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecAttrSyncViewHint)
         case .type:
             return String(kSecAttrType)
-
+            
         // Password
         case .account:
             return String(kSecAttrAccount)
@@ -169,7 +169,7 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecAttrServer)
         case .service:
             return String(kSecAttrService)
-
+            
         // Value
         case .data:
             return String(kSecValueData)
@@ -177,7 +177,7 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecValuePersistentRef)
         case .reference:
             return String(kSecValueRef)
-
+            
         // Return
         case .returnAttributes:
             return String(kSecReturnAttributes)
@@ -187,15 +187,15 @@ extension KeychainAttribute: RawRepresentable {
             return String(kSecReturnPersistentRef)
         case .returnReference:
             return String(kSecReturnRef)
-
+            
         // Matching
         case .matchLimit:
             return String(kSecMatchLimit)
         }
     }
-
+    
     // MARK: Initializer
-
+    
     public init?(rawValue: String) {
         switch rawValue {
         #if os(OSX)
@@ -203,11 +203,11 @@ extension KeychainAttribute: RawRepresentable {
             case String(kSecAttrAccess):
                 self = .access
         #endif
-
+            
         // Class
         case String(kSecClass):
             self = .class
-
+            
         // General
         case String(kSecAttrAccessControl):
             self = .accessControl
@@ -237,7 +237,7 @@ extension KeychainAttribute: RawRepresentable {
             self = .syncViewHint
         case String(kSecAttrType):
             self = .type
-
+            
         // Password
         case String(kSecAttrAccount):
             self = .account
@@ -257,7 +257,7 @@ extension KeychainAttribute: RawRepresentable {
             self = .server
         case String(kSecAttrService):
             self = .service
-
+            
         // Value
         case String(kSecValueData):
             self = .data
@@ -265,7 +265,7 @@ extension KeychainAttribute: RawRepresentable {
             self = .persistentReference
         case String(kSecValueRef):
             self = .reference
-
+            
         // Return
         case String(kSecReturnAttributes):
             self = .returnAttributes
@@ -275,11 +275,11 @@ extension KeychainAttribute: RawRepresentable {
             self = .returnPersistentReference
         case String(kSecReturnRef):
             self = .returnReference
-
+            
         // Matching
         case String(kSecMatchLimit):
             self = .matchLimit
-
+            
         default:
             return nil
         }

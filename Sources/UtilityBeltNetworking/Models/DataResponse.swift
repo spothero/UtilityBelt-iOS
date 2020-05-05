@@ -6,26 +6,26 @@ import Foundation
 public struct DataResponse<Success, Failure: Error> {
     /// The request sent to the server.
     public let request: URLRequest?
-
+    
     /// The response returned by the server.
     public let response: HTTPURLResponse?
-
+    
     /// The data returned by the server.
     public let data: Data?
-
+    
     /// The serialized result of the request sent to the server.
     public let result: Result<Success, Failure>
-
+    
     /// The success value of the serialized result.
     public var value: Success? {
         return self.result.success
     }
-
+    
     /// The error value of the serialized result.
     public var error: Failure? {
         return self.result.failure
     }
-
+    
     /// Creates an `HTTPResult` object composed of the result of an HTTP request.
     ///
     /// - Parameters:
@@ -49,7 +49,7 @@ public extension DataResponse {
     var status: HTTPStatusCode? {
         return self.response?.status
     }
-
+    
     /// The raw status code returned by the request.
     var statusCode: Int? {
         return self.response?.statusCode

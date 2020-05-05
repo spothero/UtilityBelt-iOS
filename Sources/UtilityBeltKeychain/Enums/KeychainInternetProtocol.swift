@@ -69,7 +69,7 @@ public enum KeychainInternetProtocol: RawRepresentable {
     case telnet
     /// Telnet over TLS/SSL.
     case telnetS
-
+    
     public var rawValue: String {
         switch self {
         case .afp:
@@ -136,7 +136,7 @@ public enum KeychainInternetProtocol: RawRepresentable {
             return String(kSecAttrProtocolTelnetS)
         }
     }
-
+    
     public init?(rawValue: String) {
         switch rawValue {
         case String(kSecAttrProtocolAFP):

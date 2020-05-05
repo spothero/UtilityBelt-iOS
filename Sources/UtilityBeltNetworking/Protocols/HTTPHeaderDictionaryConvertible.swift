@@ -11,11 +11,11 @@ public protocol HTTPHeaderDictionaryConvertible {
 extension Dictionary: HTTPHeaderDictionaryConvertible where Key: HTTPHeaderConvertible, Value == String {
     public func asHeaderDictionary() -> [String: String] {
         var headers: [String: String] = [:]
-
+        
         for element in self {
             headers[element.key.rawValue] = element.value
         }
-
+        
         return headers
     }
 }

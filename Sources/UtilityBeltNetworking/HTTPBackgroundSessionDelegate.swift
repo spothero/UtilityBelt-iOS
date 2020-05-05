@@ -3,7 +3,6 @@
 import Foundation
 
 class HTTPBackgroundSessionDelegate: NSObject, HTTPSessionDelegate {
-    
     var completion: HTTPSessionDelegateCompletion?
     
     // MARK: - URLSessionDownloadDelegate
@@ -17,5 +16,4 @@ class HTTPBackgroundSessionDelegate: NSObject, HTTPSessionDelegate {
         }
         self.completion = nil
     }
-    
 }

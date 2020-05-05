@@ -6,7 +6,7 @@ public enum ParameterEncoding {
     case httpBody(HTTPBodyEncoding)
     /// Parameters are put into the query string of the URL.
     case queryString
-
+    
     /// Returns the default encoding for a given HTTP method.
     public static func defaultEncoding(for method: HTTPMethod) -> ParameterEncoding {
         switch method {

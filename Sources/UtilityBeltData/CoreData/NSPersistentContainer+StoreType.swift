@@ -14,7 +14,7 @@ public extension NSPersistentContainer {
         case memory
         /// Stores data in a SQLite database.
         case sqlite
-
+        
         var rawValue: String {
             switch self {
             case .binary:

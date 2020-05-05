@@ -7,7 +7,7 @@ public extension URLSessionConfiguration {
     static var mocked: URLSessionConfiguration {
         let urlConfig: URLSessionConfiguration = .default
         urlConfig.protocolClasses = [MockURLProtocol.self]
-
+        
         return urlConfig
     }
 }

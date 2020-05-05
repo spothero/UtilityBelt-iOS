@@ -14,7 +14,7 @@ extension KeychainDictionary {
                 result[currentItem.key.rawValue] = value
             }
         }
-
+        
         // Return the string keyed dictionary, converted into a CFDictionary
         return stringKeyedDictionary as CFDictionary
     }

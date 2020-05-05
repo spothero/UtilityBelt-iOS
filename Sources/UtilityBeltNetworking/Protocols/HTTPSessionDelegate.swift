@@ -8,7 +8,5 @@ public typealias HTTPSessionDelegateCompletion = ((Data?, URLResponse?, Error?) 
 /// A delegate is required to be used and only download or upload tasks are allowed
 /// when the app is in the background.
 public protocol HTTPSessionDelegate: URLSessionDownloadDelegate {
-    
     var completion: HTTPSessionDelegateCompletion? { get set }
-    
 }

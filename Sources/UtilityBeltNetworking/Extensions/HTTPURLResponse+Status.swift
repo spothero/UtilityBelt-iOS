@@ -10,7 +10,7 @@ public extension HTTPURLResponse {
         guard let status = HTTPStatusCode(rawValue: self.statusCode) else {
             return .undefined
         }
-
+        
         return status
     }
 }

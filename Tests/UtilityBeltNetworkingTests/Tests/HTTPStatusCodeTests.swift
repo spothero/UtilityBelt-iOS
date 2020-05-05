@@ -12,7 +12,7 @@ final class HTTPStatusCodeTests: XCTestCase {
                 XCTAssertEqual(code.responseType, .undefined)
                 continue
             }
-
+            
             switch code.rawValue {
             case Int.min ..< 100:
                 XCTFail("Status codes should not be less than 100.")

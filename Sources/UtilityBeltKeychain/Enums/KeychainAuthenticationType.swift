@@ -23,7 +23,7 @@ public enum KeychainAuthenticationType: RawRepresentable {
     case ntlm
     /// Remote Password authentication.
     case rpa
-
+    
     public var rawValue: String {
         switch self {
         case .default:
@@ -44,7 +44,7 @@ public enum KeychainAuthenticationType: RawRepresentable {
             return String(kSecAttrAuthenticationTypeRPA)
         }
     }
-
+    
     public init?(rawValue: String) {
         switch rawValue {
         case String(kSecAttrAuthenticationTypeDefault):

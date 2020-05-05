@@ -11,27 +11,27 @@ public typealias DecodableTaskCompletion<T: Decodable> = (DataResponse<T, Error>
 /// A lightweight HTTP Client that supports data tasks
 public class HTTPClient {
     // MARK: - Shared Instance
-
+    
     /// The shared HTTP Client instance.
     public static let shared = HTTPClient()
-
+    
     // MARK: - Properties
-
+    
     /// The URLSession that is used for all requests.
     private let session: URLSession
-
+    
     // MARK: - Methods
-
+    
     // MARK: Initializers
-
+    
     /// Initializes a new HTTPClient with a given URLSession.
     /// - Parameter session: The URLSession to use for all requests.
     public init(session: URLSession = .shared) {
         self.session = session
     }
-
+    
     // MARK: Request
-
+    
     /// Creates and sends a request, fetching raw data from an endpoint.
     /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
@@ -59,12 +59,12 @@ public class HTTPClient {
             }
             return nil
         }
-
+        
         let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
             // Convert the URLResponse into an HTTPURLResponse object.
             // If it cannot be converted, use the undefined HTTPURLResponse object
             let httpResponse = urlResponse as? HTTPURLResponse
-
+            
             // Create a result object for improved handling of the response
             let result: Result<Data, Error> = {
                 if let data = data {
@@ -75,7 +75,7 @@ public class HTTPClient {
                     return .failure(UBNetworkError.unexpectedError)
                 }
             }()
-
+            
             // Create the DataResponse object containing all necessary information from the response
             let dataResponse = DataResponse(request: request,
                                             response: httpResponse,
@@ -87,7 +87,7 @@ public class HTTPClient {
                 completion?(dataResponse)
             }
         }
-
+        
         let task: URLSessionTask
         // When a background request is made, it must use a delegate
         // and be a download or upload task. Using a data task will fail
@@ -99,10 +99,10 @@ public class HTTPClient {
             task = self.session.dataTask(with: request, completionHandler: completion)
         }
         task.resume()
-
+        
         return task
     }
-
+    
     /// Creates and sends a request, fetching raw data from an endpoint that is decoded into a Decodable object.
     /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
@@ -143,7 +143,7 @@ public class HTTPClient {
 //                    guard dataResponse.response?.mimeType == "application/json" else {
 //                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
 //                    }
-
+                    
                     do {
                         let decodedObject = try decoder.decode(T.self, from: data)
                         return .success(decodedObject)
@@ -154,18 +154,18 @@ public class HTTPClient {
                     return .failure(error)
                 }
             }()
-
+            
             // Create the DataResponse object containing all necessary information from the response
             let response = DataResponse(request: dataResponse.request,
                                         response: dataResponse.response,
                                         data: dataResponse.data,
                                         result: result)
-
+            
             // Fire the completion!
             completion?(response)
         }
     }
-
+    
     /// Creates a configured URLRequest.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request.
@@ -180,15 +180,15 @@ public class HTTPClient {
         guard let url = try? url.asURL() else {
             return nil
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-
+        
         request.setHeaders(headers)
-
+        
         // Parameters must be set after setting headers, because encoding dictates (and therefore overrides) the Content-Type header
         request.setParameters(parameters, method: method, encoding: encoding)
-
+        
         return request
     }
 }

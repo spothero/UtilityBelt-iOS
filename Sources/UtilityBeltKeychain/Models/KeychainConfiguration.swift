@@ -5,7 +5,7 @@ import Foundation
 /// Represents a base Keychain.
 class KeychainConfiguration {
     // MARK: - Properties
-
+    
     /// The type of class for the Keychain Item.
     /// Required.
     ///
@@ -13,7 +13,7 @@ class KeychainConfiguration {
     ///
     /// [Source](https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_class_keys_and_values#1678477)
     let `class`: KeychainClass
-
+    
     /// Indicates the item’s one and only access group.
     /// Only available on macOS if true for `kSecUseDataProtectionKeychain` or `kSecAttrSynchronizable`.
     /// Optional.
@@ -29,24 +29,24 @@ class KeychainConfiguration {
     ///
     /// [Source](https://developer.apple.com/documentation/security/ksecattraccessgroup)
     let accessGroup: String?
-
+    
     // MARK: - Methods
-
+    
     // MARK: Initializers
-
+    
     init(class keychainClass: KeychainClass, accessGroup: String? = nil) {
         self.accessGroup = accessGroup
         self.class = keychainClass
     }
-
+    
     // MARK: Converters
-
+    
     func asDictionary() -> [KeychainAttribute: Any?] {
         var query = [KeychainAttribute: Any?]()
-
+        
         query[.class] = self.class.rawValue
         query[.accessGroup] = self.accessGroup
-
+        
         return query
     }
 }

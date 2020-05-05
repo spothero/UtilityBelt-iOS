@@ -9,23 +9,23 @@ import Foundation
 public enum KeychainClass: RawRepresentable {
     /// The value that indicates a certificate item.
     case certificate
-
+    
     /// The value that indicates a generic password item.
     case genericPassword
-
+    
     /// The value that indicates an identity item.
     ///
     /// An identity is a certificate paired with its associated private key.
     /// Because an identity is the combination of a private key and a certificate,
     /// this class shares attributes of both `kSecClassKey` and `kSecClassCertificate`.
     case identity
-
+    
     /// The value that indicates an Internet password item.
     case internetPassword
-
+    
     /// The value that indicates a cryptographic key item.
     case key
-
+    
     public var rawValue: String {
         switch self {
         case .certificate:
@@ -40,7 +40,7 @@ public enum KeychainClass: RawRepresentable {
             return String(kSecClassKey)
         }
     }
-
+    
     public init?(rawValue: String) {
         switch rawValue {
         case String(kSecClassCertificate):

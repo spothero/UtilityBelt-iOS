@@ -8,16 +8,16 @@ extension Result {
         guard case let .success(value) = self else {
             return nil
         }
-
+        
         return value
     }
-
+    
     /// Returns the associated error value if the result is a failure, or nil if it is a success.
     var failure: Failure? {
         guard case let .failure(error) = self else {
             return nil
         }
-
+        
         return error
     }
 }

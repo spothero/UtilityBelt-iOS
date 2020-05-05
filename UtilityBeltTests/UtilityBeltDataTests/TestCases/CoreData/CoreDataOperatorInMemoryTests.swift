@@ -7,25 +7,25 @@ import XCTest
 
 class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
     var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .memory)
-
+    
     override func setUp() {
         super.setUp()
-
+        
         self.loadData()
     }
-
+    
     func testCount() {
         self.count()
     }
-
+    
     func testDelete() {
         self.delete()
     }
-
+    
     func testExists() {
         self.exists()
     }
-
+    
     func testFetch() {
         self.fetchAll()
     }

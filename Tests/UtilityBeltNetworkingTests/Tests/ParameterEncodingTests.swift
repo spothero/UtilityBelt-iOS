@@ -4,7 +4,6 @@
 import XCTest
 
 final class ParameterEncodingTests: XCTestCase {
-    
     private var parameters: [String: Any] = [
         "bool": true,
         "double": 2.5,
@@ -178,5 +177,4 @@ final class ParameterEncodingTests: XCTestCase {
         
         XCTAssertEqual(requestQuery, testQuery, "Query is incorrect.")
     }
-    
 }
