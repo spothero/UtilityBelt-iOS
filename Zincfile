@@ -21,5 +21,10 @@ files:
   - source_path: Applications/Xcode/RunScriptHelper-Info.plist
     destination_path: .zinc
   # Scripts
+  - source_path: Scripts/onboard.sh
+    destination_path: scripts
   - source_path: Scripts/swiftlint_run_script.rb
     destination_path: scripts
+  # Git Hooks
+  - source_path: Scripts/git-hooks/pre-commit
+    destination_path: scripts/git-hooks
