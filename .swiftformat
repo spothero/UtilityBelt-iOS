@@ -32,6 +32,14 @@
 # only trims whitespace on nonblank-lines to avoid xcode inconsistencies
 --trimwhitespace nonblank-lines
 
+# this removes the underscore (_) separation in large numbers
+--binarygrouping none
+--decimalgrouping none
+--hexgrouping none
+--octalgrouping none
+--exponentgrouping disabled
+--fractiongrouping disabled
+
 #----------------#
 # Disabled Rules #
 #----------------#
