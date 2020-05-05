@@ -17,9 +17,6 @@ files:
   - source_path: Tools/SwiftLint/.swiftlint.yml
   # SwiftFormat
   - source_path: Tools/SwiftFormat/.swiftformat
-  # Xcode
-  - source_path: Applications/Xcode/RunScriptHelper-Info.plist
-    destination_path: .zinc
   # Scripts
   - source_path: Scripts/onboard.sh
     destination_path: scripts

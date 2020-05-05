@@ -20,6 +20,20 @@
                ReferencedContainer = "container:UtilityBeltTests.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "34E5ABC724620DD90070A80B"
+               BuildableName = "RunScriptHelper"
+               BlueprintName = "RunScriptHelper"
+               ReferencedContainer = "container:../RunScriptHelper.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

@@ -98,8 +98,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3471D5C9234BB4DB00729A46"
-               BuildableName = "RunScriptHelper.framework"
+               BlueprintIdentifier = "34E5ABC724620DD90070A80B"
+               BuildableName = "RunScriptHelper"
                BlueprintName = "RunScriptHelper"
                ReferencedContainer = "container:RunScriptHelper.xcodeproj">
             </BuildableReference>
