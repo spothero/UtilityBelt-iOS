@@ -130,7 +130,7 @@ final class ParameterEncodingTests: XCTestCase {
     /// - Parameter request: The request to check.
     private func dataIsInBody(request: URLRequest) {
         let jsonSerialized: Data
-        if #available(OSX 10.13, *) {
+        if #available(iOS 11.0, OSX 10.13, *) {
             guard let serialized = try? JSONSerialization.data(withJSONObject: self.parameters, options: .sortedKeys) else {
                 assertionFailure("Failed to serialized mocked parameters")
                 return
