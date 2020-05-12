@@ -4,7 +4,7 @@
 # XCODEBUILD_SCHEME="UtilityBelt"
 # DEVICE_NAME="iPhone 11 Pro"
 
-mkdir "output"
+mkdir "${DEPLOY_DIRECTORY}"
 
 set -o pipefail && 
   env NSUnbufferedIO=YES \
@@ -12,9 +12,9 @@ set -o pipefail &&
     -workspace "$XCODEBUILD_WORKSPACE" \
     -scheme "$XCODEBUILD_SCHEME" \
     -destination "$1" \
-    -resultBundlePath "output/Test.xcresult" \
+    -resultBundlePath "${DEPLOY_DIRECTORY}/Test.xcresult" \
     clean test \
-  | tee "output/xcodebuild.log" \
+  | tee "${DEPLOY_DIRECTORY}/xcodebuild.log" \
   | xcpretty
 
 #  # This is what Bitrise runs:
