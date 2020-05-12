@@ -10,7 +10,7 @@ env:
   PACKAGE_NAME: UtilityBelt
   XCODEBUILD_WORKSPACE: UtilityBelt.xcworkspace
   XCODEBUILD_SCHEME: UtilityBelt
-  # DEVELOPER_DIR: /Applications/Xcode_11.4.1.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_11.4.1.app/Contents/Developer
   DEPLOY_DIRECTORY: deploy
 
 jobs:
@@ -27,13 +27,13 @@ jobs:
           - device_name: "iPhone XS"
             os: "12.4.1"
             xcode_version: 11.3.1
+    env:
+      DEVELOPER_DIR: "/Applications/Xcode_${{ matrix.xcode_version }}.app/Contents/Developer"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
-        run: |
-          xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app/Contents/Developer"
-          sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
+        run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
