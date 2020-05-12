@@ -4,10 +4,14 @@ import Foundation
 
 extension Dictionary {
     func asJSONSerializedData() throws -> Data {
+        let options: JSONSerialization.WritingOptions
+        
         if #available(iOS 11.0, OSX 10.13, tvOS 11.0, watchOS 4.0, *) {
-            return try JSONSerialization.data(withJSONObject: self, options: .sortedKeys)
+            options = .sortedKeys
         } else {
-            return try JSONSerialization.data(withJSONObject: self, options: [])
+            options = []
         }
+        
+        return try JSONSerialization.data(withJSONObject: self, options: options)
     }
 }
