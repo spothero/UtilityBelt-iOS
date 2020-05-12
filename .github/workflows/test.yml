@@ -2,11 +2,9 @@ name: Test
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
 
 env:
   PACKAGE_NAME: UtilityBelt
@@ -16,6 +14,12 @@ env:
   DEPLOY_DIRECTORY: deploy
 
 jobs:
+  checkout:
+    name: Checkout
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
   iOS:
     name: iOS ${{ matrix.os }} ${{ matrix.device_name }}
     runs-on: macos-latest
@@ -27,9 +31,8 @@ jobs:
         # include:
         #   - device_name: "iPhone XS"
         #     os: "12.4.1"
+    needs: [checkout]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
       - name: Upload Step Output
@@ -42,9 +45,8 @@ jobs:
     runs-on: macos-latest
     env:
       XCODEBUILD_SCHEME: "UtilityBelt macOS"
+    needs: [checkout]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/xcode_build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
       - name: Upload Step Output
@@ -59,9 +61,8 @@ jobs:
       matrix:
         device_name: ["Apple TV 4K"]
         os: ["13.4"]
+    needs: [checkout]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
       - name: Upload Step Output
@@ -72,9 +73,8 @@ jobs:
   spm:
     name: SPM
     runs-on: macos-latest
+    needs: [checkout]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Run Tests
         run: sh ./scripts/swift_build.sh
       - name: Upload Step Output
