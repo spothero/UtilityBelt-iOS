@@ -29,7 +29,7 @@ jobs:
             os: "12.4.1"
     steps:
       - uses: actions/checkout@v2
-      - name: Test ${{ matrix.destination }}
+      - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
@@ -44,7 +44,7 @@ jobs:
       XCODEBUILD_SCHEME: "UtilityBelt macOS"
     steps:
       - uses: actions/checkout@v2
-      - name: Test ${{ matrix.destination }}
+      - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
@@ -60,17 +60,24 @@ jobs:
         os: ["13.4"]
     steps:
       - uses: actions/checkout@v2
-      - name: Test ${{ matrix.destination }}
+      - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
           name: "tvOS ${{ matrix.os }} ${{ matrix.device_name }} Output"
           path: "deploy"
-  # spm:
-  #   name: Test with SPM
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: SPM Test
-  #       run: swift test -c debug
+  spm:
+    name: SPM
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Tests
+        run: |
+          swift test -c debug --enable-test-discovery --enable-code-coverage
+      - name: Upload Step Output
+        uses: actions/upload-artifact@v1
+        with:
+          name: "SPM Output"
+          path: "deploy"
+          # swift test --show-codecov-path
