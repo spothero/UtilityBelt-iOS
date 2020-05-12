@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: "iOS ${{ matrix.os }} ${{ matrix.device_name }} Output"
-          path: $DEPLOY_DIRECTORY
+          path: "$DEPLOY_DIRECTORY"
         # run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator" clean test | xcpretty
   macOS:
     name: macOS
@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: "macOS Output"
-          path: $DEPLOY_DIRECTORY
+          path: "$DEPLOY_DIRECTORY"
   tvOS:
     name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
     runs-on: macos-latest
@@ -66,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: "tvOS ${{ matrix.os }} ${{ matrix.device_name }} Output"
-          path: $DEPLOY_DIRECTORY
+          path: "$DEPLOY_DIRECTORY"
   # spm:
   #   name: Test with SPM
   #   runs-on: macos-latest

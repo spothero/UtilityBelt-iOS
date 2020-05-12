@@ -12,9 +12,9 @@ set -o pipefail &&
     -workspace "$XCODEBUILD_WORKSPACE" \
     -scheme "$XCODEBUILD_SCHEME" \
     -destination "$1" \
-    -resultBundlePath "$DEPLOY_DIRECTORY/Test.xcresult" \
+    -resultBundlePath "${DEPLOY_DIRECTORY}/Test.xcresult" \
     clean test \
-  | tee "$DEPLOY_DIRECTORY/xcodebuild.log" \
+  | tee "${DEPLOY_DIRECTORY}/xcodebuild.log" \
   | xcpretty
 
 #  # This is what Bitrise runs:
