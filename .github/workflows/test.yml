@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: "iOS ${{ matrix.os }} ${{ matrix.device_name }} Output"
-          path: $DEPLOY_DIRECTORY
+          path: ${{ env.DEPLOY_DIRECTORY }}
   macOS:
     name: macOS
     runs-on: macos-latest
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: "macOS Output"
-          path: $DEPLOY_DIRECTORY
+          path: ${{ env.DEPLOY_DIRECTORY }}
   tvOS:
     name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
     runs-on: macos-latest
@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: "tvOS ${{ matrix.os }} ${{ matrix.device_name }} Output"
-          path: $DEPLOY_DIRECTORY
+          path: ${{ env.DEPLOY_DIRECTORY }}
   spm:
     name: SPM
     runs-on: macos-latest
@@ -77,4 +77,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: "SPM Output"
-          path: $DEPLOY_DIRECTORY
+          path: ${{ env.DEPLOY_DIRECTORY }}
