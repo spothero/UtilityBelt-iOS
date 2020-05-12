@@ -9,8 +9,7 @@ set -o pipefail &&
   xcodebuild \
     -workspace "$XCODEBUILD_WORKSPACE" \
     -scheme "$XCODEBUILD_SCHEME" \
-    -destination "$1" \
-    "$2" \
+    -destination "$1" "$2" \
     clean test \
   | tee "xcodebuild.log" \
   | xcpretty
