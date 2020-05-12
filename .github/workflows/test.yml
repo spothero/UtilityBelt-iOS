@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
-        run: sh ./scripts/build.sh "platform=macOS" "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
+        run: sh ./scripts/build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
       - name: Upload Test Result
         uses: actions/upload-artifact@v1
         with:
