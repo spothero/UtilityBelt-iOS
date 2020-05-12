@@ -38,7 +38,7 @@ jobs:
       - name: Upload Test Result
         uses: actions/upload-artifact@v1
         with:
-          name: "iOS ${{ matrix.os }} {{ matrix.device_name }} Test Result"
+          name: "iOS ${{ matrix.os }} {{ matrix.device_name }}.xcresult"
           path: "Test.xcresult"
         # run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator" clean test | xcpretty
   macOS:
@@ -58,7 +58,7 @@ jobs:
       - name: Upload Test Result
         uses: actions/upload-artifact@v1
         with:
-          name: "macOS Test Result"
+          name: "macOS.xcresult"
           path: "Test.xcresult"
   tvOS:
     name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
@@ -79,7 +79,7 @@ jobs:
       - name: Upload Test Result
         uses: actions/upload-artifact@v1
         with:
-          name: "tvOS ${{ matrix.os }} {{ matrix.device_name }} Test Result"
+          name: "tvOS ${{ matrix.os }} {{ matrix.device_name }}.xcresult"
           path: "Test.xcresult"
   # spm:
   #   name: Test with SPM
