@@ -111,9 +111,9 @@ type_body_length: # Type bodies should not span too many lines.
 
 excluded: # what folders should be excluded from analysis?
   # CocoaPods
-  - Pods 
+  - Pods
   # Swift Package Manager
-  - .build 
+  - .build
   - .swiftpm
   - Tests/LinuxMain.swift
   - "Tests/*/XCTestManifests.swift"
