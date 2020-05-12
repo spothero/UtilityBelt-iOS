@@ -11,7 +11,7 @@ set -o pipefail &&
     -scheme "$2" \
     -destination "$3" \
     clean test \
-  | tee xcodebuild.log \
+  | tee "xcodebuild.log" \
   | xcpretty
 
 #  # This is what Bitrise runs:
