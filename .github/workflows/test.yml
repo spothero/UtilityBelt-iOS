@@ -12,25 +12,21 @@ env:
   PACKAGE_NAME: UtilityBelt
   XCODEBUILD_WORKSPACE: UtilityBelt.xcworkspace
   XCODEBUILD_SCHEME: UtilityBelt
-  IOS_SDK: 13.4.1
-  WATCH_SDK: 6.2
 
 jobs:
   iOS:
-    name: Test ${{ matrix.destination }}
+    name: Test ${{ matrix.destination.name }}
     runs-on: macos-latest
     # env:
     #   DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
     strategy:
       matrix:
-        destination:
-          - "name=iPhone 11 Pro,OS=$IOS_SDK"
-          - "name=Apple TV 4K,OS=$IOS_SDK"
-          - "name=Apple Watch Series 5 - 44mm,OS=$WATCH_SDK"
+        destination.os: ["13.4.1"]
+        destination.name: ["iPhone 11 Pro, Apple TV 4K"]
     steps:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "${{ matrix.destination }}" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.destination.name}},OS=${{ matrix.destination.os }}" clean test | xcpretty
   # macOS_5_1:
   #   name: Test macOS (5.1)
   #   runs-on: macOS-latest
