@@ -23,10 +23,10 @@ jobs:
       matrix:
         device_name: ["iPhone 11 Pro"]
         os: ["13.4.1"]
-        # # The keys below are included as a one-off combination
-        # include:
-        #   - device_name: "Apple TV 4K"
-        #     os: "latest"
+        # The keys below are included as a one-off combination
+        include:
+          - device_name: "iPhone XS"
+            os: "12.4.1"
     steps:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
