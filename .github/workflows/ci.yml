@@ -19,15 +19,22 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        device_name: ["iPhone 11 Pro", "iPhone 11"]
+        device_name:
+          [
+            "iPhone 11 Pro",
+            "iPhone SE (2nd generation)",
+            "iPad Pro (11-inch) (2nd generation)",
+          ]
         os: [13.4.1]
         xcode_version: [11.4.1]
         # The keys below are included as a one-off combination
-        include:
-          - device_name: "iPhone XS"
-            os: 12.4.1
-            xcode_version: 10.3
+        # include:
+        #   - device_name: "iPhone SE (2nd generation)"
+        #     os: 13.4.1
+        #     xcode_version: 11.4.1
     env:
+      # Only Xcode 11.x and higher can run this project due to Swift Package Manager integration
+      # This means that we cannot test versions below iOS 13, tvOS 13, etc. specifically
       DEVELOPER_DIR: "/Applications/Xcode_${{ matrix.xcode_version }}.app/Contents/Developer"
     steps:
       - name: Checkout
