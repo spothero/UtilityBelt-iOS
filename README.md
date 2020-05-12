@@ -1,6 +1,7 @@
 # UtilityBelt-iOS
 
 [![Build Status](https://app.bitrise.io/app/ca194f397ea8421e/status.svg?token=mWTkOH26hJthuWEGXK-vOA&branch=master)](https://app.bitrise.io/app/ca194f397ea8421e)
+[![CI](https://github.com/spothero/UtilityBelt-iOS/workflows/CI/badge.svg)](https://github.com/spothero/UtilityBelt-iOS/actions?query=workflow%3A%22CI%22)
 
 UtilityBelt is a collection of utilities used across various applications and libraries.
 
