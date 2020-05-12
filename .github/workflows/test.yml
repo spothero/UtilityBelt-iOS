@@ -1,4 +1,4 @@
-name: Tests
+name: Test
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 env:
   PACKAGE_NAME: UtilityBelt
-  XCODEBUILD_PROJECT: UtilityBelt.xcworkspace
+  XCODEBUILD_WORKSPACE: UtilityBelt.xcworkspace
   XCODEBUILD_SCHEME: UtilityBelt
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: iOS - ${{ matrix.destination }}
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "$XCODEBUILD_PROJECT" -scheme "$XCODEBUILD_SCHEME" -destination "${{ matrix.destination }}" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "${{ matrix.destination }}" clean test | xcpretty
   # macOS_5_1:
   #   name: Test macOS (5.1)
   #   runs-on: macOS-latest
