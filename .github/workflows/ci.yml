@@ -61,19 +61,20 @@ jobs:
         with:
           name: "macOS Output"
           path: ${{ env.DEPLOY_DIRECTORY }}
-  macOS_catalyst:
-    name: macOS Catalyst
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Run Tests
-        run: sh ./scripts/xcode_build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
-      - name: Upload Step Output
-        uses: actions/upload-artifact@v1
-        with:
-          name: "macOS Catalyst Output"
-          path: ${{ env.DEPLOY_DIRECTORY }}
+  # TODO: Get macOS Catalyst working
+  # macOS_catalyst:
+  #   name: macOS Catalyst
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Run Tests
+  #       run: sh ./scripts/xcode_build.sh "platform=macOS,variant=Mac Catalyst" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
+  #     - name: Upload Step Output
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: "macOS Catalyst Output"
+  #         path: ${{ env.DEPLOY_DIRECTORY }}
   tvOS:
     name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
     runs-on: macos-latest
