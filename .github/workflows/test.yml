@@ -12,13 +12,12 @@ env:
   PACKAGE_NAME: UtilityBelt
   XCODEBUILD_WORKSPACE: UtilityBelt.xcworkspace
   XCODEBUILD_SCHEME: UtilityBelt
+  DEVELOPER_DIR: /Applications/Xcode_11.4.1.app/Contents/Developer
 
 jobs:
   iOS:
-    name: Test ${{ matrix.device_name }} (${{ matrix.os }})
+    name: ${{ matrix.device_name }} - iOS ${{ matrix.os }}
     runs-on: macos-latest
-    # env:
-    #   DEVELOPER_DIR: /Applications/Xcode_11.4.1.app/Contents/Developer
     strategy:
       matrix:
         device_name: ["iPhone 11 Pro"]
@@ -26,55 +25,32 @@ jobs:
         # The keys below are included as a one-off combination
         include:
           - device_name: "Apple TV 4K"
-            os: "13.4"
+            os: "latest"
     steps:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }}" clean test | xcpretty
-  # macOS_5_1:
-  #   name: Test macOS (5.1)
-  #   runs-on: macOS-latest
-  #   env:
-  #     DEVELOPER_DIR: /Applications/Xcode_11.3.1.app/Contents/Developer
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: macOS
-  #       run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire macOS" -destination "platform=macOS" clean test | xcpretty
-  # macOS_5_2:
-  #   name: Test macOS (5.2)
-  #   runs-on: macOS-latest
-  #   env:
-  #     DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: macOS
-  #       run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire macOS" -destination "platform=macOS" clean test | xcpretty
-  # Catalyst:
-  #   name: Test Catalyst
-  #   runs-on: macOS-latest
-  #   env:
-  #     DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Catalyst
-  #       run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire iOS" -destination "platform=macOS" clean test | xcpretty
-  # iOS:
-  #   name: Test iOS
-  #   runs-on: macOS-latest
-  #   env:
-  #     DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
-  #   strategy:
-  #     matrix:
-  #       destination: ["OS=13.4,name=iPhone 11 Pro"] #, "OS=12.4,name=iPhone XS", "OS=11.4,name=iPhone X", "OS=10.3.1,name=iPhone SE"]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: iOS - ${{ matrix.destination }}
-  #       run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire iOS" -destination "${{ matrix.destination }}" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator" clean test | xcpretty
+  macOS:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test ${{ matrix.destination }}
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "platform=macOS" clean test | xcpretty
+  tvOS:
+    name: ${{ matrix.device_name }} - tvOS ${{ matrix.os }}
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        device_name: ["Apple TV 4K"]
+        os: ["13.4"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test ${{ matrix.destination }}
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator" clean test | xcpretty
   # spm:
   #   name: Test with SPM
-  #   runs-on: macOS-latest
-  #   env:
-  #     DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
+  #   runs-on: macos-latest
   #   steps:
   #     - uses: actions/checkout@v2
   #     - name: SPM Test
