@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
         run: |
-          xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_path }}.app/Contents/Developer"
+          xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app/Contents/Developer"
           sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
