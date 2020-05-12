@@ -7,8 +7,8 @@
 set -o pipefail && 
   env NSUnbufferedIO=YES \
   xcodebuild \
-    -workspace "$XCODE_WORKSPACE" \
-    -scheme "$XCODE_SCHEME" \
+    -workspace "$XCODEBUILD_WORKSPACE" \
+    -scheme "$XCODEBUILD_SCHEME" \
     -destination "$1" \
     clean test \
   | tee "xcodebuild.log" \
