@@ -13,7 +13,7 @@ env:
   XCODEBUILD_WORKSPACE: UtilityBelt.xcworkspace
   XCODEBUILD_SCHEME: UtilityBelt
   DEVELOPER_DIR: /Applications/Xcode_11.4.1.app/Contents/Developer
-  # DEPLOY_DIRECTORY: deploy
+  DEPLOY_DIRECTORY: deploy
 
 jobs:
   iOS:
@@ -30,13 +30,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
-        run: sh ./scripts/build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
+        run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
           name: "iOS ${{ matrix.os }} ${{ matrix.device_name }} Output"
-          path: "deploy"
-        # run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator" clean test | xcpretty
+          path: $DEPLOY_DIRECTORY
   macOS:
     name: macOS
     runs-on: macos-latest
@@ -45,12 +44,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
-        run: sh ./scripts/build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
+        run: sh ./scripts/xcode_build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
           name: "macOS Output"
-          path: "deploy"
+          path: $DEPLOY_DIRECTORY
   tvOS:
     name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
     runs-on: macos-latest
@@ -61,24 +60,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
-        run: sh ./scripts/build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
+        run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
           name: "tvOS ${{ matrix.os }} ${{ matrix.device_name }} Output"
-          path: "deploy"
+          path: $DEPLOY_DIRECTORY
   spm:
     name: SPM
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Run Tests
-        run: |
-          mkdir deploy
-          swift test -c debug --enable-test-discovery --enable-code-coverage
+        run: sh ./scripts/swift_build.sh
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
           name: "SPM Output"
-          path: "deploy"
-          # swift test --show-codecov-path
+          path: $DEPLOY_DIRECTORY
