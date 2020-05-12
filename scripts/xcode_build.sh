@@ -11,7 +11,7 @@ set -o pipefail &&
     -resultBundlePath "./deploy/Test.xcresult" \
     -enableCodeCoverage YES \
     clean test \
-  | tee "./deploy/xcodebuild.log" \
+  | tee "./deploy/xcodebuild.log"
   | xcpretty
   
 
