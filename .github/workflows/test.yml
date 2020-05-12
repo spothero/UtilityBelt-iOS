@@ -33,29 +33,39 @@ jobs:
       - name: Upload Test Result
         uses: actions/upload-artifact@v1
         with:
-          name: "${{ matrix.device_name }} ${{ matrix.os }}/xcodebuild.log"
+          name: "${{ matrix.device_name }} - iOS ${{ matrix.os }} Xcodebuild Log"
           path: "xcodebuild.log"
         # run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator" clean test | xcpretty
-  # macOS:
-  #   name: macOS
-  #   runs-on: macos-latest
-  #   env:
-  #     XCODEBUILD_SCHEME: "UtilityBelt macOS"
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Test ${{ matrix.destination }}
-  #       run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "platform=macOS" -skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests   clean test | xcpretty
-  # tvOS:
-  #   name: ${{ matrix.device_name }} - tvOS ${{ matrix.os }}
-  #   runs-on: macos-latest
-  #   strategy:
-  #     matrix:
-  #       device_name: ["Apple TV 4K"]
-  #       os: ["13.4"]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Test ${{ matrix.destination }}
-  #       run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator" clean test | xcpretty
+  macOS:
+    name: macOS
+    runs-on: macos-latest
+    env:
+      XCODEBUILD_SCHEME: "UtilityBelt macOS"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test ${{ matrix.destination }}
+        run: sh ./scripts/build.sh "platform=macOS" "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
+      - name: Upload Test Result
+        uses: actions/upload-artifact@v1
+        with:
+          name: "macOS Xcodebuild Log"
+          path: "xcodebuild.log"
+  tvOS:
+    name: ${{ matrix.device_name }} - tvOS ${{ matrix.os }}
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        device_name: ["Apple TV 4K"]
+        os: ["13.4"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test ${{ matrix.destination }}
+        run: sh ./scripts/build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
+      - name: Upload Test Result
+        uses: actions/upload-artifact@v1
+        with:
+          name: "${{ matrix.device_name }} - tvOS ${{ matrix.os }} Xcodebuild Log"
+          path: "xcodebuild.log"
   # spm:
   #   name: Test with SPM
   #   runs-on: macos-latest
