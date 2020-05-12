@@ -129,22 +129,20 @@ final class ParameterEncodingTests: XCTestCase {
     /// Asserts that the parameters are data in the request body.
     /// - Parameter request: The request to check.
     private func dataIsInBody(request: URLRequest) {
-        let jsonSerialized: Data
-        if #available(iOS 11.0, OSX 10.13, *) {
-            guard let serialized = try? JSONSerialization.data(withJSONObject: self.parameters, options: .sortedKeys) else {
-                assertionFailure("Failed to serialized mocked parameters")
-                return
-            }
-            jsonSerialized = serialized
+        let options: JSONSerialization.WritingOptions
+        
+        if #available(iOS 11.0, OSX 10.13, tvOS 11.0, *) {
+            options = .sortedKeys
         } else {
-            guard let serialized = try? JSONSerialization.data(withJSONObject: self.parameters, options: []) else {
-                assertionFailure("Failed to serialized mocked parameters")
-                return
-            }
-            jsonSerialized = serialized
+            options = []
         }
         
-        XCTAssertEqual(request.httpBody, jsonSerialized)
+        guard let serializedJSON = try? JSONSerialization.data(withJSONObject: self.parameters, options: options) else {
+            assertionFailure("Failed to serialized mocked parameters")
+            return
+        }
+        
+        XCTAssertEqual(request.httpBody, serializedJSON)
     }
     
     /// Asserts that the parameters are a query in the request body.
