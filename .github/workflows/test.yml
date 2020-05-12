@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "platform=macOS" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "platform=macOS" -skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests   clean test | xcpretty
   tvOS:
     name: ${{ matrix.device_name }} - tvOS ${{ matrix.os }}
     runs-on: macos-latest
