@@ -30,11 +30,16 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
         run: sh ./scripts/build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
+      - name: Upload Xcodebuild Log
+        uses: actions/upload-artifact@v1
+        with:
+          name: "iOS ${{ matrix.os }} {{ matrix.device_name }} Xcodebuild Log"
+          path: "xcodebuild.log"
       - name: Upload Test Result
         uses: actions/upload-artifact@v1
         with:
-          name: "iOS ${{ matrix.os }} ${{ matrix.device_name }} Xcodebuild Log"
-          path: "xcodebuild.log"
+          name: "iOS ${{ matrix.os }} {{ matrix.device_name }} Test Result"
+          path: "Test.xcresult"
         # run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator" clean test | xcpretty
   macOS:
     name: macOS
@@ -45,13 +50,18 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
         run: sh ./scripts/build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
-      - name: Upload Test Result
+      - name: Upload Xcodebuild Log
         uses: actions/upload-artifact@v1
         with:
           name: "macOS Xcodebuild Log"
           path: "xcodebuild.log"
+      - name: Upload Test Result
+        uses: actions/upload-artifact@v1
+        with:
+          name: "macOS Test Result"
+          path: "Test.xcresult"
   tvOS:
-    name: tvOS ${{ matrix.os }} {{ matrix.device_name }}
+    name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
     runs-on: macos-latest
     strategy:
       matrix:
@@ -61,11 +71,16 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
         run: sh ./scripts/build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
-      - name: Upload Test Result
+      - name: Upload Xcodebuild Log
         uses: actions/upload-artifact@v1
         with:
           name: "tvOS ${{ matrix.os }} {{ matrix.device_name }} Xcodebuild Log"
           path: "xcodebuild.log"
+      - name: Upload Test Result
+        uses: actions/upload-artifact@v1
+        with:
+          name: "tvOS ${{ matrix.os }} {{ matrix.device_name }} Test Result"
+          path: "Test.xcresult"
   # spm:
   #   name: Test with SPM
   #   runs-on: macos-latest
