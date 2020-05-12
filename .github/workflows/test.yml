@@ -15,19 +15,18 @@ env:
 
 jobs:
   iOS:
-    name: Test ${{ matrix.destination.name }}
+    name: Test ${{ matrix.destination }} ${{ }}
     runs-on: macos-latest
     # env:
-    #   DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
+    #   DEVELOPER_DIR: /Applications/Xcode_11.4.1.app/Contents/Developer
     strategy:
       matrix:
-        destination:
-          - os: ["13.4.1"]
-          - name: ["iPhone 11 Pro, Apple TV 4K"]
+        device_name: ["iPhone 11 Pro", "Apple TV 4K"]
+        os: ["13.4.1"]
     steps:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.destination.name}},OS=${{ matrix.destination.os }}" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},os=${{ matrix.os }}" clean test | xcpretty
   # macOS_5_1:
   #   name: Test macOS (5.1)
   #   runs-on: macOS-latest
