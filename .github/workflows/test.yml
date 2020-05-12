@@ -29,27 +29,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test ${{ matrix.destination }}
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator" clean test | xcpretty
-  macOS:
-    name: macOS
-    runs-on: macos-latest
-    env:
-      XCODEBUILD_SCHEME: "UtilityBelt macOS"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Test ${{ matrix.destination }}
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "platform=macOS" -skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests   clean test | xcpretty
-  tvOS:
-    name: ${{ matrix.device_name }} - tvOS ${{ matrix.os }}
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        device_name: ["Apple TV 4K"]
-        os: ["13.4"]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Test ${{ matrix.destination }}
-        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator" clean test | xcpretty
+        run: sh scripts/build.sh $XCODEBUILD_WORKSPACE $XCODEBUILD_SCHEME "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
+        # run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator" clean test | xcpretty
+  # macOS:
+  #   name: macOS
+  #   runs-on: macos-latest
+  #   env:
+  #     XCODEBUILD_SCHEME: "UtilityBelt macOS"
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Test ${{ matrix.destination }}
+  #       run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "platform=macOS" -skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests   clean test | xcpretty
+  # tvOS:
+  #   name: ${{ matrix.device_name }} - tvOS ${{ matrix.os }}
+  #   runs-on: macos-latest
+  #   strategy:
+  #     matrix:
+  #       device_name: ["Apple TV 4K"]
+  #       os: ["13.4"]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Test ${{ matrix.destination }}
+  #       run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -workspace "$XCODEBUILD_WORKSPACE" -scheme "$XCODEBUILD_SCHEME" -destination "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator" clean test | xcpretty
   # spm:
   #   name: Test with SPM
   #   runs-on: macos-latest

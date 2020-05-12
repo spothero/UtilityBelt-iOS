@@ -1,22 +1,31 @@
 #!/bin/bash
 
-xcodebuild test \
-  -workspace UtilityBelt.xcworkspace \
-  -scheme UtilityBelt-Package \
-#   -sdk iphonesimulator \
-  -destination 'platform=iOS Simulator,name=iPhone 11 Pro,OS=13.4.1' \
-  -destination 'platform=OS X,arch=x86_64' \
-  | tee xcodebuild.log \
+# XCODEBUILD_WORKSPACE="UtilityBelt.xcworkspace"
+# XCODEBUILD_SCHEME="UtilityBelt"
+# DEVICE_NAME="iPhone 11 Pro"
+
+set -o pipefail && 
+  env NSUnbufferedIO=YES \
+  xcodebuild \
+    -workspace $1 \
+    -scheme $2 \
+    -destination $3 \
+    clean test \
+  | tee .build/xcodebuild.log \
   | xcpretty
 
-# xcodebuild | tee xcodebuild.log | xcpretty
-# set -o pipefail &&
+#  # This is what Bitrise runs:
+
+# set -o pipefail && 
+#   env NSUnbufferedIO=YES \ 
 #   xcodebuild \
-#     -workspace MyApp.xcworkspace \
-#     -scheme "MyApp" \
-#     -sdk iphonesimulator \
-#     -destination 'platform=iOS Simulator,name=iPhone 6,OS=8.1' \
+#     -workspace UtilityBelt.xcworkspace \
+#     -scheme UtilityBelt \
+#     build \
+#     COMPILER_INDEX_STORE_ENABLE=NO \
 #     test \
-#   | xcpretty \
-#     -r "html" \
-#     -o "tests.html"
+#     -destination name=iPhone 11 Pro,OS=13.4.1 \
+#     -resultBundlePath output/Test.xcresult \
+#     GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES \
+#     GCC_GENERATE_TEST_COVERAGE_FILES=YES \
+#   | xcpretty --color --report html --output output/xcode-test-results-UtilityBelt.html
