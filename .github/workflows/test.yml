@@ -21,14 +21,15 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        device_name: ["iPhone 11 Pro"]
+        device_name: ["iPhone 11 Pro", "iPhone 11"]
         os: ["13.4.1"]
         # The keys below are included as a one-off combination
         # include:
         #   - device_name: "iPhone XS"
         #     os: "12.4.1"
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
       - name: Upload Step Output
@@ -42,7 +43,8 @@ jobs:
     env:
       XCODEBUILD_SCHEME: "UtilityBelt macOS"
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/xcode_build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
       - name: Upload Step Output
@@ -58,7 +60,8 @@ jobs:
         device_name: ["Apple TV 4K"]
         os: ["13.4"]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Run Tests for ${{ matrix.destination }}
         run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
       - name: Upload Step Output
@@ -70,7 +73,8 @@ jobs:
     name: SPM
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Run Tests
         run: sh ./scripts/swift_build.sh
       - name: Upload Step Output
