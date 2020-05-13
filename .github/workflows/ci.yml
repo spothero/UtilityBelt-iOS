@@ -22,7 +22,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Run Danger
         run: |
-          bundle install danger
           sh ./scripts/danger_lint.sh
   iOS:
     name: iOS ${{ matrix.os }} ${{ matrix.device_name }}
