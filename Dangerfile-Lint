@@ -86,11 +86,14 @@ validate_pull_request if defined?(github)
 
 # Runs the Danger-SwiftFormat plugin and fail the build if there are pending formatting changes
 if defined?(swiftformat) && File.exist?('.swiftformat') 
-  # Prints the version of SwiftFormat used to help with debugging violations and keeping our projects in sync.
-  message "Formatted with SwiftFormat v#{ENV['SWIFTFORMAT_VERSION']}."
+  # Gets the version of SwiftFormat used by Danger
+  swiftformat_version = ENV['SWIFTFORMAT_VERSION'] || `swiftformat --version`
 
-  # Sets the path of the SwiftFormat binary
-  swiftformat.binary_path = ENV['SWIFTFORMAT_PATH']
+  # Prints the version of SwiftFormat used to help with debugging violations and keeping our projects in sync.
+  message "Formatted with SwiftFormat v#{swiftformat_version}."
+
+  # Sets the path of the SwiftFormat binary if the env var has been set
+  swiftformat.binary_path = ENV['SWIFTFORMAT_PATH'] if ENV.key?('SWIFTFORMAT_PATH')
 
   # Run SwiftFormat
   swiftformat.check_format(fail_on_error: true) 
@@ -98,7 +101,7 @@ end
 
 # Runs the Danger-SwiftLint plugin and make inline comments with any warnings or errors
 if defined?(swiftlint) && File.exist?('.swiftlint.yml')
-  # Gets the SwiftLint version run by danger-swiftlint.
+  # Gets the version of SwiftLint used by Danger
   swiftlint_version = ENV['SWIFTLINT_VERSION'] || `danger-swiftlint swiftlint_version`
 
   # Prints the version of SwiftLint used to help with debugging violations and keeping our projects in sync.

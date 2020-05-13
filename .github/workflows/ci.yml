@@ -22,13 +22,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install Mint Dependencies
+      # - name: Install Mint Dependencies
+      #   run: |
+      #     brew install mint
+      #     mint install swiftlint
+      #     mint install swiftformat
+      - name: Install Dependencies
         run: |
-          brew install mint
-          mint install swiftlint
-          mint install swiftformat
-      - name: Install Bundler Dependencies
-        run: bundle install
+          bundle install
+          brew install swiftformat
       - name: Run Danger
         run: sh ./scripts/danger_lint.sh
   # iOS:
