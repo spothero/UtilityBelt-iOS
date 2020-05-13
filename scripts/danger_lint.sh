@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bundle exec danger --fail-on-errors=true --remove-previous-comments --new-comment --verbose
+bundle exec danger dry_run --dangerfile=Dangerfile-Lint # --fail-on-errors=true --remove-previous-comments --new-comment --verbose
 
 # lane :run_danger do |options|
 #     next if options[:skip_danger]
@@ -38,4 +38,4 @@ bundle exec danger --fail-on-errors=true --remove-previous-comments --new-commen
 #     )
 #   end
 
-# #   danger --fail-on-errors=true --remove-previous-comments --new-comment --verboseda
+# #   danger --fail-on-errors=true --remove-previous-comments --new-comment --verbose

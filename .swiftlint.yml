@@ -62,7 +62,8 @@ colon: # Colons should be next to the identifier when specifying a type and next
   apply_to_dictionaries: false # we don't want this rule applied to dictionaries
 cyclomatic_complexity: # Complexity of function bodies should be limited.
   ignores_case_statements: true # ignores switch statements
-empty_count: warning # Prefer checking `isEmpty` over comparing `count` to zero.
+empty_count: # Prefer checking `isEmpty` over comparing `count` to zero.
+  severity: warning
 file_header:
   required_pattern: |
     \/\/ Copyright © \d{4} SpotHero, Inc\. All rights reserved\.
