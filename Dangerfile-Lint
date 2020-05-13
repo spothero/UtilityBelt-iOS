@@ -1,4 +1,4 @@
-# Updated for v6.0.9
+# Updated for v8.0.0
 
 # frozen_string_literal: true
 
@@ -6,9 +6,8 @@
 #   Constants   #
 # ============= #
 
-SWIFTLINT_INLINE_MODE = ENV['INLINE_MODE'] != 'false'
-RUBOCOP_INLINE_MODE = ENV['RUBOCOP_INLINE_MODE'] != 'false'
-IS_LOCAL = ENV['IS_LOCAL'] == 'true'
+SWIFTLINT_INLINE_MODE = true
+# SWIFTLINT_VERSION = "0.39.2"
 IS_DEBUGGING = false
 
 # ======================= #
@@ -20,7 +19,7 @@ def cheer(message)
 end
 
 def debug_message(message)
-  message "[Debug] #{message}" if IS_DEBUGGING && IS_LOCAL
+  message "[Debug] #{message}" if IS_DEBUGGING
 end
 
 def pr_title_tickets
@@ -80,7 +79,7 @@ end
 # =========== #
 
 # Validate that the Pull Request has a valid title and body
-validate_pull_request
+validate_pull_request if defined?(github)
 
 # Sources for all third-party tools can be found here:
 # https://danger.systems/ruby/
@@ -88,37 +87,14 @@ validate_pull_request
 
 # Run the Danger-SwiftLint plugin and make inline comments with any warnings or errors
 if defined?(swiftlint)
-  swiftlint.lint_files(inline_mode: SWIFTLINT_INLINE_MODE)
+  message "Linted with SwiftLint v#{SWIFTLINT_VERSION}."
+
+  swiftlint.verbose = IS_DEBUGGING
+  swiftlint.lint_files(inline_mode: SWIFTLINT_INLINE_MODE) 
 end
 
-# Run the Danger-Rubocop plugin and make inline comments with any warnings or errors
-if defined?(rubocop)
-  rubocop.lint(inline_comment: RUBOCOP_INLINE_MODE)
-end
 
-# Run the Danger-JUnit plugin and print test report summary to PR
-if defined?(junit)
-  # We need to check on whether or not we can access the generated junit report
-  if ENV.key?('DANGER_JUNIT_PATH')
-    junit.parse ENV['DANGER_JUNIT_PATH']
-    junit.report
-
-    if junit.passes.count == junit.tests.count
-      message "#{junit.tests.count} tests ran. All passed! 🎉"
-    else
-      message "#{junit.tests.count} tests ran. #{junit.passes.count} passed, #{junit.failures.count} failed."
-    end
-
-    # Set some environment variables for Fastlane to work with after Danger is finished running
-    ENV['DANGER_JUNIT_TESTS_COUNT'] = junit.tests.count.to_s
-    ENV['DANGER_JUNIT_PASSES_COUNT'] = junit.passes.count.to_s
-    ENV['DANGER_JUNIT_FAILURES_COUNT'] = junit.failures.count.to_s
-    ENV['DANGER_JUNIT_ERRORS_COUNT'] = junit.errors.count.to_s
-    ENV['DANGER_JUNIT_SKIPPED_COUNT'] = junit.skipped.count.to_s
-  else
-    warn 'The danger-junit plugin was found, but no DANGER_JUNIT_PATH was set.'
-  end
-end
+fail 'SwiftLint violations need to be addressed before tests will run.' if swiftlint.issues > 0
 
 # We need a pat on the back sometimes!
 message '👋 👋 Great job!' if status_report[:errors].empty? && status_report[:warnings].empty?
