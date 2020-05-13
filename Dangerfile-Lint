@@ -7,7 +7,6 @@
 # ============= #
 
 SWIFTLINT_INLINE_MODE = true
-# SWIFTLINT_VERSION = "0.39.2"
 IS_DEBUGGING = false
 
 # ======================= #
@@ -87,7 +86,7 @@ validate_pull_request if defined?(github)
 
 # Run the Danger-SwiftLint plugin and make inline comments with any warnings or errors
 if defined?(swiftlint)
-  message "Linted with SwiftLint vADD THE VERSION HERE."
+  message "Linted with SwiftLint v#{ENV['SWIFTLINT_VERSION']}."
 
   swiftlint.verbose = IS_DEBUGGING
   swiftlint.lint_files(inline_mode: SWIFTLINT_INLINE_MODE) 
