@@ -66,7 +66,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Run Tests
-        run: sh ./scripts/xcode_build.sh "platform=macOS" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
+        run: sh ./scripts/xcode_build.sh "platform=macOS"
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
@@ -80,7 +80,7 @@ jobs:
   #     - name: Checkout
   #       uses: actions/checkout@v2
   #     - name: Run Tests
-  #       run: sh ./scripts/xcode_build.sh "platform=macOS,variant=Mac Catalyst" # "-skip-testing:UtilityBeltDataTests,UtilityBeltKeychainTests"
+  #       run: sh ./scripts/xcode_build.sh "platform=macOS,variant=Mac Catalyst"
   #     - name: Upload Step Output
   #       uses: actions/upload-artifact@v1
   #       with:
