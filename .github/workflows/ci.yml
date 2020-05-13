@@ -25,7 +25,8 @@ jobs:
       - name: Install Mint Dependencies
         run: |
           brew install mint
-          mint bootstrap
+          mint install swiftlint
+          mint install swiftformat
       - name: Install Bundler Dependencies
         run: bundle install
       - name: Run Danger
