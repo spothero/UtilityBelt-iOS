@@ -34,12 +34,7 @@ jobs:
     needs: [lint]
     strategy:
       matrix:
-        device_name:
-          [
-            "iPhone 11 Pro",
-            "iPhone SE (2nd generation)",
-            "iPad Pro (11-inch) (2nd generation)",
-          ]
+        device_name: ["iPhone 11 Pro", "iPad Pro (11-inch) (2nd generation)"]
         os: [13.4.1]
         xcode_version: [11.4.1]
         # The keys below are included as a one-off combination
