@@ -3,14 +3,12 @@ source: https://github.com/spothero/Shared-iOS.git
 files:
   # Danger
   - source_path: Tools/Danger/Dangerfile
-    destination_path: .zinc
   # GitHub
   - source_path: Tools/GitHub/CODEOWNERS
     destination_path: .github
   - source_path: Tools/GitHub/.gitignore
   # Rubocop
   - source_path: Tools/Rubocop/rubocop.yml
-    destination_path: .zinc
   # SwiftLint
   - source_path: Tools/SwiftLint/.swiftlint.yml
   # SwiftFormat
