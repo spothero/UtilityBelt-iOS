@@ -96,7 +96,7 @@ if defined?(swiftlint)
   swiftlint.lint_files(inline_mode: SWIFTLINT_INLINE_MODE) 
 end
 
-fail 'SwiftLint violations need to be addressed before tests will run.' if swiftlint.issues.length > 0
+fail "There are #{swiftlint.issues.length} SwiftLint violations that need to be addressed." if swiftlint.issues.length > 0
 
 # We need a pat on the back sometimes!
 message '👋 👋 Great job!' if status_report[:errors].empty? && status_report[:warnings].empty?
