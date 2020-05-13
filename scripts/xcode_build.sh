@@ -14,7 +14,6 @@ set -o pipefail &&
   | tee "./deploy/xcodebuild.log" \
   | xcpretty
   
-
 # Bitrise also calls the following:
 
 #     COMPILER_INDEX_STORE_ENABLE=NO \
