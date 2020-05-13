@@ -88,7 +88,7 @@ validate_pull_request if defined?(github)
 if defined?(swiftformat) && File.exist?('.swiftformat') 
   # Gets the version of SwiftFormat used by Danger
   swiftformat_version = ENV['SWIFTFORMAT_VERSION'] || `swiftformat --version`
-  swiftformat_version = swiftformat_version.join(' ') # Remove newline and spaces
+  swiftformat_version = swiftformat_version.gsub("\n", ' ').squeeze(' ') # Remove newline and spaces
 
   # Prints the version of SwiftFormat used to help with debugging violations and keeping our projects in sync.
   message "Formatted with SwiftFormat v#{swiftformat_version}."
@@ -104,7 +104,7 @@ end
 if defined?(swiftlint) && File.exist?('.swiftlint.yml')
   # Gets the version of SwiftLint used by Danger
   swiftlint_version = ENV['SWIFTLINT_VERSION'] || `danger-swiftlint swiftlint_version`
-  swiftlint_version = swiftlint_version.join(' ') # Remove newline and spaces
+  swiftlint_version = swiftlint_version.gsub("\n", ' ').squeeze(' ') # Remove newline and spaces
 
   # Prints the version of SwiftLint used to help with debugging violations and keeping our projects in sync.
   message "Linted with SwiftLint v#{swiftlint_version}."
