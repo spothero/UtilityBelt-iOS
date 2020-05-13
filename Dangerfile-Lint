@@ -7,8 +7,8 @@
 # ============= #
 
 SWIFTLINT_INLINE_MODE = true
-SWIFTLINT_VERSION = "0.39.2"
-IS_DEBUGGING = true
+# SWIFTLINT_VERSION = "0.39.2"
+IS_DEBUGGING = false
 
 # ======================= #
 #   Convenience Methods   #
@@ -86,9 +86,15 @@ validate_pull_request if defined?(github)
 # Scroll down and select the bubble that has the tool you're looking for
 
 # Run the Danger-SwiftLint plugin and make inline comments with any warnings or errors
-swiftlint.verbose = IS_DEBUGGING
+if defined?(swiftlint)
+  message "Linted with SwiftLint v#{SWIFTLINT_VERSION}."
 
-swiftlint.lint_files(inline_mode: SWIFTLINT_INLINE_MODE, fail_on_error: true) if defined?(swiftlint)
+  swiftlint.verbose = IS_DEBUGGING
+  swiftlint.lint_files(inline_mode: SWIFTLINT_INLINE_MODE) 
+end
+
+
+fail 'SwiftLint violations need to be addressed before tests will run.' if swiftlint.issues > 0
 
 # We need a pat on the back sometimes!
 message '👋 👋 Great job!' if status_report[:errors].empty? && status_report[:warnings].empty?
