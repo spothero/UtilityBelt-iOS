@@ -14,9 +14,20 @@ env:
   DEPLOY_DIRECTORY: deploy
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run Danger
+        run: |
+          bundle install danger
+          sh ./scripts/danger_lint.sh
   iOS:
     name: iOS ${{ matrix.os }} ${{ matrix.device_name }}
     runs-on: macos-latest
+    needs: [lint]
     strategy:
       matrix:
         device_name:
@@ -49,6 +60,7 @@ jobs:
   macOS:
     name: macOS
     runs-on: macos-latest
+    needs: [lint]
     env:
       XCODEBUILD_SCHEME: "UtilityBelt macOS"
     steps:
@@ -78,6 +90,7 @@ jobs:
   tvOS:
     name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
     runs-on: macos-latest
+    needs: [lint]
     strategy:
       matrix:
         device_name: ["Apple TV 4K"]
@@ -95,6 +108,7 @@ jobs:
   spm:
     name: SPM
     runs-on: macos-latest
+    needs: [lint]
     steps:
       - name: Checkout
         uses: actions/checkout@v2

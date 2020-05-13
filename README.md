@@ -1,8 +1,8 @@
 # UtilityBelt-iOS
 
-[![CI](https://github.com/spothero/UtilityBelt-iOS/workflows/CI/badge.svg)](https://github.com/spothero/UtilityBelt-iOS/actions?query=workflow%3A%22CI%22)
-[![Version](https://img.shields.io/github/v/tag/spothero/UtilityBelt-iOS?color=blue&label=latest)](https://github.com/spothero/UtilityBelt-iOS/releases)
-[![Swift 5.2](https://img.shields.io/static/v1?label=swift&message=5.2&color=red&logo=swift&logoColor=white)](https://developer.apple.com/swift)
+[![CI Status](https://github.com/spothero/UtilityBelt-iOS/workflows/CI/badge.svg)](https://github.com/spothero/UtilityBelt-iOS/actions?query=workflow%3A%22CI%22)
+[![Latest Release](https://img.shields.io/github/v/tag/spothero/UtilityBelt-iOS?color=blue&label=latest)](https://github.com/spothero/UtilityBelt-iOS/releases)
+[![Swift Version](https://img.shields.io/static/v1?label=swift&message=5.2&color=red&logo=swift&logoColor=white)](https://developer.apple.com/swift)
 [![License](https://img.shields.io/github/license/spothero/UtilityBelt-iOS)](https://github.com/spothero/UtilityBelt-iOS/blob/master/LICENSE)
 
 UtilityBelt is a collection of utilities used across various applications and libraries.
