@@ -94,7 +94,7 @@ if defined?(swiftlint)
 end
 
 
-fail 'SwiftLint violations need to be addressed before tests will run.' if swiftlint.issues > 0
+fail 'SwiftLint violations need to be addressed before tests will run.' if swiftlint.issues.length > 0
 
 # We need a pat on the back sometimes!
 message '👋 👋 Great job!' if status_report[:errors].empty? && status_report[:warnings].empty?
