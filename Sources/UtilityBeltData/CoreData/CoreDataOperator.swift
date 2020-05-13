@@ -20,8 +20,9 @@ public class CoreDataOperator {
     private var persistentContainer: NSPersistentContainer?
     
     /// The default managed object context for all requests.
-    public var defaultContext: NSManagedObjectContext? {
-            return self.persistentContainer?.viewContext
+    public var defaultContext: NSManagedObjectContext?  
+    {
+        return self.persistentContainer?.viewContext
     }
     
     /// The URLs for each persistent store in the current Core Data stack.
