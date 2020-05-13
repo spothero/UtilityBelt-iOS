@@ -86,12 +86,15 @@ validate_pull_request if defined?(github)
 
 # Run the Danger-SwiftLint plugin and make inline comments with any warnings or errors
 if defined?(swiftlint)
-  message "Linted with SwiftLint v#{ENV['SWIFTLINT_VERSION']}."
+  # Gets the SwiftLint version run by danger-swiftlint.
+  swiftlint_version = ENV['SWIFTLINT_VERSION'] || `danger-swiftlint swiftlint_version`
+
+  # Prints the version of SwiftLint used to help with debugging violations and keeping our projects in sync.
+  message "Linted with SwiftLint v#{swiftlint_version}."
 
   swiftlint.verbose = IS_DEBUGGING
   swiftlint.lint_files(inline_mode: SWIFTLINT_INLINE_MODE) 
 end
-
 
 fail 'SwiftLint violations need to be addressed before tests will run.' if swiftlint.issues.length > 0
 
