@@ -90,7 +90,7 @@ if defined?(swiftformat) && File.exist?('.swiftformat')
   swiftformat_version = ENV['SWIFTFORMAT_VERSION'] || `swiftformat --version`
 
   # Prints the version of SwiftFormat used to help with debugging violations and keeping our projects in sync.
-  message "Formatted with SwiftFormat v#{swiftformat_version}."
+  message "Formatted with SwiftFormat v#{swiftformat_version.squish}."
 
   # Sets the path of the SwiftFormat binary if the env var has been set
   swiftformat.binary_path = ENV['SWIFTFORMAT_PATH'] if ENV.key?('SWIFTFORMAT_PATH')
@@ -105,7 +105,7 @@ if defined?(swiftlint) && File.exist?('.swiftlint.yml')
   swiftlint_version = ENV['SWIFTLINT_VERSION'] || `danger-swiftlint swiftlint_version`
 
   # Prints the version of SwiftLint used to help with debugging violations and keeping our projects in sync.
-  message "Linted with SwiftLint v#{swiftlint_version}."
+  message "Linted with SwiftLint v#{swiftlint_version.squish}."
 
   swiftlint.verbose = IS_DEBUGGING
 
