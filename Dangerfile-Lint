@@ -88,10 +88,9 @@ validate_pull_request if defined?(github)
 if defined?(swiftformat) && File.exist?('.swiftformat') 
   # Gets the version of SwiftFormat used by Danger
   swiftformat_version = ENV['SWIFTFORMAT_VERSION'] || `swiftformat --version`
-  swiftformat_version = swiftformat_version.strip # Remove newline and spaces
 
   # Prints the version of SwiftFormat used to help with debugging violations and keeping our projects in sync.
-  message "Formatted with SwiftFormat v#{swiftformat_version}."
+  message "Formatted with SwiftFormat v#{swiftformat_version.strip}."
 
   # Sets the path of the SwiftFormat binary if the env var has been set
   swiftformat.binary_path = ENV['SWIFTFORMAT_PATH'] if ENV.key?('SWIFTFORMAT_PATH')
@@ -104,17 +103,16 @@ end
 if defined?(swiftlint) && File.exist?('.swiftlint.yml')
   # Gets the version of SwiftLint used by Danger
   swiftlint_version = ENV['SWIFTLINT_VERSION'] || `danger-swiftlint swiftlint_version`
-  swiftlint_version = swiftlint_version.strip # Remove newline and spaces
 
   # Prints the version of SwiftLint used to help with debugging violations and keeping our projects in sync.
-  message "Linted with SwiftLint v#{swiftlint_version}."
+  message "Linted with SwiftLint v#{swiftlint_version.strip}."
 
   swiftlint.verbose = IS_DEBUGGING
 
   # Run SwiftLint
   swiftlint.lint_files(inline_mode: SWIFTLINT_INLINE_MODE) 
 
-  fail "There are #{swiftlint.issues.length} SwiftLint violations that need to be addressed." if swiftlint.issues.length > 0
+  fail "SwiftLint found #{swiftlint.issues.length} violations." if swiftlint.issues.length > 0
 end
 
 # We need a pat on the back sometimes!
