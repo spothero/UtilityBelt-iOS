@@ -17,7 +17,7 @@ files:
   # Scripts
   - source_path: Scripts/onboard.sh
     destination_path: scripts
-  - source_path: Scripts/swiftlint_run_script.rb
+  - source_path: Scripts/swiftlint_run_script.sh
     destination_path: scripts
   # Git Hooks
   - source_path: Scripts/git-hooks/pre-commit
