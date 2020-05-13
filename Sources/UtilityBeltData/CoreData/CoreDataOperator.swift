@@ -20,8 +20,7 @@ public class CoreDataOperator {
     private var persistentContainer: NSPersistentContainer?
     
     /// The default managed object context for all requests.
-    public var defaultContext: NSManagedObjectContext?  
-    {
+    public var defaultContext: NSManagedObjectContext? {
         return self.persistentContainer?.viewContext
     }
     
