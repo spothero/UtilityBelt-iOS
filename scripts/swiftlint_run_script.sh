@@ -3,7 +3,7 @@
 # Only run linting scripts locally, Danger will handle linting on CI
 if ! [ -z "$CI" ]; then
   echo "The SwiftLint Run Script does not run on CI. Don't worry, Danger will handle it! (swiftlint_run_script)"
-  exit 1
+  exit 0
 fi
 
 # The workspace directory should be the git repo root
