@@ -9,7 +9,7 @@ files:
   - source_path: Tools/GitHub/.gitignore
   # Rubocop
   - source_path: Tools/Rubocop/rubocop.yml
-    destination_path: .rubocop.yml
+    name: .rubocop.yml
   # SwiftLint
   - source_path: Tools/SwiftLint/.swiftlint.yml
   # SwiftFormat
