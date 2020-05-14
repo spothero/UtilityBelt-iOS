@@ -73,11 +73,18 @@ public class MockService {
         
         // If response had no exact match, we need to find the closest match
         if response == nil {
+            self.log("Could not find exact match for stub: \(request.description)")
+            
+            for (key, value) in self.stubbedData {
+                self.log("\(key.description) --- CanMOCKURL: \(key.canMockData(for: request))")
+            }
+            
             // Otherwise, find the first matching stubbed request/response pair for the given request
             let firstStubbedDataPair = self.stubbedData.first { $0.key.canMockData(for: request) }
             
             // Return the stubbed response from the first stubbed data pair found, or return nil
             response = firstStubbedDataPair?.value
+            self.log("Using stub for request: \(firstStubbedDataPair?.key.description)")
         }
         
         // Log response debugging information
