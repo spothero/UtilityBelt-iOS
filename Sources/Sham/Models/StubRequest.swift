@@ -4,7 +4,7 @@ import Foundation
 import UtilityBeltNetworking
 
 /// A request for stubbing response meant to mirror a URLRequest.
-public struct StubRequest: Hashable, CustomStringConvertible {
+public struct StubRequest: CustomStringConvertible {
     // MARK: - Properties
     
     /// The HTTP method to stub. If nil, stubs all methods.
@@ -23,10 +23,12 @@ public struct StubRequest: Hashable, CustomStringConvertible {
     
     /// The string representation of the request.
     public var description: String {
-        if let method = self.method, let url = self.url {
-            return "\(method): \(url.absoluteString)"
-        } else if let url = self.url {
-            return "ALL: \(url.absoluteString)"
+        if let urlString = self.url?.sortedAbsoluteString {
+            if let method = self.method {
+                return "\(method): \(urlString)"
+            } else {
+                return "ALL: \(urlString)"
+            }
         } else {
             return "INVALID: NO URL"
         }
@@ -105,9 +107,22 @@ public struct StubRequest: Hashable, CustomStringConvertible {
         let validPath = url.trimmedPath.isEmpty || url.trimmedPath == requestURL.trimmedPath
         
         // Include any stubbed response where the query matches the incoming URL's query or is nil or empty
-        let validQuery = url.query.isNilOrEmpty || url.hasQueryStringEqualTo(url: requestURL)
+        let validQuery = url.query.isNilOrEmpty || url.sortedQueryString == requestURL.sortedQueryString
         
         return validScheme && validHost && validPort && validPath && validQuery
+    }
+}
+
+// MARK: - Hashable and Equatable
+
+extension StubRequest: Hashable, Equatable {
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.description)
+    }
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.hashValue == rhs.hashValue
     }
 }
 
@@ -205,12 +220,16 @@ private extension URL {
         return !self.path.isEmpty || self.host?.isEmpty == false
     }
     
-    func hasQueryStringEqualTo(url otherURL: URL) -> Bool {
-        // Split the query string apart by key/value pairs, then sort
-        let selfQuery = self.query?.split(separator: "&").sorted(by: { $0 < $1 })
-        let requestQuery = otherURL.query?.split(separator: "&").sorted(by: { $0 < $1 })
-        
-        // Compare the query arrays to ensure they match
-        return selfQuery == requestQuery
+    /// Returns the absolute url string with sorted query parameters
+    var sortedAbsoluteString: String? {
+        var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)
+        urlComponents?.query = self.sortedQueryString
+        return urlComponents?.string
+    }
+    
+    /// Returns a string representing the sorted query parameters
+    var sortedQueryString: String? {
+        let splitCharacter: Character = "&"
+        return self.query?.split(separator: splitCharacter).sorted(by: { $0 < $1 }).joined(separator: String(splitCharacter))
     }
 }
