@@ -116,8 +116,7 @@ public class MockService {
         
         // If the request exists, print a log to verify
         if self.stubbedData.keys.contains(request) {
-            // TODO: Instead of print, use some sort of DLog equivalent
-            print("Stubbed data already exists for request '\(request)'. Updating with new data.")
+            self.log("Stubbed data already exists for request '\(request)'. Updating with new data.")
         }
         
         self.stubbedData[request] = response
