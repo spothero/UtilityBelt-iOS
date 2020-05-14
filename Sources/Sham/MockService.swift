@@ -28,6 +28,9 @@ public class MockService {
     /// Whether or not the service should be logging mock requests.
     public var isDebugLoggingEnabled = false
     
+    /// Whether or not to log the request via `os_log`. Defaults to `false`.
+    public var shouldLogToOSLog = false
+    
     /// A dictionary of stubbed responses keyed by stubbed requests.
     private var stubbedData = [StubRequest: StubResponse]()
     
@@ -173,6 +176,10 @@ public class MockService {
             return
         }
         
-        os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
+        if self.shouldLogToOSLog {
+            os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
+        } else {
+            print("message")
+        }
     }
 }
