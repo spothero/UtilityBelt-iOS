@@ -9,10 +9,10 @@ final class StubRequestTests: XCTestCase {
     private let baseURLString = "https://spothero.local"
     
     func testDescriptionWithUnsortedParameters() {
-        let unsortedQueryParametersURL = "\(self.baseURLString)?zebra=thing&ardvark=other_thing"
+        let unsortedQueryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing"
         let request: StubRequest = .get(unsortedQueryParametersURL)
         
-        let sortedQueryParametersURL = "\(self.baseURLString)?ardvark=other_thing&zebra=thing"
+        let sortedQueryParametersURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
         XCTAssertEqual(request.description, "get: \(sortedQueryParametersURL)")
     }
     
