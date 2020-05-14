@@ -116,7 +116,6 @@ public struct StubRequest: CustomStringConvertible {
 // MARK: - Hashable and Equatable
 
 extension StubRequest: Hashable, Equatable {
-    
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.description)
     }

@@ -6,7 +6,6 @@ import UtilityBeltNetworking
 import XCTest
 
 final class StubRequestTests: XCTestCase {
-    
     private let baseURLString = "https://spothero.local"
     
     func testDescriptionWithUnsortedParameters() {
