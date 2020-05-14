@@ -1,7 +1,6 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import Foundation
-import os
 import UtilityBeltNetworking
 
 /// A service which contains stub requests and stub responses for use with the MockURLProtocol.
@@ -10,11 +9,6 @@ public class MockService {
     
     /// The shared instance of the service.
     public static let shared = MockService()
-    
-    // MARK: - Constants
-    
-    /// The default logger for all things Sham.
-    static let shamLog = OSLog(subsystem: "com.spothero.utilitybelt.sham", category: "Mocking")
     
     // MARK: - Properties
     
@@ -27,9 +21,6 @@ public class MockService {
     
     /// Whether or not the service should be logging mock requests.
     public var isDebugLoggingEnabled = false
-    
-    /// Whether or not to log the request via `os_log`. Defaults to `false`.
-    public var shouldLogToOSLog = false
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
     private var stubbedData = [StubRequest: StubResponse]()
@@ -176,10 +167,6 @@ public class MockService {
             return
         }
         
-        if self.shouldLogToOSLog {
-            os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
-        } else {
-            print("message")
-        }
+        print("message")
     }
 }
