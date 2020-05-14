@@ -167,6 +167,6 @@ public class MockService {
             return
         }
         
-        print("message")
+        print("[Sham] \(message)")
     }
 }
