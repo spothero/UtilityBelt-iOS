@@ -13,12 +13,12 @@ final class StubRequestTests: XCTestCase {
         let request: StubRequest = .get(unsortedQueryParametersURL)
         
         let sortedQueryParametersURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
-        XCTAssertEqual(request.description, "get: \(sortedQueryParametersURL)")
+        XCTAssertEqual(request.description, "GET: \(sortedQueryParametersURL)")
     }
     
     func testDescriptionWithNoParameters() {
         let request: StubRequest = .post(self.baseURLString)
-        XCTAssertEqual(request.description, "post: \(self.baseURLString)")
+        XCTAssertEqual(request.description, "POST: \(self.baseURLString)")
     }
     
     func testDescriptionWithNoMethod() {

@@ -27,7 +27,7 @@ public struct StubRequest: CustomStringConvertible {
             return "INVALID: NO URL"
         }
         if let method = self.method {
-            return "\(method): \(urlString)"
+            return "\(method.rawValue): \(urlString)"
         } else {
             return "ALL: \(urlString)"
         }
