@@ -23,14 +23,13 @@ public struct StubRequest: CustomStringConvertible {
     
     /// The string representation of the request.
     public var description: String {
-        if let urlString = self.url?.sortedAbsoluteString {
-            if let method = self.method {
-                return "\(method): \(urlString)"
-            } else {
-                return "ALL: \(urlString)"
-            }
-        } else {
+        guard let urlString = self.url?.sortedAbsoluteString else {
             return "INVALID: NO URL"
+        }
+        if let method = self.method {
+            return "\(method): \(urlString)"
+        } else {
+            return "ALL: \(urlString)"
         }
     }
     
