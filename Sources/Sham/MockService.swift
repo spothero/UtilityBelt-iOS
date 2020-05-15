@@ -68,10 +68,25 @@ public class MockService {
         
         // If response had no exact match, we need to find the closest match
         if response == nil {
-            // Use the response associated with the highest scoring match for stubbed requests
-            response = self.stubbedData.max {
-                $0.key.priorityScore(for: request) > $1.key.priorityScore(for: request)
-            }?.value
+            var bestScore: Int?
+            var bestResponse: StubResponse?
+            
+            for (cachedRequest, cachedResponse) in self.stubbedData {
+                guard
+                    // If there is a priority score
+                    let priorityScore = cachedRequest.priorityScore(for: request),
+                    // and its better than anything we have found yet
+                    priorityScore > bestScore ?? 0 else {
+                    continue
+                }
+                
+                // store this score and response - its the best matching stub so far
+                bestScore = priorityScore
+                bestResponse = cachedResponse
+            }
+            
+            // Use the best response we found, if any
+            response = bestResponse
         }
         
         // Log response debugging information
