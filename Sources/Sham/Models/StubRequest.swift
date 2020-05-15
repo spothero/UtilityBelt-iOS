@@ -4,7 +4,7 @@ import Foundation
 import UtilityBeltNetworking
 
 /// A request for stubbing response meant to mirror a URLRequest.
-public struct StubRequest: CustomStringConvertible {
+public struct StubRequest: Hashable, CustomStringConvertible {
     // MARK: - Properties
     
     /// The HTTP method to stub. If nil, stubs all methods.
@@ -110,17 +110,43 @@ public struct StubRequest: CustomStringConvertible {
         
         return validScheme && validHost && validPort && validPath && validQuery
     }
-}
-
-// MARK: - Hashable and Equatable
-
-extension StubRequest: Hashable, Equatable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.description)
-    }
     
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.hashValue == rhs.hashValue
+    /// A function that generates a score to represent how well a stored stubbed request matches an incoming request, with
+    /// 0 indicating no match and higher scores representing better matches.
+    /// - Parameter request: The incoming request to generate the priority score against.
+    /// - Returns: A score representing how well this request matches an incoming request.  Hight scores indicate better matches.
+    public func priorityScore(for request: StubRequest) -> Int {
+        var score = 0
+        
+        if self.method == request.method {
+            score += 1
+        }
+        
+        guard let url = self.url else {
+            return score
+        }
+        
+        if url.scheme == request.url?.scheme {
+            score += 1
+        }
+        
+        if url.host == request.url?.host {
+            score += 1
+        }
+        
+        if url.port == request.url?.port {
+            score += 1
+        }
+        
+        if url.trimmedPath == request.url?.trimmedPath {
+            score += 1
+        }
+        
+        if url.sortedQueryString == request.url?.sortedQueryString {
+            score += 1
+        }
+        
+        return score
     }
 }
 

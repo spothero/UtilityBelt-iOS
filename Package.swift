@@ -7,10 +7,10 @@ import PackageDescription
 let package = Package(
     name: "UtilityBelt",
     platforms: [
-        .iOS(.v10),         // supports NSPersistentContainer and os_log
-        .macOS(.v10_12),    // supports NSPersistentContainer and os_log
-        .tvOS(.v10),        // supports NSPersistentContainer and os_log
-        .watchOS(.v3),      // supports NSPersistentContainer and os_log
+        .iOS(.v10),         // supports NSPersistentContainer
+        .macOS(.v10_12),    // supports NSPersistentContainer
+        .tvOS(.v10),        // supports NSPersistentContainer
+        .watchOS(.v3),      // supports NSPersistentContainer
     ],
     products: [
         .library(name: "Sham", targets: ["Sham"]),

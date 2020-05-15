@@ -1,7 +1,6 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import Foundation
-import os
 import UtilityBeltNetworking
 
 /// A service which contains stub requests and stub responses for use with the MockURLProtocol.
@@ -10,11 +9,6 @@ public class MockService {
     
     /// The shared instance of the service.
     public static let shared = MockService()
-    
-    // MARK: - Constants
-    
-    /// The default logger for all things Sham.
-    static let shamLog = OSLog(subsystem: "com.spothero.utilitybelt.sham", category: "Mocking")
     
     // MARK: - Properties
     
@@ -30,11 +24,6 @@ public class MockService {
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
     private var stubbedData = [StubRequest: StubResponse]()
-    
-//    /// A convenience array of stubbed requests, taken from stubbedData dictionary keys.
-//    private var stubbedRequests: [StubRequest] {
-//        return self.stubbedData.keys
-//    }
     
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
@@ -72,18 +61,22 @@ public class MockService {
     /// Returns nil if there is no matching stubbed request found.
     /// - Parameter request: The request to match against stubbed requests.
     public func getResponse(for request: StubRequest) -> StubResponse? {
-        self.log("Attempting to stub request: \(request)")
+        self.log("Attempting to stub request: \(request.description)")
         
         // Check for a match with the exact URL
         var response = self.stubbedData[request]
         
         // If response had no exact match, we need to find the closest match
         if response == nil {
-            // Otherwise, find the first matching stubbed request/response pair for the given request
-            let firstStubbedDataPair = self.stubbedData.first { $0.key.canMockData(for: request) }
+            // Filter out stubs that can not mock this request
+            let availableStubs = self.stubbedData.filter {
+                return $0.key.canMockData(for: request)
+            }
             
-            // Return the stubbed response from the first stubbed data pair found, or return nil
-            response = firstStubbedDataPair?.value
+            // Find the highest priority matching score to get the best response
+            response = availableStubs.max {
+                $0.key.priorityScore(for: request) < $1.key.priorityScore(for: request)
+            }?.value
         }
         
         // Log response debugging information
@@ -122,8 +115,7 @@ public class MockService {
         
         // If the request exists, print a log to verify
         if self.stubbedData.keys.contains(request) {
-            // TODO: Instead of print, use some sort of DLog equivalent
-            print("Stubbed data already exists for request '\(request)'. Updating with new data.")
+            self.log("Stubbed data already exists for request '\(request)'. Updating with new data.")
         }
         
         self.stubbedData[request] = response
@@ -173,6 +165,6 @@ public class MockService {
             return
         }
         
-        os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
+        print("[Sham] \(message)")
     }
 }
