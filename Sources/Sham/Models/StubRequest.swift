@@ -111,8 +111,8 @@ public struct StubRequest: Hashable, CustomStringConvertible {
         return validScheme && validHost && validPort && validPath && validQuery
     }
     
-    /// A function that generates a score to represent how well a StubRequest matches an incoming request
-    /// - Parameter request: The request to generate the priority score against
+    /// A function that generates a score to represent how well a stored stubbed request matches an incoming request
+    /// - Parameter request: The incoming request to generate the priority score against
     /// - Returns: A score representing how well this request matches an incoming request.  Nil values imply no match.
     public func priorityScore(for request: StubRequest) -> Int? {
         guard self.canMockData(for: request) else {
@@ -249,7 +249,7 @@ private extension URL {
     
     /// Returns the absolute url string with sorted query parameters
     var sortedAbsoluteString: String? {
-        var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: true)
+        var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)
         urlComponents?.query = self.sortedQueryString
         return urlComponents?.string
     }
