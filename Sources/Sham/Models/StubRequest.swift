@@ -249,7 +249,7 @@ private extension URL {
     
     /// Returns the absolute url string with sorted query parameters
     var sortedAbsoluteString: String? {
-        var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)
+        var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: true)
         urlComponents?.query = self.sortedQueryString
         return urlComponents?.string
     }

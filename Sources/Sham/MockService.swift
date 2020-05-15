@@ -1,7 +1,6 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import Foundation
-import os
 import UtilityBeltNetworking
 
 /// A service which contains stub requests and stub responses for use with the MockURLProtocol.
@@ -10,11 +9,6 @@ public class MockService {
     
     /// The shared instance of the service.
     public static let shared = MockService()
-    
-    // MARK: - Constants
-    
-    /// The default logger for all things Sham.
-    static let shamLog = OSLog(subsystem: "com.spothero.utilitybelt.sham", category: "Mocking")
     
     // MARK: - Properties
     
@@ -136,8 +130,7 @@ public class MockService {
         
         // If the request exists, print a log to verify
         if self.stubbedData.keys.contains(request) {
-            // TODO: Instead of print, use some sort of DLog equivalent
-            print("Stubbed data already exists for request '\(request)'. Updating with new data.")
+            self.log("Stubbed data already exists for request '\(request)'. Updating with new data.")
         }
         
         self.stubbedData[request] = response
@@ -187,6 +180,6 @@ public class MockService {
             return
         }
         
-        os_log("[Sham] %@", log: Self.shamLog, type: .debug, message)
+        print("[Sham] \(message)")
     }
 }
