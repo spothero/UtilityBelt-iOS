@@ -25,11 +25,6 @@ public class MockService {
     /// A dictionary of stubbed responses keyed by stubbed requests.
     private var stubbedData = [StubRequest: StubResponse]()
     
-//    /// A convenience array of stubbed requests, taken from stubbedData dictionary keys.
-//    private var stubbedRequests: [StubRequest] {
-//        return self.stubbedData.keys
-//    }
-    
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
         return !self.stubbedData.isEmpty
