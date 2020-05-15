@@ -70,7 +70,7 @@ public class MockService {
         if response == nil {
             // Use the response associated with the highest scoring match for stubbed requests
             response = self.stubbedData.max {
-                $0.key.priorityScore(for: request) < $1.key.priorityScore(for: request)
+                $0.key.priorityScore(for: request) > $1.key.priorityScore(for: request)
             }?.value
         }
         
