@@ -72,7 +72,7 @@ public class MockService {
     /// Returns nil if there is no matching stubbed request found.
     /// - Parameter request: The request to match against stubbed requests.
     public func getResponse(for request: StubRequest) -> StubResponse? {
-        self.log("Attempting to stub request: \(request)")
+        self.log("Attempting to stub request: \(request.description)")
         
         // Check for a match with the exact URL
         var response = self.stubbedData[request]
@@ -90,8 +90,6 @@ public class MockService {
                     priorityScore > bestScore ?? 0 else {
                     continue
                 }
-                print("priorityScore: \(priorityScore)")
-                print("req: \(cachedRequest.description)")
                 
                 // store this score and response - its the best matching stub so far
                 bestScore = priorityScore

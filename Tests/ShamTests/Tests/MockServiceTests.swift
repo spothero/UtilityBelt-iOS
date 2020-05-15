@@ -130,23 +130,4 @@ final class MockServiceTests: XCTestCase {
         
         self.waitForExpectations(timeout: 5)
     }
-    
-    func testQueryParameterMatching() {
-        let baseURLResponse: StubResponse = .encodable("Base URL Response")
-        let rightResponse: StubResponse = .encodable("Right Response")
-        // swiftlint:disable:next line_length
-        let fullString = "api/v1/facilities/769/rates/?show_unavailable=true&session_uuid=DCAFF36A-A268-4FFB-9CAC-63963DF12374&starts=2018-06-06T12%3A30&search_text=&ends=2018-06-06T18%3A00&auto_extend=true&action_id=6EB2D9E2-90B0-4A09-A3BB-0A287F50B2C3&action=rebook_recent_reservations&segment_id=TESTING&include=facility%2Cfacility.operator_id%2Cfacility.supported_fee_types&search_id=158ED109-3F21-45E6-BA63-6A0999A8F69B"
-        
-        let base = "api/v1/facilities/769/rates/"
-        
-        self.stub(.get(base), with: baseURLResponse)
-        self.stub(.get(fullString), with: rightResponse)
-        // swiftlint:disable:next line_length
-        let rearranged = "api/v1/facilities/769/rates/?show_unavailable=true&session_uuid=DCAFF36A-A268-4FFB-9CAC-63963DF12374&starts=2018-06-06T12%3A30&search_text=&auto_extend=true&action_id=6EB2D9E2-90B0-4A09-A3BB-0A287F50B2C3&action=rebook_recent_reservations&segment_id=TESTING&include=facility%2Cfacility.operator_id%2Cfacility.supported_fee_types&ends=2018-06-06T18%3A00&search_id=158ED109-3F21-45E6-BA63-6A0999A8F69B"
-        
-        let testResult = MockService.shared.getResponse(for: StubRequest.get(rearranged))
-        print("1. \(String(data: testResult!.data!, encoding: .utf8))")
-        XCTAssertNotNil(testResult?.data)
-        XCTAssertEqual(testResult?.data, rightResponse.data)
-    }
 }
