@@ -34,7 +34,6 @@ extension Array where Element == CodingKey {
             }
         }
         
-        return path
-            .trimmingCharacters(in: CharacterSet(charactersIn: "."))
+        return path.trimmingCharacters(in: CharacterSet(charactersIn: "."))
     }
 }
