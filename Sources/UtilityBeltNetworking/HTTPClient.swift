@@ -69,7 +69,9 @@ public class HTTPClient {
         }
         
         let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
-            self.log(urlResponse)
+            if let urlResponse = urlResponse {
+                self.log(urlResponse)
+            }
             
             // Convert the URLResponse into an HTTPURLResponse object.
             // If it cannot be converted, use the undefined HTTPURLResponse object
@@ -88,11 +90,12 @@ public class HTTPClient {
             
             switch result {
             case let .success(data):
-                // Attempt to get the data as pretty printed JSON, otherwise just encode to utf8
-                let dataString = data.asPrettyPrintedJSON ?? String(data: data, encoding: .utf8)
-                
                 self.log("Response succeeded.")
-                self.log(dataString)
+                
+                // Attempt to get the data as pretty printed JSON, otherwise just encode to utf8
+                if let dataString: String = data.asPrettyPrintedJSON ?? String(data: data, encoding: .utf8) {
+                    self.log(dataString)
+                }
             case let .failure(error):
                 self.log("Response failed. Error: \(error.localizedDescription)")
             }
