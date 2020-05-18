@@ -7,7 +7,7 @@ public enum UBNetworkError: Error {
     case invalidFilePath(String)
     case invalidURLString(String)
     case invalidURLResponse
-    case unableToDecode(String)
+    case unableToDecode(String, DecodingError?)
     case unexpectedError
 }
 
@@ -22,7 +22,9 @@ extension UBNetworkError: LocalizedError {
             return "Invalid URL string '\(urlString)'."
         case .invalidURLResponse:
             return "Invalid URL Response."
-        case let .unableToDecode(objectName):
+        case let .unableToDecode(objectName, .some(underlyingError)):
+            return "Unable to decode '\(objectName)'. \(underlyingError.cleanedDescription)"
+        case let .unableToDecode(objectName, _):
             return "Unable to decode '\(objectName)'."
         case .unexpectedError:
             return "An unexpected error has occurred."

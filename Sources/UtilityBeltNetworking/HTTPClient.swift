@@ -135,7 +135,7 @@ public class HTTPClient {
                     if let data = data as? T {
                         return .success(data)
                     } else {
-                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self)))
+                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self), nil))
                     }
                 case let .success(data):
                     // TODO: Implement mime type checking for JSON before attempting to decode JSON (IOS-1967)
@@ -147,8 +147,10 @@ public class HTTPClient {
                     do {
                         let decodedObject = try decoder.decode(T.self, from: data)
                         return .success(decodedObject)
+                    } catch let error as DecodingError {
+                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self), error))
                     } catch {
-                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self)))
+                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self), nil))
                     }
                 case let .failure(error):
                     return .failure(error)
