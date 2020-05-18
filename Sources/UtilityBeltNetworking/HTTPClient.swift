@@ -88,7 +88,11 @@ public class HTTPClient {
             
             switch result {
             case let .success(data):
-                self.log("Response succeeded. Data: \(String(data: data, encoding: .utf8))")
+                // Attempt to get the data as pretty printed JSON, otherwise just encode to utf8
+                let dataString = data.asPrettyPrintedJSON ?? String(data: data, encoding: .utf8)
+                
+                self.log("Response succeeded.")
+                self.log(dataString)
             case let .failure(error):
                 self.log("Response failed. Error: \(error.localizedDescription)")
             }
@@ -231,5 +235,17 @@ private extension DataResponse {
                                       response: nil,
                                       data: nil,
                                       result: .failure(error))
+    }
+}
+
+private extension Data {
+    var asPrettyPrintedJSON: String? {
+        guard
+            let object = try? JSONSerialization.jsonObject(with: self, options: []),
+            let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]) else {
+            return nil
+        }
+        
+        return String(data: data, encoding: .utf8)
     }
 }
