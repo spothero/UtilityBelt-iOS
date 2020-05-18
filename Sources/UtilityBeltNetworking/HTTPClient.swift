@@ -20,6 +20,9 @@ public class HTTPClient {
     /// The URLSession that is used for all requests.
     private let session: URLSession
     
+    /// Whether or not the client should be logging requests.
+    public var isDebugLoggingEnabled = false
+    
     // MARK: - Methods
     
     // MARK: Initializers
@@ -60,7 +63,14 @@ public class HTTPClient {
             return nil
         }
         
+        if let urlString = request.url?.absoluteString {
+            self.log("Making \(method.rawValue) request to \(urlString)...")
+            self.log("Request: \(request.debugDescription)")
+        }
+        
         let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
+            self.log(urlResponse)
+            
             // Convert the URLResponse into an HTTPURLResponse object.
             // If it cannot be converted, use the undefined HTTPURLResponse object
             let httpResponse = urlResponse as? HTTPURLResponse
@@ -75,6 +85,13 @@ public class HTTPClient {
                     return .failure(UBNetworkError.unexpectedError)
                 }
             }()
+            
+            switch result {
+            case let .success(data):
+                self.log("Response succeeded. Data: \(String(data: data, encoding: .utf8))")
+            case let .failure(error):
+                self.log("Response failed. Error: \(error.localizedDescription)")
+            }
             
             // Create the DataResponse object containing all necessary information from the response
             let dataResponse = DataResponse(request: request,
@@ -139,10 +156,10 @@ public class HTTPClient {
                     }
                 case let .success(data):
                     // TODO: Implement mime type checking for JSON before attempting to decode JSON (IOS-1967)
-//                    // If the mime type for the response isn't JSON, we can't decode it
-//                    guard dataResponse.response?.mimeType == "application/json" else {
-//                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
-//                    }
+                    //                    // If the mime type for the response isn't JSON, we can't decode it
+                    //                    guard dataResponse.response?.mimeType == "application/json" else {
+                    //                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
+                    //                    }
                     
                     do {
                         let decodedObject = try decoder.decode(T.self, from: data)
@@ -192,6 +209,14 @@ public class HTTPClient {
         request.setParameters(parameters, method: method, encoding: encoding)
         
         return request
+    }
+    
+    private func log(_ message: Any) {
+        guard self.isDebugLoggingEnabled else {
+            return
+        }
+        
+        print("[UtilityBeltNetworking] \(message)")
     }
 }
 
