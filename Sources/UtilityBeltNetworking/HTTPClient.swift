@@ -21,7 +21,13 @@ public class HTTPClient {
     private let session: URLSession
     
     /// Whether or not the client should be logging requests.
-    public var isDebugLoggingEnabled = false
+    public var isDebugLoggingEnabled: Bool = {
+        #if DEBUG
+            return true
+        #else
+            return false
+        #endif
+    }()
     
     // MARK: - Methods
     
@@ -71,7 +77,7 @@ public class HTTPClient {
             self.log("Request finished.")
             
             if let urlResponse = urlResponse {
-                self.log("[Data]", urlResponse)
+                self.log("[Data] \(urlResponse)")
             }
             
             // Convert the URLResponse into an HTTPURLResponse object.
@@ -164,10 +170,10 @@ public class HTTPClient {
                     }
                 case let .success(data):
                     // TODO: Implement mime type checking for JSON before attempting to decode JSON (IOS-1967)
-                    //                    // If the mime type for the response isn't JSON, we can't decode it
-                    //                    guard dataResponse.response?.mimeType == "application/json" else {
-                    //                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
-                    //                    }
+//                    // If the mime type for the response isn't JSON, we can't decode it
+//                    guard dataResponse.response?.mimeType == "application/json" else {
+//                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
+//                    }
                     
                     do {
                         let decodedObject = try decoder.decode(T.self, from: data)
