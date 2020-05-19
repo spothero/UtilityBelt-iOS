@@ -64,13 +64,14 @@ public class HTTPClient {
         }
         
         if let urlString = request.url?.absoluteString {
-            self.log("Making \(method.rawValue) request to \(urlString)...")
-            self.log("Request: \(request.debugDescription)")
+            self.log("Starting \(method.rawValue) request to \(urlString)...")
         }
         
         let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
+            self.log("Request finished.")
+            
             if let urlResponse = urlResponse {
-                self.log(urlResponse)
+                self.log("[Data]", urlResponse)
             }
             
             // Convert the URLResponse into an HTTPURLResponse object.

@@ -20,7 +20,7 @@ public class MockService {
     public var isMockingAllRequests = true
     
     /// Whether or not the service should be logging mock requests.
-    public var isDebugLoggingEnabled = false
+    public var isDebugLoggingEnabled = true
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
     private var stubbedData = [StubRequest: StubResponse]()
