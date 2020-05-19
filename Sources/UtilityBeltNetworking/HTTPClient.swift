@@ -77,7 +77,7 @@ public class HTTPClient {
             self.log("Request finished.")
             
             if let urlResponse = urlResponse {
-                self.log("[Data] \(urlResponse)")
+                self.log("[Response] \(urlResponse)")
             }
             
             // Convert the URLResponse into an HTTPURLResponse object.
