@@ -17,6 +17,7 @@ let package = Package(
         .library(name: "UtilityBelt", targets: ["UtilityBeltData", "UtilityBeltKeychain", "UtilityBeltNetworking"]),
         .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltKeychain", targets: ["UtilityBeltKeychain"]),
+        .library(name: "UtilityBeltLogging", targets: ["UtilityBeltLogging"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
     ],
     dependencies: [],
@@ -33,6 +34,10 @@ let package = Package(
         ),
         .target(
             name: "UtilityBeltKeychain",
+            dependencies: []
+        ),
+        .target(
+            name: "UtilityBeltLogging",
             dependencies: []
         ),
         .target(
