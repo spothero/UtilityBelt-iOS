@@ -2,6 +2,13 @@
 
 import Foundation
 
+// TODO: Lincoln has to be able to have metadata at the class and event level.
+// TODO: Add timestamps to logs.
+// TODO: Measure the speed to ensure optimal performance.
+// TODO: Experiment with Combine conformance?
+// TODO: Include a domain or label for Lincoln to log events under?
+// TODO: Instead of a static object or singleton, should I instantiate Loggers?
+
 public class Lincoln {
     // MARK: Type Aliases
     
@@ -13,7 +20,7 @@ public class Lincoln {
     
     // MARK: Enums
     
-    /// The log level.
+    /// Indicates the severity or condition of a log event.
     ///
     /// Log levels are ordered by their severity, with `.trace` being the least severe and
     /// `.critical` being the most severe.
@@ -45,14 +52,19 @@ public class Lincoln {
     
     // MARK: Properties
     
-    /// The least severe log level that Lincoln should process log events for.
+    // TODO: Adjust the log level depending on the DEBUG flag
+    
+    /// Indicates the minimum severity or condition threshold that should process log events.
+    /// Log levels range from `.trace` (lowest severity) to `.critical` (highest severity).
+    /// Setting this property will log all events of a matching or higher severity.
     public var logLevel: LogLevel = .trace
     
     /// The handlers to use for processing log events. A handler must be registered for logs to be processed.
     /// There is no guaranteed order that the handlers will be called in.
     ///
-    /// To get started, call `registerHandler(PrintLogHandler())`.
-    private var handlers: [LogHandler] = []
+    /// By default, a `PrintLogHandler` is registered when running in Debug configuration,
+    /// which simply prints to the console using the `print()` function.
+    private var handlers: [LogHandler] = [PrintLogHandler()]
     
     /// Any global log options that should be applied to all log events.
     /// The default options will log file and line numbers that all events occur on.
@@ -88,6 +100,8 @@ public class Lincoln {
         guard !self.handlers.isEmpty else {
             return
         }
+        
+        // TODO: How can I avoiding processing the message like this for handlers that don't need it?
         
         // Get a set of log options containing the global options as well as the additional options for this call
         let allOptions = self.logOptions.union(options)
@@ -178,8 +192,14 @@ public class Lincoln {
     
     // MARK: Methods - Handler Registration
     
-    public func registerHandler(_ handler: LogHandler) {
-        self.handlers.append(handler)
+    // TODO: It isn't clear that this method unregisters existing handlers.
+    public func register(_ handler: LogHandler) {
+        self.handlers = [handler]
+    }
+    
+    // TODO: It isn't clear that this method unregisters existing handlers.
+    public func register(_ handlers: [LogHandler]) {
+        self.handlers = handlers
     }
     
     // MARK: Methods - Utilities

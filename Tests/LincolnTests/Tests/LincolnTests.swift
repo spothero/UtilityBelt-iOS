@@ -6,7 +6,7 @@ import XCTest
 
 final class LincolnTests: XCTestCase {
     func testLogging() throws {
-        Lincoln.shared.registerHandler(self)
+        Lincoln.shared.register(self)
         Lincoln.shared.info("Wow")
     }
 }
