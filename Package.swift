@@ -13,6 +13,7 @@ let package = Package(
         .watchOS(.v3),      // supports NSPersistentContainer
     ],
     products: [
+        .library(name: "Lincoln", targets: ["Lincoln"]),
         .library(name: "Sham", targets: ["Sham"]),
         .library(name: "UtilityBelt", targets: ["UtilityBeltData", "UtilityBeltKeychain", "UtilityBeltNetworking"]),
         .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
@@ -21,6 +22,10 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
+        .target(
+            name: "Lincoln",
+            dependencies: []
+        ),
         .target(
             name: "Sham",
             dependencies: [
@@ -38,6 +43,12 @@ let package = Package(
         .target(
             name: "UtilityBeltNetworking",
             dependencies: []
+        ),
+        .testTarget(
+            name: "LincolnTests",
+            dependencies: [
+                .target(name: "Lincoln"),
+            ]
         ),
         .testTarget(
             name: "ShamTests",
