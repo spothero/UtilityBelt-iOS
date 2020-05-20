@@ -20,6 +20,7 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
+        // Library Product Targets
         .target(
             name: "Sham",
             dependencies: [
@@ -34,10 +35,17 @@ let package = Package(
             name: "UtilityBeltNetworking",
             dependencies: []
         ),
+        // Test Targets
         .testTarget(
             name: "ShamTests",
             dependencies: [
                 .target(name: "Sham"),
+            ]
+        ),
+        .testTarget(
+            name: "UtilityBeltDataTests",
+            dependencies: [
+                .target(name: "UtilityBeltData"),
             ]
         ),
         .testTarget(
