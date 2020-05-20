@@ -70,8 +70,8 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.1.4)
   danger (~> 8.0.0)
-  danger-swiftformat
-  danger-swiftlint (~> 0.24.1)
+  danger-swiftformat (~> 0.7.0)
+  danger-swiftlint (~> 0.24.2)
   xcpretty (~> 0.3.0)
 
 BUNDLED WITH
