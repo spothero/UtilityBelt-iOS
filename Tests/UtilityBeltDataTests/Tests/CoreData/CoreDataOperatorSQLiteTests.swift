@@ -2,11 +2,10 @@
 
 import CoreData
 @testable import UtilityBeltData
-@testable import UtilityBeltDemo
 import XCTest
 
-class CoreDataOperatorSQLiteTests: XCTestCase, CoreDataOperatorTesting {
-    var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .sqlite)
+final class CoreDataOperatorSQLiteTests: XCTestCase, CoreDataOperatorTesting {
+    var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .sqlite, managedObjectModel: .mocked)
     
     override func setUp() {
         super.setUp()
