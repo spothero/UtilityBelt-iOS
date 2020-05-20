@@ -20,6 +20,15 @@ public class HTTPClient {
     /// The URLSession that is used for all requests.
     private let session: URLSession
     
+    /// Whether or not the client should be logging requests.
+    public var isDebugLoggingEnabled: Bool = {
+        #if DEBUG
+            return true
+        #else
+            return false
+        #endif
+    }()
+    
     // MARK: - Methods
     
     // MARK: Initializers
@@ -60,7 +69,17 @@ public class HTTPClient {
             return nil
         }
         
+        if let urlString = request.url?.absoluteString {
+            self.log("Starting \(method.rawValue) request to \(urlString)...")
+        }
+        
         let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
+            self.log("Request finished.")
+            
+            if let urlResponse = urlResponse {
+                self.log("[Response] \(urlResponse)")
+            }
+            
             // Convert the URLResponse into an HTTPURLResponse object.
             // If it cannot be converted, use the undefined HTTPURLResponse object
             let httpResponse = urlResponse as? HTTPURLResponse
@@ -75,6 +94,18 @@ public class HTTPClient {
                     return .failure(UBNetworkError.unexpectedError)
                 }
             }()
+            
+            switch result {
+            case let .success(data):
+                self.log("Response succeeded.")
+                
+                // Attempt to get the data as pretty printed JSON, otherwise just encode to utf8
+                if let dataString: String = data.asPrettyPrintedJSON ?? String(data: data, encoding: .utf8) {
+                    self.log(dataString)
+                }
+            case let .failure(error):
+                self.log("Response failed. Error: \(error.localizedDescription)")
+            }
             
             // Create the DataResponse object containing all necessary information from the response
             let dataResponse = DataResponse(request: request,
@@ -193,6 +224,14 @@ public class HTTPClient {
         
         return request
     }
+    
+    private func log(_ message: Any) {
+        guard self.isDebugLoggingEnabled else {
+            return
+        }
+        
+        print("[UtilityBeltNetworking] \(message)")
+    }
 }
 
 // MARK: - Extensions
@@ -206,5 +245,17 @@ private extension DataResponse {
                                       response: nil,
                                       data: nil,
                                       result: .failure(error))
+    }
+}
+
+private extension Data {
+    var asPrettyPrintedJSON: String? {
+        guard
+            let object = try? JSONSerialization.jsonObject(with: self, options: []),
+            let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]) else {
+            return nil
+        }
+        
+        return String(data: data, encoding: .utf8)
     }
 }
