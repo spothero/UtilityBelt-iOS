@@ -15,13 +15,13 @@ let package = Package(
     products: [
         .library(name: "Lincoln", targets: ["Lincoln"]),
         .library(name: "Sham", targets: ["Sham"]),
-        .library(name: "UtilityBelt", targets: ["UtilityBeltData", "UtilityBeltKeychain", "UtilityBeltNetworking"]),
+        .library(name: "UtilityBelt", targets: ["UtilityBeltData", "UtilityBeltNetworking"]),
         .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
-        .library(name: "UtilityBeltKeychain", targets: ["UtilityBeltKeychain"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
     ],
     dependencies: [],
     targets: [
+        // Library Product Targets
         .target(
             name: "Lincoln",
             dependencies: []
@@ -37,13 +37,10 @@ let package = Package(
             dependencies: []
         ),
         .target(
-            name: "UtilityBeltKeychain",
-            dependencies: []
-        ),
-        .target(
             name: "UtilityBeltNetworking",
             dependencies: []
         ),
+        // Test Targets
         .testTarget(
             name: "LincolnTests",
             dependencies: [
@@ -54,6 +51,12 @@ let package = Package(
             name: "ShamTests",
             dependencies: [
                 .target(name: "Sham"),
+            ]
+        ),
+        .testTarget(
+            name: "UtilityBeltDataTests",
+            dependencies: [
+                .target(name: "UtilityBeltData"),
             ]
         ),
         .testTarget(
