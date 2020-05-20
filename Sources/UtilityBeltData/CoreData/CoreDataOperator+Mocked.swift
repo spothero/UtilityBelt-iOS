@@ -9,7 +9,9 @@
         /// Creates a mocked `CoreDataOperator` for use with testing.
         /// - Parameter name: The name of the Data Model to persist.
         /// - Parameter storeType: The method of storage for this `CoreDataOperator`. Defaults to In Memory.
-        /// - Parameter managedObjectModel: The managed Data Model to persist if mocking programmatically.
+        /// - Parameter managedObjectModel: By default, the provided name value of the container is used as the name of
+        ///                                 the persisent store associated with the container. Passing in the `NSManagedObjectModel`
+        ///                                 object overrides the lookup of the model by the provided name value.
         static func mocked(name: String,
                            storeType: NSPersistentContainer.StoreType = .memory,
                            managedObjectModel: NSManagedObjectModel? = nil) -> CoreDataOperator {
