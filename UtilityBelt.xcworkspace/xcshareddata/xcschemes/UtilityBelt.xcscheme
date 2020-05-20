@@ -114,21 +114,10 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBeltNetworkingTests"
-               BuildableName = "UtilityBeltNetworkingTests"
-               BlueprintName = "UtilityBeltNetworkingTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "34BE19EC2391FC1000ED5FC1"
-               BuildableName = "UtilityBeltDataTests.xctest"
+               BlueprintIdentifier = "UtilityBeltDataTests"
+               BuildableName = "UtilityBeltDataTests"
                BlueprintName = "UtilityBeltDataTests"
-               ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -140,6 +129,17 @@
                BuildableName = "UtilityBeltKeychainTests.xctest"
                BlueprintName = "UtilityBeltKeychainTests"
                ReferencedContainer = "container:UtilityBeltTests/UtilityBeltTests.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityBeltNetworkingTests"
+               BuildableName = "UtilityBeltNetworkingTests"
+               BlueprintName = "UtilityBeltNetworkingTests"
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
       </Testables>

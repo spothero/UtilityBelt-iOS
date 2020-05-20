@@ -9,8 +9,18 @@
         /// Creates a mocked `NSPersistentContainer` for use with testing.
         /// - Parameter name: The name of the Data Model to persist.
         /// - Parameter storeType: The method of storage for this `NSPersistentContainer`. Defaults to In Memory.
-        static func mocked(name: String, storeType: StoreType = .memory) -> NSPersistentContainer {
-            let container = NSPersistentContainer(name: name)
+        /// - Parameter managedObjectModel: The managed Data Model to persist if mocking programmatically.
+        static func mocked(name: String,
+                           storeType: StoreType = .memory,
+                           managedObjectModel: NSManagedObjectModel? = nil) -> NSPersistentContainer {
+            let container: NSPersistentContainer = {
+                if let managedObjectModel = managedObjectModel {
+                    return .init(name: name, managedObjectModel: managedObjectModel)
+                } else {
+                    return .init(name: name)
+                }
+            }()
+            
             let description = NSPersistentStoreDescription()
             
             // Storing in memory will prevent saving of data between runs
