@@ -47,7 +47,7 @@ final class PrintLogHandlerPerformanceTests: XCTestCase {
     // MARK: Tests
     
     /// This function provides our baseline metrics for a raw print command.
-    func testPrintingPerformance() throws {
+    func testPrinting() throws {
         // Baseline: ~0.0085s
         self.measure(options: Self.measurementOptions) {
             for _ in 0 ..< Self.totalInvocations {
@@ -57,12 +57,12 @@ final class PrintLogHandlerPerformanceTests: XCTestCase {
     }
     
     /// This function provides our baseline metrics for logging messages via Lincoln with NO additional formatting.
-    func testNonFormattedMessageLoggingPerformance() throws {
+    func testNonFormattedMessageLogging() throws {
         let lincoln = self.lincolnWithPrintLogHandler()
         
         // Baseline: ~0.0085s
         // Result:   Approximately identical to raw printing.
-        self.measure {
+        self.measure(options: Self.measurementOptions) {
             for _ in 0 ..< Self.totalInvocations {
                 lincoln.log("Lorem ipsum dolor sit amet.")
             }
@@ -70,12 +70,12 @@ final class PrintLogHandlerPerformanceTests: XCTestCase {
     }
     
     /// This function provides our baseline metrics for logging messages via Lincoln with ALL additional formatting options enabled.
-    func testFormattedMessageLoggingPerformance() throws {
+    func testFormattedMessageLogging() throws {
         let lincoln = self.lincolnWithPrintLogHandler(options: Set(PrintLogHandler.LogOption.allCases))
         
         // Baseline: ~0.045s
         // Result:   Approximately 5x as long as non-formatted message logging.
-        self.measure {
+        self.measure(options: Self.measurementOptions) {
             for _ in 0 ..< Self.totalInvocations {
                 lincoln.log("Lorem ipsum dolor sit amet.")
             }
@@ -83,12 +83,12 @@ final class PrintLogHandlerPerformanceTests: XCTestCase {
     }
     
     /// This function provides our baseline metrics for logging errors via Lincoln with NO additional formatting.
-    func testNonFormattedErrorLoggingPerformance() throws {
+    func testNonFormattedErrorLogging() throws {
         let lincoln = self.lincolnWithPrintLogHandler()
         
         // Baseline: ~0.02s
         // Result:   Approximately 2x as long as non-formatted message logging.
-        self.measure {
+        self.measure(options: Self.measurementOptions) {
             for _ in 0 ..< Self.totalInvocations {
                 lincoln.error(TestError.generic, message: "Lorem ipsum dolor sit amet.")
             }
@@ -96,12 +96,12 @@ final class PrintLogHandlerPerformanceTests: XCTestCase {
     }
     
     /// This function provides our baseline metrics for logging errors via Lincoln with ALL additional formatting options enabled.
-    func testFormattedErrorLoggingPerformance() throws {
+    func testFormattedErrorLogging() throws {
         let lincoln = self.lincolnWithPrintLogHandler(options: Set(PrintLogHandler.LogOption.allCases))
         
         // Baseline: ~0.065s
         // Result:   Approximately 6x as long as non-formatted message logging.
-        self.measure {
+        self.measure(options: Self.measurementOptions) {
             for _ in 0 ..< Self.totalInvocations {
                 lincoln.error(TestError.generic, message: "Lorem ipsum dolor sit amet.")
             }
