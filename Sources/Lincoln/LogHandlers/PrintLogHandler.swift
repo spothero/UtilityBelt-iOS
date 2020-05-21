@@ -18,9 +18,13 @@ public struct PrintLogHandler: LogHandler, LogPrinting {
     
     /// Any global log options that should be applied to all log events.
     /// Only the `.includePrefix` option is included by default.
-    public var options: LogOptions = [.includePrefix]
+    public let options: LogOptions
     
     // MARK: Methods
+    
+    public init(options: LogOptions = [.includePrefix]) {
+        self.options = options
+    }
     
     public func log(_ event: LogEvent) {
         // Clean the base message any way we need to

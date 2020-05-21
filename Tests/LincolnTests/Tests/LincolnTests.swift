@@ -15,14 +15,17 @@ final class LincolnTests: XCTestCase {
         // Create an expectation
         let expectation = self.expectation(description: "Log item '\(String(describing: item))'.")
         
+        // Initialize a local instance of Lincoln
+        let lincoln = Lincoln()
+        
         // Create a test logger to handle the log events
         let logger = TestLogger(expectation: expectation, completion: completion)
         
-        // Register it to the shared Lincoln instance
-        Lincoln.shared.register(logger)
+        // Register it to the local Lincoln instance
+        lincoln.register(logger)
         
         // Log an item through the same Lincoln instance
-        Lincoln.shared.log(item)
+        lincoln.log(item)
         
         // Wait for expectations to complete
         self.wait(for: [logger.expectation], timeout: 0.1)

@@ -108,7 +108,6 @@ public class Lincoln {
     
     // TODO: Consider wrapping the error here if a message is supplied, then passing it into the log function.
     
-    // swiftlint:disable:next function_parameter_count
     func report(_ error: Error,
                 message: String?,
                 level: LogLevel,
