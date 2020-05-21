@@ -4,11 +4,12 @@ import Foundation
 @testable import Lincoln
 import XCTest
 
-final class LincolnTests: XCTestCase {
+final class PrintHandlerTests: XCTestCase {
     func testLogging() throws {
-        self.log("Wow") { event in
-            XCTAssertEqual("Wow", event.item as? String)
-        }
+        let logger = TestPrintLogger()
+        Lincoln.shared.register(logger)
+        
+        Lincoln.shared.log("Lorem ipsum dolor sit amet.")
     }
     
     private func log(_ item: Any, completion: @escaping (LogEvent) -> Void) {
@@ -29,7 +30,7 @@ final class LincolnTests: XCTestCase {
     }
 }
 
-struct TestLogger: LogHandler {
+struct TestPrintLogger: LogHandler, LogPrinting {
     let expectation: XCTestExpectation
     let completion: (LogEvent) -> Void
     
