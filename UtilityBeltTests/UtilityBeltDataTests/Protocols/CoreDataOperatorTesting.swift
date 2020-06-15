@@ -157,7 +157,7 @@ extension CoreDataOperatorTesting {
             let unknownUserPredicate = NSPredicate(key: #keyPath(User.email),
                                                    equalTo: "notauser@spothero.com")
             XCTAssertEqual(try self.coreDataOperator.count(of: User.self, with: unknownUserPredicate),
-                           1,
+                           0,
                            file: file,
                            line: line)
         } catch {
