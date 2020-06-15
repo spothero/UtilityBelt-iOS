@@ -88,10 +88,18 @@ extension CoreDataOperatorTesting {
                            file: file,
                            line: line)
             
-            // Verify using a predicate with the count returns the correct number
+            // Verify using a predicate with a match returns the correct number
             let secondUserPredicate = NSPredicate(key: #keyPath(User.email),
                                                   equalTo: "second@spothero.com")
             XCTAssertEqual(try self.coreDataOperator.count(of: User.self, with: secondUserPredicate),
+                           1,
+                           file: file,
+                           line: line)
+            
+            // Verify using a predicate without a match returns 0
+            let unknownUserPredicate = NSPredicate(key: #keyPath(User.email),
+                                                   equalTo: "notauser@spothero.com")
+            XCTAssertEqual(try self.coreDataOperator.count(of: User.self, with: unknownUserPredicate),
                            1,
                            file: file,
                            line: line)
