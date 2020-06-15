@@ -7,7 +7,7 @@ import XCTest
 final class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
     // MARK: Properties
     
-    var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .memory)
+    var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .memory, managedObjectModel: .mocked)
     
     // MARK: Create Tests
     
