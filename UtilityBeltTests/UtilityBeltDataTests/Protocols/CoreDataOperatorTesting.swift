@@ -8,6 +8,8 @@ import XCTest
 protocol CoreDataOperatorTesting: XCTestCase {
     var coreDataOperator: CoreDataOperator { get set }
     
+    func testNewInstance()
+    
     func testCount()
     func testCountWithPredicate()
     
@@ -17,6 +19,25 @@ protocol CoreDataOperatorTesting: XCTestCase {
 }
 
 extension CoreDataOperatorTesting {
+    
+    // MARK: Create
+    
+    func verifyNewInstanceSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Create a new user instance
+            let user = try XCTUnwrap(self.coreDataOperator.newInstance(of: User.self),
+                                     file: file,
+                                     line: line)
+            
+            // Verify the entity name is correct
+            XCTAssertEqual(user.entity.name,
+                           "User",
+                           file: file,
+                           line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
     
     // MARK: Count
     

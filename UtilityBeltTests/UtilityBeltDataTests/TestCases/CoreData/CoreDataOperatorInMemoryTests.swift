@@ -11,6 +11,12 @@ class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
     
     var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .memory)
 
+    // MARK: Create Tests
+    
+    func testNewInstance() {
+        self.verifyNewInstanceSucceeds()
+    }
+    
     // MARK: Count Tests
     
     func testCount() {

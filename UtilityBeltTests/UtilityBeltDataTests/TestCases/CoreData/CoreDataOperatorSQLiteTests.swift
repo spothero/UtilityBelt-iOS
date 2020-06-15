@@ -11,6 +11,12 @@ class CoreDataOperatorSQLiteTests: XCTestCase, CoreDataOperatorTesting {
     
     var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .sqlite)
     
+    // MARK: Create Tests
+    
+    func testNewInstance() {
+        self.verifyNewInstanceSucceeds()
+    }
+    
     // MARK: Count Tests
     
     func testCount() {
