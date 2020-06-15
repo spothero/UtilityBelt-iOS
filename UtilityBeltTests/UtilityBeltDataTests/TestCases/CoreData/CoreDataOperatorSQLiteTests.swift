@@ -6,27 +6,23 @@ import CoreData
 import XCTest
 
 class CoreDataOperatorSQLiteTests: XCTestCase, CoreDataOperatorTesting {
+    
+    // MARK: Properties
+    
     var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .sqlite)
+    
+    // MARK: Tests
+    
+    func testDeleteSingleObject() {
+         self.verifyDeleteSingleObjectsSucceeds()
+     }
+     
+     func testDeleteAllObjects() {
+         self.verifyDeleteAllObjectsSucceeds()
+     }
+     
+     func testDeleteAllObjectsWithPredicate() {
+         self.verifyDeleteAllObjectsWithPredicateSucceeds()
+     }
 
-    override func setUp() {
-        super.setUp()
-
-        self.loadData()
-    }
-
-    func testCount() {
-        self.count()
-    }
-
-    func testDelete() {
-        self.delete()
-    }
-
-    func testExists() {
-        self.exists()
-    }
-
-    func testFetch() {
-        self.fetchAll()
-    }
 }
