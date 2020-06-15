@@ -17,6 +17,16 @@ class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
         self.verifyNewInstanceSucceeds()
     }
     
+    // MARK: Exists Tests
+    
+    func testExists() {
+        self.verifyExistsSucceeds()
+    }
+    
+    func testExistsWithPredicate() {
+        self.verifyExistsWithPredicateSucceeds()
+    }
+    
     // MARK: Count Tests
     
     func testCount() {

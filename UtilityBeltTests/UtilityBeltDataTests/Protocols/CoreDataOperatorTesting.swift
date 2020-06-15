@@ -10,6 +10,9 @@ protocol CoreDataOperatorTesting: XCTestCase {
     
     func testNewInstance()
     
+    func testExists()
+    func testExistsWithPredicate()
+    
     func testCount()
     func testCountWithPredicate()
     
@@ -32,6 +35,60 @@ extension CoreDataOperatorTesting {
             // Verify the entity name is correct
             XCTAssertEqual(user.entity.name,
                            "User",
+                           file: file,
+                           line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyExistsSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Verify no users exist when we start
+            XCTAssertFalse(try self.coreDataOperator.exists(User.self),
+                           file: file,
+                           line: line)
+            
+            // Create a user object
+            try self.createUser(firstName: "Test",
+                                lastName: "User",
+                                email: "test@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify a user object now exists
+            XCTAssertTrue(try self.coreDataOperator.exists(User.self),
+                          file: file,
+                          line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyExistsWithPredicateSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Verify no users exist when we start
+            XCTAssertFalse(try self.coreDataOperator.exists(User.self),
+                           file: file,
+                           line: line)
+            
+            // Create a user objects
+            try self.createUser(firstName: "First",
+                                lastName: "User",
+                                email: "first@spothero.com")
+            try self.createUser(firstName: "Second",
+                                lastName: "User",
+                                email: "second@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify passing predicate for matching object returns true
+            let matchingPredicate = NSPredicate(key: #keyPath(User.email), contains: "spothero")
+            XCTAssertTrue(try self.coreDataOperator.exists(User.self, with: matchingPredicate),
+                          file: file,
+                          line: line)
+            
+            // Verify passing predicate for no matching objects returns false
+            let nonMatchingPredicate = NSPredicate(key: #keyPath(User.email), contains: "gmail")
+            XCTAssertFalse(try self.coreDataOperator.exists(User.self, with: nonMatchingPredicate),
                            file: file,
                            line: line)
         } catch {
