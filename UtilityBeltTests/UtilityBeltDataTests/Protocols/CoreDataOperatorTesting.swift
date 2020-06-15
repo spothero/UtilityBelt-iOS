@@ -8,12 +8,76 @@ import XCTest
 protocol CoreDataOperatorTesting: XCTestCase {
     var coreDataOperator: CoreDataOperator { get set }
     
+    func testCount()
+    func testCountWithPredicate()
+    
     func testDeleteSingleObject()
     func testDeleteAllObjects()
     func testDeleteAllObjectsWithPredicate()
 }
 
 extension CoreDataOperatorTesting {
+    
+    // MARK: Count
+    
+    func verifyCountSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Verify we start with no data
+            XCTAssertEqual(try self.coreDataOperator.count(of: User.self),
+                           0,
+                           file: file,
+                           line: line)
+            
+            // Create a user in Core Data
+            try self.createUser(firstName: "Test",
+                                lastName: "User",
+                                email: "test@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify we have 1 object in Core Data
+            XCTAssertEqual(try self.coreDataOperator.count(of: User.self),
+                           1,
+                           file: file,
+                           line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyCountWithPredicateSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Verify we start with no data
+            XCTAssertEqual(try self.coreDataOperator.count(of: User.self),
+                           0,
+                           file: file,
+                           line: line)
+            
+            // Create users in Core Data
+            try self.createUser(firstName: "First",
+                                lastName: "User",
+                                email: "first@spothero.com")
+            try self.createUser(firstName: "Second",
+                                lastName: "Second",
+                                email: "second@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify we have 2 objects in Core Data
+            XCTAssertEqual(try self.coreDataOperator.count(of: User.self),
+                           2,
+                           file: file,
+                           line: line)
+            
+            // Verify using a predicate with the count returns the correct number
+            let secondUserPredicate = NSPredicate(key: #keyPath(User.email),
+                                                  equalTo: "second@spothero.com")
+            XCTAssertEqual(try self.coreDataOperator.count(of: User.self, with: secondUserPredicate),
+                           1,
+                           file: file,
+                           line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
     
     // MARK: Delete
     

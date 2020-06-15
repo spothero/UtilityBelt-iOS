@@ -11,7 +11,17 @@ class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
     
     var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .memory)
 
-    // MARK: Tests
+    // MARK: Count Tests
+    
+    func testCount() {
+        self.verifyCountSucceeds()
+    }
+    
+    func testCountWithPredicate() {
+        self.verifyCountWithPredicateSucceeds()
+    }
+    
+    // MARK: Delete Tests
     
     func testDeleteSingleObject() {
         self.verifyDeleteSingleObjectsSucceeds()
