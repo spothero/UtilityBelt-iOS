@@ -117,16 +117,12 @@ extension CoreDataOperatorTesting {
                                         line: UInt = #line) {
         do {
             // Create user objects in Core Data
-            _ = try XCTUnwrap(self.createUser(firstName: "First",
-                                              lastName: "User",
-                                              email: "first@spothero.com"),
-                              file: file,
-                              line: line)
-            _ = try XCTUnwrap(self.createUser(firstName: "Second",
-                                              lastName: "User",
-                                              email: "second@spothero.com"),
-                              file: file,
-                              line: line)
+            try self.createUser(firstName: "First",
+                                lastName: "User",
+                                email: "first@spothero.com")
+            try self.createUser(firstName: "Second",
+                                lastName: "User",
+                                email: "second@spothero.com")
             try self.coreDataOperator.saveDefaultContext()
             
             // Verify we now have 2 user objects
@@ -154,21 +150,15 @@ extension CoreDataOperatorTesting {
                                                      line: UInt = #line) {
         do {
             // Create user objects in Core Data
-            _ = try XCTUnwrap(self.createUser(firstName: "First",
-                                              lastName: "User",
-                                              email: "first@spothero.com"),
-                              file: file,
-                              line: line)
-            _ = try XCTUnwrap(self.createUser(firstName: "Second",
-                                              lastName: "User",
-                                              email: "second@gmail.com"),
-                              file: file,
-                              line: line)
-            _ = try XCTUnwrap(self.createUser(firstName: "Third",
-                                              lastName: "User",
-                                              email: "third@gmail.com"),
-                              file: file,
-                              line: line)
+            try self.createUser(firstName: "First",
+                                lastName: "User",
+                                email: "first@spothero.com")
+            try self.createUser(firstName: "Second",
+                                lastName: "User",
+                                email: "second@gmail.com")
+            try self.createUser(firstName: "Third",
+                                lastName: "User",
+                                email: "third@gmail.com")
             try self.coreDataOperator.saveDefaultContext()
             
             // Verify we now have 3 user objects
@@ -201,6 +191,7 @@ extension CoreDataOperatorTesting {
     
     // MARK: Utilities
     
+    @discardableResult
     private func createUser(firstName: String,
                             lastName: String,
                             email: String) throws -> User? {
