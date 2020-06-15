@@ -28,6 +28,7 @@
 		34BE1A1023920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A0E23920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld */; };
 		34BE1A1223920F0A00ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34BE1A0E23920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld */; };
 		34E13B5923A8252900E7EFC5 /* UtilityBeltKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 34E13B5823A8252900E7EFC5 /* UtilityBeltKeychain */; };
+		E408E6B924980F56001D16A4 /* NSPredicate+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = E408E6B824980F56001D16A4 /* NSPredicate+Convenience.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		34BE1A0F23920E8000ED5FC1 /* UtilityBeltData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UtilityBeltData.xcdatamodel; sourceTree = "<group>"; };
 		34D6EBDA2399AC3E005429FC /* UtilityBeltKeychainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilityBeltKeychainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D6EBDE2399AC3E005429FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E408E6B824980F56001D16A4 /* NSPredicate+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Convenience.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +216,7 @@
 		345FE27923924B620027D0FE /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E408E6B824980F56001D16A4 /* NSPredicate+Convenience.swift */,
 				345FE27A23924B6C0027D0FE /* XCTestCase+MeasureAndCatch.swift */,
 			);
 			path = Extensions;
@@ -458,6 +461,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BE1A1023920E8000ED5FC1 /* UtilityBeltData.xcdatamodeld in Sources */,
+				E408E6B924980F56001D16A4 /* NSPredicate+Convenience.swift in Sources */,
 				34BE1A072392013700ED5FC1 /* User+CoreDataProperties.swift in Sources */,
 				345FE28023924EC50027D0FE /* CoreDataOperatorTesting.swift in Sources */,
 				34BE1A062392013700ED5FC1 /* User+CoreDataClass.swift in Sources */,
