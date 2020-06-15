@@ -110,8 +110,7 @@ extension CoreDataOperatorTesting {
     
     // MARK: Delete
     
-    func verifyDeleteSingleObjectsSucceeds(file: StaticString = #file,
-                                           line: UInt = #line) {
+    func verifyDeleteSingleObjectsSucceeds(file: StaticString = #file, line: UInt = #line) {
         do {
             // Create a user object in Core Data
             let user = try XCTUnwrap(self.createUser(firstName: "Test",
@@ -142,8 +141,7 @@ extension CoreDataOperatorTesting {
         }
     }
     
-    func verifyDeleteAllObjectsSucceeds(file: StaticString = #file,
-                                        line: UInt = #line) {
+    func verifyDeleteAllObjectsSucceeds(file: StaticString = #file, line: UInt = #line) {
         do {
             // Create user objects in Core Data
             try self.createUser(firstName: "First",
@@ -175,8 +173,7 @@ extension CoreDataOperatorTesting {
         }
     }
     
-    func verifyDeleteAllObjectsWithPredicateSucceeds(file: StaticString = #file,
-                                                     line: UInt = #line) {
+    func verifyDeleteAllObjectsWithPredicateSucceeds(file: StaticString = #file, line: UInt = #line) {
         do {
             // Create user objects in Core Data
             try self.createUser(firstName: "First",
