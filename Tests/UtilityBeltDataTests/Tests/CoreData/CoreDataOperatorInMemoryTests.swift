@@ -5,27 +5,47 @@ import CoreData
 import XCTest
 
 final class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
+    // MARK: Properties
+    
     var coreDataOperator: CoreDataOperator = .mocked(name: "UtilityBeltData", storeType: .memory, managedObjectModel: .mocked)
     
-    override func setUp() {
-        super.setUp()
-        
-        self.loadData()
+    // MARK: Create Tests
+    
+    func testNewInstance() {
+        self.verifyNewInstanceSucceeds()
     }
     
-    func testCount() {
-        self.count()
-    }
-    
-    func testDelete() {
-        self.delete()
-    }
+    // MARK: Exists Tests
     
     func testExists() {
-        self.exists()
+        self.verifyExistsSucceeds()
     }
     
-    func testFetch() {
-        self.fetchAll()
+    func testExistsWithPredicate() {
+        self.verifyExistsWithPredicateSucceeds()
+    }
+    
+    // MARK: Count Tests
+    
+    func testCount() {
+        self.verifyCountSucceeds()
+    }
+    
+    func testCountWithPredicate() {
+        self.verifyCountWithPredicateSucceeds()
+    }
+    
+    // MARK: Delete Tests
+    
+    func testDeleteSingleObject() {
+        self.verifyDeleteSingleObjectsSucceeds()
+    }
+    
+    func testDeleteAllObjects() {
+        self.verifyDeleteAllObjectsSucceeds()
+    }
+    
+    func testDeleteAllObjectsWithPredicate() {
+        self.verifyDeleteAllObjectsWithPredicateSucceeds()
     }
 }
