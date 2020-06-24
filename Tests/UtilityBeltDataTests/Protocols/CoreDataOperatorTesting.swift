@@ -16,6 +16,14 @@ protocol CoreDataOperatorTesting: XCTestCase {
     func testCount()
     func testCountWithPredicate()
     
+    func testFetch()
+    func testFetchWithPredicate()
+    
+    func testFetchMultiple()
+    func testFetchMultipleWithPredicate()
+    func testFetchMultipleWithSortDescriptors()
+    func testFetchMultipleWithFetchLimit()
+    
     func testDeleteSingleObject()
     func testDeleteAllObjects()
     func testDeleteAllObjectsWithPredicate()
@@ -159,6 +167,149 @@ extension CoreDataOperatorTesting {
                            0,
                            file: file,
                            line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    // MARK: Fetch
+    
+    func verifyFetchSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Create a user in Core Data
+            try self.createUser(firstName: "Test",
+                                lastName: "User",
+                                email: "test@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify fetch returns the user
+            let user = try XCTUnwrap(self.coreDataOperator.fetch(User.self))
+            XCTAssertEqual(user.email,
+                           "test@spothero.com",
+                           file: file,
+                           line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyFetchWithPredicateSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Create users in Core Data
+            try self.createUser(firstName: "First",
+                                lastName: "User",
+                                email: "first@spothero.com")
+            try self.createUser(firstName: "Second",
+                                lastName: "User",
+                                email: "second@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify a fetch with a predicate returns the correct user
+            let secondUserPredicate = NSPredicate(key: #keyPath(User.email),
+                                                  equalTo: "second@spothero.com")
+            let user = try XCTUnwrap(self.coreDataOperator.fetch(User.self,
+                                                                 with: secondUserPredicate),
+                                     file: file,
+                                     line: line)
+            XCTAssertEqual(user.email, "second@spothero.com")
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyFetchMultipleSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Create users in Core Data
+            try self.createUser(firstName: "First",
+                                lastName: "User",
+                                email: "first@spothero.com")
+            try self.createUser(firstName: "Second",
+                                lastName: "User",
+                                email: "second@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify the fetch returns all users
+            let users = try self.coreDataOperator.fetchMultiple(of: User.self)
+            XCTAssertEqual(users.count, 2, file: file, line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyFetchMultipleWithPredicateSucceeds(file: StaticString = #file,
+                                                  line: UInt = #line) {
+        do {
+            // Create users in Core Data
+            try self.createUser(firstName: "A",
+                                lastName: "User",
+                                email: "a@spothero.com")
+            try self.createUser(firstName: "B",
+                                lastName: "User",
+                                email: "b@spothero.com")
+            try self.createUser(firstName: "C",
+                                lastName: "User",
+                                email: "c@gmail.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify fetching with a predicate succeeds
+            let gmailPredicate = NSPredicate(key: #keyPath(User.email), contains: "gmail")
+            let gmailUsers = try self.coreDataOperator.fetchMultiple(of: User.self, with: gmailPredicate)
+            XCTAssertEqual(gmailUsers.count, 1)
+            XCTAssertEqual(gmailUsers.first?.email, "c@gmail.com")
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyFetchMultipleWithSortDescriptorsSucceeds(file: StaticString = #file,
+                                                        line: UInt = #line) {
+        do {
+            // Create users in Core Data
+            try self.createUser(firstName: "A",
+                                lastName: "User",
+                                email: "a@spothero.com")
+            try self.createUser(firstName: "C",
+                                lastName: "User",
+                                email: "c@spothero.com")
+            try self.createUser(firstName: "B",
+                                lastName: "User",
+                                email: "b@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify fetching with a sort descriptor succeeds
+            let firstNameSort = NSSortDescriptor(key: #keyPath(User.firstName), ascending: true)
+            let sortedUsers = try self.coreDataOperator.fetchMultiple(of: User.self, sortDescriptors: [firstNameSort])
+            XCTAssertEqual(sortedUsers.count, 3)
+            XCTAssertEqual(sortedUsers[0].firstName, "A")
+            XCTAssertEqual(sortedUsers[1].firstName, "B")
+            XCTAssertEqual(sortedUsers[2].firstName, "C")
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyFetchMultipleWithFetchLimitSucceeds(file: StaticString = #file,
+                                                   line: UInt = #line) {
+        do {
+            // Create users in Core Data
+            try self.createUser(firstName: "A",
+                                lastName: "User",
+                                email: "a@spothero.com")
+            try self.createUser(firstName: "B",
+                                lastName: "User",
+                                email: "b@spothero.com")
+            try self.createUser(firstName: "C",
+                                lastName: "User",
+                                email: "c@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify a fetch without a limit returns 3 users
+            let noLimitUsers = try self.coreDataOperator.fetchMultiple(of: User.self)
+            XCTAssertEqual(noLimitUsers.count, 3)
+            
+            // Verify fetching with a limit succeeds
+            let limitedUsers = try self.coreDataOperator.fetchMultiple(of: User.self, fetchLimit: 2)
+            XCTAssertEqual(limitedUsers.count, 2)
         } catch {
             XCTFail(error.localizedDescription, file: file, line: line)
         }
