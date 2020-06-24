@@ -35,6 +35,32 @@ final class CoreDataOperatorSQLiteTests: XCTestCase, CoreDataOperatorTesting {
         self.verifyCountWithPredicateSucceeds()
     }
     
+    // MARK: Fetch Tests
+    
+    func testFetch() {
+        self.verifyFetchSucceeds()
+    }
+    
+    func testFetchWithPredicate() {
+        self.verifyFetchWithPredicateSucceeds()
+    }
+    
+    func testFetchMultiple() {
+        self.verifyFetchMultipleSucceeds()
+    }
+    
+    func testFetchMultipleWithPredicate() {
+        self.verifyFetchMultipleWithPredicateSucceeds()
+    }
+    
+    func testFetchMultipleWithSortDescriptors() {
+        self.verifyFetchMultipleWithSortDescriptorsSucceeds()
+    }
+    
+    func testFetchMultipleWithFetchLimit() {
+        self.verifyFetchMultipleWithFetchLimitSucceeds()
+    }
+    
     // MARK: Delete Tests
     
     func testDeleteSingleObject() {
