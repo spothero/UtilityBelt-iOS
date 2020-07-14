@@ -21,7 +21,7 @@ public class Lincoln {
     /// Log levels are ordered by their severity, with `.trace` being the least severe and
     /// `.critical` being the most severe.
     ///
-    /// Sources:
+    /// # References
     /// - [RFC 5424](https://tools.ietf.org/html/rfc5424#page-11)
     /// - [swift-log](https://github.com/apple/swift-log/blob/87c2553da204fc269be89aec39e38217d65c4980/Sources/Logging/Logging.swift#L325)
     public enum LogLevel: Int, Codable {
@@ -43,8 +43,6 @@ public class Lincoln {
     
     // MARK: Properties
     
-    // TODO: Adjust the log level depending on the DEBUG flag
-    
     /// Indicates the minimum severity or condition threshold that should process log events.
     /// Log levels range from `.trace` (lowest severity) to `.critical` (highest severity).
     /// Setting this property will log all events of a matching or higher severity.
@@ -62,7 +60,13 @@ public class Lincoln {
     ///
     /// By default, a `PrintLogHandler` is registered when running in Debug configuration,
     /// which simply prints to the console using the `print()` function.
-    private var handlers: [LogHandler] = [PrintLogHandler()]
+    private var handlers: [LogHandler] = {
+        #if DEBUG
+            return [PrintLogHandler()]
+        #else
+            return []
+        #endif
+    }()
     
     // MARK: Methods - Logging
     
