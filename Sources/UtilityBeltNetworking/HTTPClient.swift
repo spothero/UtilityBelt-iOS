@@ -50,6 +50,7 @@ public class HTTPClient {
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
     /// - Parameter completion: The completion block to call when the request is completed.
+    /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
     public func request(_ url: URLConvertible,
                         method: HTTPMethod = .get,
@@ -147,6 +148,7 @@ public class HTTPClient {
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
     /// - Parameter completion: The completion block to call when the request is completed.
+    /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
     // swiftlint:disable:next function_default_parameter_at_end
     public func request(_ url: URLConvertible,
@@ -174,6 +176,7 @@ public class HTTPClient {
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
+    /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
     public func request<T: Decodable>(_ url: URLConvertible,
                                       method: HTTPMethod = .get,
@@ -239,6 +242,7 @@ public class HTTPClient {
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
+    /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
     // swiftlint:disable:next function_default_parameter_at_end
     public func request<T: Decodable>(_ url: URLConvertible,
@@ -265,6 +269,7 @@ public class HTTPClient {
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Returns: The configured `URLRequest` object.
     func configuredURLRequest(url: URLConvertible,
                               method: HTTPMethod = .get,
                               parameters: ParameterDictionaryConvertible? = nil,
