@@ -4,7 +4,6 @@ import Foundation
 
 public enum UBNetworkError: Error {
     case invalidContentType(String)
-    case invalidFilePath(String)
     case invalidURLString(String)
     case invalidURLResponse
     case unableToDecode(String, DecodingError?)
@@ -16,8 +15,6 @@ extension UBNetworkError: LocalizedError {
         switch self {
         case let .invalidContentType(contentType):
             return "Invalid content type '\(contentType)'."
-        case let .invalidFilePath(path):
-            return "Invalid file path '\(path)'."
         case let .invalidURLString(urlString):
             return "Invalid URL string '\(urlString)'."
         case .invalidURLResponse:

@@ -1,5 +1,6 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
+import Combine
 import Foundation
 
 /// A completion handler for requests that return raw data results.
@@ -18,7 +19,7 @@ public class HTTPClient {
     // MARK: - Properties
     
     /// The URLSession that is used for all requests.
-    private let session: URLSession
+    let session: URLSession
     
     /// Whether or not the client should be logging requests.
     public var isDebugLoggingEnabled: Bool = {
@@ -39,8 +40,6 @@ public class HTTPClient {
         self.session = session
     }
     
-    // MARK: Request
-    
     /// Creates and sends a request, fetching raw data from an endpoint.
     /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
@@ -56,15 +55,19 @@ public class HTTPClient {
                         headers: HTTPHeaderDictionaryConvertible? = nil,
                         encoding: ParameterEncoding? = nil,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
-        guard let request = self.configuredURLRequest(
-            url: url,
-            method: method,
-            parameters: parameters,
-            headers: headers,
-            encoding: encoding
-        ) else {
+        let request: URLRequest
+        
+        do {
+            request = try self.configuredURLRequest(
+                url: url,
+                method: method,
+                parameters: parameters,
+                headers: headers,
+                encoding: encoding
+            )
+        } catch {
             DispatchQueue.main.async {
-                completion?(.failure(UBNetworkError.unexpectedError))
+                completion?(.failure(error))
             }
             return nil
         }
@@ -144,13 +147,13 @@ public class HTTPClient {
     /// - Parameter jsonDecoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
     @discardableResult
-    public func request<T>(_ url: URLConvertible,
-                           method: HTTPMethod,
-                           parameters: [String: Any]? = nil,
-                           headers: HTTPHeaderDictionaryConvertible? = nil,
-                           encoding: ParameterEncoding? = nil,
-                           decoder: JSONDecoder = JSONDecoder(),
-                           completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? where T: Decodable {
+    public func request<T: Decodable>(_ url: URLConvertible,
+                                      method: HTTPMethod,
+                                      parameters: [String: Any]? = nil,
+                                      headers: HTTPHeaderDictionaryConvertible? = nil,
+                                      encoding: ParameterEncoding? = nil,
+                                      decoder: JSONDecoder = JSONDecoder(),
+                                      completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
         return self.request(
             url,
             method: method,
@@ -205,14 +208,12 @@ public class HTTPClient {
     /// - Parameter parameters: The dictionary of parameters to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to be with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses default for HTTP method.
-    private func configuredURLRequest(url: URLConvertible,
-                                      method: HTTPMethod,
-                                      parameters: [String: Any]? = nil,
-                                      headers: HTTPHeaderDictionaryConvertible? = nil,
-                                      encoding: ParameterEncoding? = nil) -> URLRequest? {
-        guard let url = try? url.asURL() else {
-            return nil
-        }
+    func configuredURLRequest(url: URLConvertible,
+                              method: HTTPMethod,
+                              parameters: [String: Any]? = nil,
+                              headers: HTTPHeaderDictionaryConvertible? = nil,
+                              encoding: ParameterEncoding? = nil) throws -> URLRequest {
+        let url = try url.asURL()
         
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
@@ -225,7 +226,7 @@ public class HTTPClient {
         return request
     }
     
-    private func log(_ message: Any) {
+    func log(_ message: Any) {
         guard self.isDebugLoggingEnabled else {
             return
         }
@@ -245,17 +246,5 @@ private extension DataResponse {
                                       response: nil,
                                       data: nil,
                                       result: .failure(error))
-    }
-}
-
-private extension Data {
-    var asPrettyPrintedJSON: String? {
-        guard
-            let object = try? JSONSerialization.jsonObject(with: self, options: []),
-            let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]) else {
-            return nil
-        }
-        
-        return String(data: data, encoding: .utf8)
     }
 }
