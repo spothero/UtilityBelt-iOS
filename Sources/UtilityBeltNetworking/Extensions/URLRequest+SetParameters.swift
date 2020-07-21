@@ -10,13 +10,13 @@ extension URLRequest {
     //       1, method without encoding: Use the default method's encoding.
     //       2. method with encoding: Use the method, but override the encoding.
     //       3. encoding without method: Doesn't matter what method, override the encoding.
-    mutating func setParameters(_ parameters: [String: Any]?, method: HTTPMethod, encoding: ParameterEncoding? = nil) {
+    mutating func setParameters(_ parameters: ParameterDictionaryConvertible?, method: HTTPMethod, encoding: ParameterEncoding? = nil) {
         let encoding = encoding ?? .defaultEncoding(for: method)
         self.setParameters(parameters, encoding: encoding)
     }
     
-    mutating func setParameters(_ parameters: [String: Any]?, encoding: ParameterEncoding) {
-        guard let url = self.url, let parameters = parameters else {
+    mutating func setParameters(_ parameters: ParameterDictionaryConvertible?, encoding: ParameterEncoding) {
+        guard let url = self.url, let parameters = parameters?.asParameterDictionary() else {
             return
         }
         
@@ -45,24 +45,12 @@ extension URLRequest {
     }
     
     mutating func setParameters(_ encodable: Encodable, method: HTTPMethod, encoding: ParameterEncoding? = nil) {
-        let parameters = encodable.asParameters()
+        let parameters = try? encodable.asDictionary()
         self.setParameters(parameters, method: method, encoding: encoding)
     }
     
     mutating func setParameters(_ encodable: Encodable, encoding: ParameterEncoding) {
-        let parameters = encodable.asParameters()
+        let parameters = try? encodable.asDictionary()
         self.setParameters(parameters, encoding: encoding)
-    }
-}
-
-private extension Encodable {
-    func asParameters() -> [String: Any]? {
-        guard let data = try? JSONEncoder().encode(self) else {
-            return nil
-        }
-        
-        let decodedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-        
-        return decodedData.flatMap { $0 as? [String: Any] }
     }
 }
