@@ -43,7 +43,6 @@ public class HTTPClient {
     // MARK: Data Response
     
     /// Creates and sends a request which fetches raw data from an endpoint.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
@@ -141,7 +140,6 @@ public class HTTPClient {
     }
     
     /// Creates and sends a request which fetches raw data from an endpoint.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
     /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
@@ -168,7 +166,6 @@ public class HTTPClient {
     // MARK: Decodable Object Response
     
     /// Creates and sends a request which fetches raw data from an endpoint and decodes it.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
@@ -234,7 +231,6 @@ public class HTTPClient {
     }
     
     /// Creates and sends a request which fetches raw data from an endpoint and decodes it.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
     /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.

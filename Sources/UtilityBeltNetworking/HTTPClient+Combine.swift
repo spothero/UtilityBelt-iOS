@@ -4,11 +4,10 @@ import Combine
 import Foundation
 
 @available(iOS 13, macOS 10.15, tvOS 13.0, watchOS 6, *)
-extension HTTPClient {
+public extension HTTPClient {
     // MARK: Data Response
     
     /// Creates a request publisher which fetches raw data from an endpoint.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
@@ -68,7 +67,6 @@ extension HTTPClient {
     }
     
     /// Creates a request publisher which fetches raw data from an endpoint.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
     /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
@@ -91,7 +89,6 @@ extension HTTPClient {
     // MARK: Decodable Object Response
     
     /// Creates a request publisher which fetches raw data from an endpoint and decodes it.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
@@ -119,7 +116,6 @@ extension HTTPClient {
     }
     
     /// Creates a request publisher which fetches raw data from an endpoint and decodes it.
-    /// Returns a `URLSessionTask`, which allows for cancellation and retries.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
     /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
     /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
