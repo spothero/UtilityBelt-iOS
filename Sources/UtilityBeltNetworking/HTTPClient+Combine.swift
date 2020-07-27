@@ -34,7 +34,7 @@ public extension HTTPClient {
         }
         
         if self.isDebugLoggingEnabled, let urlString = request.url?.absoluteString {
-            self.log("Starting \(method.rawValue) request to \(urlString)...")
+            self.log("Starting \(method.rawValue) request to \(urlString)")
         }
         
         return self.session

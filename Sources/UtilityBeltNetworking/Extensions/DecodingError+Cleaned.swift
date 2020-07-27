@@ -14,8 +14,8 @@ extension DecodingError {
             allKeys.append(key)
             
             return "Key '\(allKeys.jsonPath)' not found."
-        case .dataCorrupted:
-            return "Data corrupted."
+        case let .dataCorrupted(context):
+            return "Data corrupted at key '\(context.codingPath.jsonPath)'."
         @unknown default:
             return self.localizedDescription
         }

@@ -75,7 +75,7 @@ public class HTTPClient {
         }
         
         if let urlString = request.url?.absoluteString {
-            self.log("Starting \(method.rawValue) request to \(urlString)...")
+            self.log("Starting \(method.rawValue) request to \(urlString)")
         }
         
         let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
