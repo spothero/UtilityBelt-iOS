@@ -52,6 +52,10 @@
 # Disabled because this rule is non-configurable
 --disable redundantReturn 
 
+# Wrap the opening brace of multiline statements
+# Disabled because this rule is non-configurable
+--disable wrapMultilineStatementBraces
+
 #-----------------#
 # File Exclusions #
 #-----------------#
