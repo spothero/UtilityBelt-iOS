@@ -1,6 +1,5 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
-import Combine
 import Foundation
 
 /// A completion handler for requests that return raw data results.
