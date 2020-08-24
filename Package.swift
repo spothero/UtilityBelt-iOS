@@ -14,9 +14,13 @@ let package = Package(
     ],
     products: [
         .library(name: "Sham", targets: ["Sham"]),
-        .library(name: "UtilityBelt", targets: ["UtilityBeltData", "UtilityBeltNetworking"]),
         .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
+        // Dynamic Libraries
+        // These libraries are required due to the Xcode 11.3+ static linking bug: https://bugs.swift.org/browse/SR-12303
+        .library(name: "ShamDynamic", type: .dynamic, targets: ["Sham"]),
+        .library(name: "UtilityBeltDataDynamic", type: .dynamic, targets: ["UtilityBeltData"]),
+        .library(name: "UtilityBeltNetworkingDynamic", type: .dynamic, targets: ["UtilityBeltNetworking"]),
     ],
     dependencies: [],
     targets: [
