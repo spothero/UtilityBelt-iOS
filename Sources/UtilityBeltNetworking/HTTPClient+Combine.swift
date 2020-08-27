@@ -140,5 +140,4 @@ public extension HTTPClient {
                                      decoder: decoder)
     }
 }
-
 #endif
