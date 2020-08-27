@@ -1,6 +1,5 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
-
 #if canImport(Combine)
 import Combine
 import Foundation
