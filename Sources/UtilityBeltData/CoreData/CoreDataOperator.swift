@@ -27,7 +27,7 @@ public class CoreDataOperator {
     /// The URLs for each persistent store in the current Core Data stack.
     public var persistentStoreFileURLs: [URL] {
         let stores = self.persistentContainer?.persistentStoreCoordinator.persistentStores
-        return stores?.compactMap { $0.url } ?? []
+        return stores?.compactMap(\.url) ?? []
     }
     
     // MARK: - Methods
