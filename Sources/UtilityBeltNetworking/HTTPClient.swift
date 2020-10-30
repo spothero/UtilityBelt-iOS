@@ -29,6 +29,13 @@ public class HTTPClient {
         #endif
     }()
     
+    /// The timeout interval to use when waiting for additional data. When the request timer reaches the specified interval without receiving
+    /// any new data, it triggers a timeout. If this property is set to `nil`, this property is ignored and the default value of 60 seconds is used.
+    ///
+    /// The value can be overridden by the session configuration if the session configuration `timeoutIntervalForRequest` property is
+    /// set to be more restrictive. https://stackoverflow.com/a/54806389
+    public var timeoutInterval: TimeInterval?
+    
     // MARK: - Methods
     
     // MARK: Initializers
@@ -274,6 +281,10 @@ public class HTTPClient {
         
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
+        
+        if let timeoutInterval = self.timeoutInterval {
+            request.timeoutInterval = timeoutInterval
+        }
         
         request.setHeaders(headers)
         
