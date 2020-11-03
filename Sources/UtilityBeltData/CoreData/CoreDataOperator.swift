@@ -332,8 +332,11 @@ public class CoreDataOperator {
         context.perform {
             // Save the child context. This will push changes up to the parent.
             try? context.save()
-            // Save the parent context. This will push changes to the persistent store.
-            try? mainContext.save()
+            
+            mainContext.perform {
+                // Save the parent context. This will push changes to the persistent store.
+                try? mainContext.save()
+            }
         }
     }
 }
