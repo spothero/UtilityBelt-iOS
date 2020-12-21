@@ -16,7 +16,7 @@ public final class LaunchEnvironmentMockData: Codable {
     
     public init() {}
     
-    /// Verifies and sets the stubbing requests on the mocked data launch environment object..
+    /// Verifies and sets the stubbing requests on the mocked data launch environment object.
     /// - Parameters:
     ///   - stubRequest: The request to stub.
     ///   - response: The response to return.
