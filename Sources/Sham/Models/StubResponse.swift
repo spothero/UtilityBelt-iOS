@@ -42,7 +42,7 @@ public struct StubResponse {
 
 extension StubResponse: Codable {
     // TODO: Figure out how to encode the error object.
-    enum Key: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case data
         case statusCode
         case headers
