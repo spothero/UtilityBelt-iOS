@@ -59,7 +59,7 @@ extension StubResponse: Codable {
     /// Enables a StubResponse object to be decoded. This has been customized to handle not decoding the error property.
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: Key.self)
-        self.data = try container.decode(Data.self, forKey: .data)
+        self.data = try container.decodeIfPresent(Data.self, forKey: .data)
         self.statusCode = try container.decode(HTTPStatusCode.self, forKey: .statusCode)
         self.headers = try container.decode([String: String].self, forKey: .headers)
     }
