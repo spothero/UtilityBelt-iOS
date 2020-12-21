@@ -38,6 +38,33 @@ public struct StubResponse {
 
 // MARK: - Extensions
 
+// MARK: - Codable
+
+extension StubResponse: Codable {
+    // TODO: Figure out how to encode the error object.
+    enum Key: String, CodingKey {
+        case data
+        case statusCode
+        case headers
+    }
+    
+    /// Enables a StubResponse object to be encoded. This has been customized to handle not encoding the error property.
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: Key.self)
+        try container.encode(self.data, forKey: .data)
+        try container.encode(self.statusCode, forKey: .statusCode)
+        try container.encode(self.headers, forKey: .headers)
+    }
+    
+    /// Enables a StubResponse object to be decoded. This has been customized to handle not decoding the error property.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: Key.self)
+        self.data = try container.decode(Data.self, forKey: .data)
+        self.statusCode = try container.decode(HTTPStatusCode.self, forKey: .statusCode)
+        self.headers = try container.decode([String: String].self, forKey: .headers)
+    }
+}
+
 // MARK: Static Convenience Initializers
 
 public extension StubResponse {

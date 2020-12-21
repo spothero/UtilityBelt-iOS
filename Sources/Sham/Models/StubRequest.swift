@@ -4,7 +4,7 @@ import Foundation
 import UtilityBeltNetworking
 
 /// A request for stubbing response meant to mirror a URLRequest.
-public struct StubRequest: Hashable, CustomStringConvertible {
+public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     // MARK: - Properties
     
     /// The HTTP method to stub. If nil, stubs all methods.
@@ -61,7 +61,7 @@ public struct StubRequest: Hashable, CustomStringConvertible {
     /// - Parameter urlRequest: The URLRequest to stub.
     public init(urlRequest: URLRequestConvertible) {
         if let rawHttpMethod = (try? urlRequest.asURLRequest())?.httpMethod,
-            let httpMethod = HTTPMethod(rawValue: rawHttpMethod) {
+           let httpMethod = HTTPMethod(rawValue: rawHttpMethod) {
             self.method = httpMethod
         } else {
             self.method = .none
