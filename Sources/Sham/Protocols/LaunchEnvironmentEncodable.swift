@@ -3,10 +3,7 @@
 import Foundation
 
 /// An object that can be encoded and injected into an app using the launch environment.
-public protocol LaunchEnvironmentEncodable {
+public protocol LaunchEnvironmentEncodable: StringEncodable {
     /// The key used when saving and retrieving the encoded object in the launch environment.
     static var launchEnvironmentKey: String { get }
-    
-    /// The object encoded into a string value to be set in the launch environment.
-    func encodedAsString() throws -> String?
 }
