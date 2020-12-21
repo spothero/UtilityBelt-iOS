@@ -11,6 +11,8 @@
         func launch(withEnvironmentObjects objects: [LaunchEnvironmentEncodable]) throws {
             try objects.forEach { object in
                 let environmentKey = type(of: object).launchEnvironmentKey
+                // TODO: https://spothero.atlassian.net/browse/IOS-2690
+                // Handle collisions instead of overriding previous values.
                 self.launchEnvironment[environmentKey] = try object.encodedAsString()
             }
             self.launch()
