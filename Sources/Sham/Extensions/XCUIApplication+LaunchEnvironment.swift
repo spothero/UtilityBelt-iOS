@@ -11,7 +11,7 @@
         func launch(withEnvironmentObjects objects: [LaunchEnvironmentObject]) throws {
             try objects.forEach { object in
                 let environmentKey = type(of: object).launchEnvironmentKey
-                self.launchEnvironment[environmentKey] = try object.encodedStringValue()
+                self.launchEnvironment[environmentKey] = try object.encodedAsString()
             }
             self.launch()
         }
