@@ -33,7 +33,7 @@ public final class LaunchEnvironmentMockData: Codable {
 
 // MARK: - LaunchEnvironmentObject
 
-extension LaunchEnvironmentMockData: LaunchEnvironmentObject {
+extension LaunchEnvironmentMockData: LaunchEnvironmentEncodable {
     /// The key used to save and retrieve the object in the launch environment.
     public static var launchEnvironmentKey = "mocked-data"
     // The encoded value of the object in String form, throws an error if unable to encode.
