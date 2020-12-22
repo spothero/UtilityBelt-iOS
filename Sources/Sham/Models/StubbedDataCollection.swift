@@ -15,7 +15,7 @@ public final class StubbedDataCollection: Codable {
     
     // MARK: Stubbing
     
-    /// Adds a response to the stub response collection for the MockService.
+    /// Adds a response to the stub response collection.
     /// - Parameter request: The request to stub.
     /// - Parameter response: The response to return upon receiving the given request.
     public func stub(_ request: StubRequest, with response: StubResponse) {
