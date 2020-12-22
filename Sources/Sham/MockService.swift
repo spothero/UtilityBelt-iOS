@@ -29,7 +29,7 @@ public class MockService {
     }()
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
-    private var stubbedDataCollection = StubbedDataCollection()
+    private let stubbedDataCollection = StubbedDataCollection()
     
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
@@ -63,10 +63,13 @@ public class MockService {
     
     // MARK: Stubbing
     
-    /// Sets the stubbed data collection for the mock service.
+    /// Clears the current stub information and updates to use the information on the passed in collection.
     /// - Parameter collection: The collection to use.
     public func setStubbedDataCollection(_ collection: StubbedDataCollection) {
-        self.stubbedDataCollection = collection
+        self.clearData()
+        collection.stubbedData.forEach { request, response in
+            self.stub(request, with: response)
+        }
     }
     
     /// Returns the stubbed response that matches the request.
