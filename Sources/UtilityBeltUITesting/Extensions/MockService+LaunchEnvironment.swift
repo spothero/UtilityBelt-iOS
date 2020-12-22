@@ -14,6 +14,6 @@ public extension MockService {
             return
         }
         
-        MockService.shared.setStubbedDataCollection(stubbedDataCollection)
+        MockService.shared.updateStubbedData(withCollection: stubbedDataCollection)
     }
 }
