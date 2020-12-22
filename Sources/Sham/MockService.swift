@@ -8,7 +8,7 @@ public class MockService {
     // MARK: - Shared Instance
     
     /// The shared instance of the service.
-    public static var shared = MockService()
+    public static let shared = MockService()
     
     // MARK: - Properties
     
@@ -29,7 +29,7 @@ public class MockService {
     }()
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
-    private(set) var stubbedDataCollection = StubbedDataCollection()
+    var stubbedDataCollection = StubbedDataCollection()
     
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
@@ -44,12 +44,6 @@ public class MockService {
     /// using any instance of MockService other than the shared instance would cause problems.
     /// Until we think of a way to allow this, we're restricting this class to just a shared instance for now.
     private init() {}
-    
-    /// Initalizes a MockService with a given stubbed data collection.
-    /// - Parameter collection: The stubbed data collection to use.
-    init(withCollection collection: StubbedDataCollection) {
-        self.stubbedDataCollection = collection
-    }
     
     // MARK: Registration
     

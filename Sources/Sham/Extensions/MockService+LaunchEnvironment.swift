@@ -13,6 +13,6 @@ public extension MockService {
             return
         }
         
-        MockService.shared = MockService(withCollection: stubbedDataCollection)
+        MockService.shared.stubbedDataCollection = stubbedDataCollection
     }
 }
