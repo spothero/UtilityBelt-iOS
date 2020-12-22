@@ -2,7 +2,7 @@
 
 import Foundation
 
-/// An object that can be injected into the launch environment to set up the mocking information.
+/// An object that manages a collection of stubbed data.
 public final class StubbedDataCollection: Codable {
     // MARK: Properties
     
