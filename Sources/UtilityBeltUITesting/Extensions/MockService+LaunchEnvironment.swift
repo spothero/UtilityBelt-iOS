@@ -1,6 +1,7 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import Foundation
+import Sham
 
 public extension MockService {
     /// Sets up the mock service object using launch environment mocked data information.

@@ -29,7 +29,7 @@ public class MockService {
     }()
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
-    var stubbedDataCollection = StubbedDataCollection()
+    public var stubbedDataCollection = StubbedDataCollection()
     
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {

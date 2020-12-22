@@ -1,6 +1,7 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 import Foundation
+import Sham
 
 extension StubbedDataCollection: LaunchEnvironmentEncodable {
     /// The key used to save and retrieve the object in the launch environment.
