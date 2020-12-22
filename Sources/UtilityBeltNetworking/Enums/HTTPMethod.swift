@@ -4,7 +4,7 @@
 ///
 /// Sources:
 /// - [Mozilla - HTTP Methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
-public enum HTTPMethod: String, Equatable, Hashable {
+public enum HTTPMethod: String, Equatable, Hashable, Codable {
     /// The CONNECT method establishes a tunnel to the server identified by the target resource.
     case connect = "CONNECT"
     /// The DELETE method deletes the specified resource.

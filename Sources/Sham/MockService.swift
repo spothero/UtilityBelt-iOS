@@ -29,11 +29,11 @@ public class MockService {
     }()
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
-    private var stubbedData = [StubRequest: StubResponse]()
+    private let stubbedDataCollection = StubbedDataCollection()
     
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
-        return !self.stubbedData.isEmpty
+        return !self.stubbedDataCollection.stubbedData.isEmpty
     }
     
     // MARK: - Methods
@@ -63,37 +63,20 @@ public class MockService {
     
     // MARK: Stubbing
     
+    /// Clears the current stub information and updates to use the information on the passed in collection.
+    /// - Parameter collection: The collection to use.
+    public func updateStubbedData(withCollection collection: StubbedDataCollection) {
+        self.clearData()
+        collection.stubbedData.forEach { request, response in
+            self.stub(request, with: response)
+        }
+    }
+    
     /// Returns the stubbed response that matches the request.
     /// Returns nil if there is no matching stubbed request found.
     /// - Parameter request: The request to match against stubbed requests.
     public func getResponse(for request: StubRequest) -> StubResponse? {
-        self.log("Attempting to stub request: \(request.description)")
-        
-        // Check for a match with the exact URL
-        var response = self.stubbedData[request]
-        
-        // If response had no exact match, we need to find the closest match
-        if response == nil {
-            // Filter out stubs that can not mock this request
-            let availableStubs = self.stubbedData.filter {
-                return $0.key.canMockData(for: request)
-            }
-            
-            // Find the highest priority matching score to get the best response
-            response = availableStubs.max {
-                $0.key.priorityScore(for: request) < $1.key.priorityScore(for: request)
-            }?.value
-        }
-        
-        // Log response debugging information
-        if let stubResponse = response {
-            self.log("Found stub response: \(stubResponse)")
-        } else {
-            self.log("No stub response found.")
-        }
-        
-        // Return the response
-        return response
+        return self.stubbedDataCollection.getResponse(for: request)
     }
     
     /// Determines whether or not a matching request has been stubbed.
@@ -113,18 +96,7 @@ public class MockService {
     /// - Parameter request: The request to stub.
     /// - Parameter response: The response to return upon receiving the given request.
     public func stub(_ request: StubRequest, with response: StubResponse) {
-        // Ensure that the URL is valid for stubbing
-        guard request.isValidForStubbing else {
-            // TODO: Throw error
-            return
-        }
-        
-        // If the request exists, print a log to verify
-        if self.stubbedData.keys.contains(request) {
-            self.log("Stubbed data already exists for request '\(request)'. Updating with new data.")
-        }
-        
-        self.stubbedData[request] = response
+        self.stubbedDataCollection.stub(request, with: response)
     }
     
     // MARK: URLRequest Convenience
@@ -163,7 +135,7 @@ public class MockService {
     
     /// Clears all stubbed responses from the stub response collection.
     public func clearData() {
-        self.stubbedData = [:]
+        self.stubbedDataCollection.clearData()
     }
     
     private func log(_ message: String) {

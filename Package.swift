@@ -16,11 +16,13 @@ let package = Package(
         .library(name: "Sham", targets: ["Sham"]),
         .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
+        .library(name: "UtilityBeltUITesting", targets: ["UtilityBeltUITesting"]),
         // Dynamic Libraries
         // These libraries are required due to the Xcode 11.3+ static linking bug: https://bugs.swift.org/browse/SR-12303
         .library(name: "ShamDynamic", type: .dynamic, targets: ["Sham"]),
         .library(name: "UtilityBeltDataDynamic", type: .dynamic, targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworkingDynamic", type: .dynamic, targets: ["UtilityBeltNetworking"]),
+        .library(name: "UtilityBeltUITestingDynamic", type: .dynamic, targets: ["UtilityBeltUITesting"]),
     ],
     dependencies: [],
     targets: [
@@ -31,13 +33,13 @@ let package = Package(
                 .target(name: "UtilityBeltNetworking"),
             ]
         ),
+        .target(name: "UtilityBeltData"),
+        .target(name: "UtilityBeltNetworking"),
         .target(
-            name: "UtilityBeltData",
-            dependencies: []
-        ),
-        .target(
-            name: "UtilityBeltNetworking",
-            dependencies: []
+            name: "UtilityBeltUITesting",
+            dependencies: [
+                .target(name: "Sham"),
+            ]
         ),
         // Test Targets
         .testTarget(
