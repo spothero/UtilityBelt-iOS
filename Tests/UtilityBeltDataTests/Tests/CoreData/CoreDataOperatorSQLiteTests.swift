@@ -74,4 +74,8 @@ final class CoreDataOperatorSQLiteTests: XCTestCase, CoreDataOperatorTesting {
     func testDeleteAllObjectsWithPredicate() {
         self.verifyDeleteAllObjectsWithPredicateSucceeds()
     }
+    
+    func testDeleteAllObjectsUsingBatchDelete() throws {
+        self.verifyDeleteAllObjectsUsingBatchDeleteSucceeds()
+    }
 }

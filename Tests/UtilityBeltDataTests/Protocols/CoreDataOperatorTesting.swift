@@ -27,6 +27,7 @@ protocol CoreDataOperatorTesting: XCTestCase {
     func testDeleteSingleObject()
     func testDeleteAllObjects()
     func testDeleteAllObjectsWithPredicate()
+    func testDeleteAllObjectsUsingBatchDelete() throws
 }
 
 extension CoreDataOperatorTesting {
@@ -417,6 +418,38 @@ extension CoreDataOperatorTesting {
                            "first@spothero.com",
                            file: file,
                            line: line)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+        }
+    }
+    
+    func verifyDeleteAllObjectsUsingBatchDeleteSucceeds(file: StaticString = #file, line: UInt = #line) {
+        do {
+            // Create user objects in Core Data
+            try self.createUser(firstName: "First",
+                                lastName: "User",
+                                email: "first@spothero.com")
+            try self.createUser(firstName: "Second",
+                                lastName: "User",
+                                email: "second@spothero.com")
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify we now have 2 user objects
+            XCTAssertEqual(try self.coreDataOperator.count(of: User.self),
+                           2,
+                           file: file,
+                           line: line)
+            
+            // Delete all user objects using a batch delete.
+            try self.coreDataOperator.deleteAll(of: User.self, batchDelete: true)
+            try self.coreDataOperator.saveDefaultContext()
+            
+            // Verify we now have 0 user objects
+            XCTAssertEqual(try self.coreDataOperator.count(of: User.self),
+                           0,
+                           file: file,
+                           line: line)
+            
         } catch {
             XCTFail(error.localizedDescription, file: file, line: line)
         }

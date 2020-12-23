@@ -74,4 +74,8 @@ final class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
     func testDeleteAllObjectsWithPredicate() {
         self.verifyDeleteAllObjectsWithPredicateSucceeds()
     }
+    
+    func testDeleteAllObjectsUsingBatchDelete() throws {
+        throw XCTSkip("Batch deletes not supported for in-memory stores.")
+    }
 }
