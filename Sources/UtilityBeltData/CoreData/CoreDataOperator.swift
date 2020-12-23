@@ -183,7 +183,7 @@ public class CoreDataOperator {
     /// - Parameter type: The entity type to batch delete.
     /// - Parameter predicate: The predicate to filter the request by.
     /// - Parameter context: The managed object context to perform the delete operation in. If nil, uses the current default context.
-    /// - Parameter batchDelete: Whether or not to use a batch delete, if available. Defaults to false.
+    /// - Parameter batchDelete: Whether or not to use a batch delete, if supported. Defaults to false.
     ///
     /// Batch requests can only be used if the context's persistent store is an SQLite store.
     ///
