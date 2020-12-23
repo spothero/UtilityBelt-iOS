@@ -183,7 +183,7 @@ public class CoreDataOperator {
     /// - Parameter type: The entity type to batch delete.
     /// - Parameter predicate: The predicate to filter the request by.
     /// - Parameter context: The managed object context to perform the delete operation in. If nil, uses the current default context.
-    /// - Parameter usingBatchDelete: Whether or not to use a batch delete, if available.
+    /// - Parameter batchDelete: Whether or not to use a batch delete, if available. Defaults to false.
     ///
     /// Batch requests can only be used if the context's persistent store is an SQLite store.
     ///
@@ -192,14 +192,14 @@ public class CoreDataOperator {
     public func deleteAll<T: NSManagedObject>(of type: T.Type,
                                               with predicate: NSPredicate? = nil,
                                               in context: NSManagedObjectContext? = nil,
-                                              usingBatchDelete: Bool = true) throws {
+                                              batchDelete: Bool = false) throws {
         guard let context = context ?? self.defaultContext else {
             throw UBCoreDataError.managedObjectContextNotFound
         }
         
         // Batch requests are only compatible on SQLite stores.
         let canBatchDelete = context.persistentStoreCoordinator?.persistentStores.first?.type == NSSQLiteStoreType
-        let useBatchRequest = canBatchDelete && usingBatchDelete
+        let useBatchRequest = canBatchDelete && batchDelete
         
         if useBatchRequest {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: T.self))
