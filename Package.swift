@@ -14,15 +14,19 @@ let package = Package(
     ],
     products: [
         .library(name: "Sham", targets: ["Sham"]),
+        .library(name: "ShamTestHelpers", targets: ["ShamTestHelpers"]),
         .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
         .library(name: "UtilityBeltUITesting", targets: ["UtilityBeltUITesting"]),
+        .library(name: "UtilityBeltUITestingHelpers", targets: ["UtilityBeltUITestingHelpers"]),
         // Dynamic Libraries
         // These libraries are required due to the Xcode 11.3+ static linking bug: https://bugs.swift.org/browse/SR-12303
         .library(name: "ShamDynamic", type: .dynamic, targets: ["Sham"]),
+        .library(name: "ShamTestHelpersDynamic", type: .dynamic, targets: ["ShamTestHelpers"]),
         .library(name: "UtilityBeltDataDynamic", type: .dynamic, targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworkingDynamic", type: .dynamic, targets: ["UtilityBeltNetworking"]),
         .library(name: "UtilityBeltUITestingDynamic", type: .dynamic, targets: ["UtilityBeltUITesting"]),
+        .library(name: "UtilityBeltUITestingHelpersDynamic", type: .dynamic, targets: ["UtilityBeltUITestingHelpers"]),
     ],
     dependencies: [],
     targets: [
@@ -33,6 +37,12 @@ let package = Package(
                 .target(name: "UtilityBeltNetworking"),
             ]
         ),
+        .target(
+            name: "ShamTestHelpers",
+            dependencies: [
+                .target(name: "Sham"),
+            ]
+        ),
         .target(name: "UtilityBeltData"),
         .target(name: "UtilityBeltNetworking"),
         .target(
@@ -41,11 +51,18 @@ let package = Package(
                 .target(name: "Sham"),
             ]
         ),
+        .target(
+            name: "UtilityBeltUITestingHelpers",
+            dependencies: [
+                .target(name: "UtilityBeltUITesting"),
+            ]
+        ),
         // Test Targets
         .testTarget(
             name: "ShamTests",
             dependencies: [
                 .target(name: "Sham"),
+                .target(name: "ShamTestHelpers"),
             ]
         ),
         .testTarget(
