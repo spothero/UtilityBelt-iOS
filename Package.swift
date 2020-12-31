@@ -14,19 +14,19 @@ let package = Package(
     ],
     products: [
         .library(name: "Sham", targets: ["Sham"]),
-        .library(name: "ShamTestHelpers", targets: ["ShamTestHelpers"]),
+        .library(name: "Sham_XCTestSupport", targets: ["Sham_XCTestSupport"]),
         .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
         .library(name: "UtilityBeltUITesting", targets: ["UtilityBeltUITesting"]),
-        .library(name: "UtilityBeltUITestingHelpers", targets: ["UtilityBeltUITestingHelpers"]),
+        .library(name: "UtilityBeltUITesting_XCTestSupport", targets: ["UtilityBeltUITesting_XCTestSupport"]),
         // Dynamic Libraries
         // These libraries are required due to the Xcode 11.3+ static linking bug: https://bugs.swift.org/browse/SR-12303
         .library(name: "ShamDynamic", type: .dynamic, targets: ["Sham"]),
-        .library(name: "ShamTestHelpersDynamic", type: .dynamic, targets: ["ShamTestHelpers"]),
+        .library(name: "Sham_XCTestSupportDynamic", type: .dynamic, targets: ["Sham_XCTestSupport"]),
         .library(name: "UtilityBeltDataDynamic", type: .dynamic, targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworkingDynamic", type: .dynamic, targets: ["UtilityBeltNetworking"]),
         .library(name: "UtilityBeltUITestingDynamic", type: .dynamic, targets: ["UtilityBeltUITesting"]),
-        .library(name: "UtilityBeltUITestingHelpersDynamic", type: .dynamic, targets: ["UtilityBeltUITestingHelpers"]),
+        .library(name: "UtilityBeltUITesting_XCTestSupportDynamic", type: .dynamic, targets: ["UtilityBeltUITesting_XCTestSupport"]),
     ],
     dependencies: [],
     targets: [
@@ -38,7 +38,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "ShamTestHelpers",
+            name: "Sham_XCTestSupport",
             dependencies: [
                 .target(name: "Sham"),
             ]
@@ -52,7 +52,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "UtilityBeltUITestingHelpers",
+            name: "UtilityBeltUITesting_XCTestSupport",
             dependencies: [
                 .target(name: "UtilityBeltUITesting"),
             ]
@@ -62,7 +62,7 @@ let package = Package(
             name: "ShamTests",
             dependencies: [
                 .target(name: "Sham"),
-                .target(name: "ShamTestHelpers"),
+                .target(name: "Sham_XCTestSupport"),
             ]
         ),
         .testTarget(

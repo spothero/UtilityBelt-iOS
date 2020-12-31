@@ -1,7 +1,7 @@
 // Copyright © 2020 SpotHero, Inc. All rights reserved.
 
 @testable import Sham
-import ShamTestHelpers
+import Sham_XCTestSupport
 import UtilityBeltNetworking
 import XCTest
 
