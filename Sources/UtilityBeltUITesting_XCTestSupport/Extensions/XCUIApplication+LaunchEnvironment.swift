@@ -2,6 +2,7 @@
 
 #if canImport(XCTest)
 
+    import UtilityBeltUITesting
     import XCTest
 
     public extension XCUIApplication {
