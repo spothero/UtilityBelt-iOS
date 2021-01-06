@@ -2,10 +2,10 @@
 
 import Foundation
 
-/// Struct to convey whether the target should enable or disable animations.
-public struct Animations: LaunchEnvironmentCodable {
+/// Struct to convey how the main target should handle animations.
+public struct AnimationConfiguration: LaunchEnvironmentCodable {
     /// The key used to save and retrieve the object in the launch environment.
-    public static var launchEnvironmentKey = "animations"
+    public static var launchEnvironmentKey = "animation-configuration"
     
     /// Whether or not animations are enabled.
     public var animationsEnabled: Bool
