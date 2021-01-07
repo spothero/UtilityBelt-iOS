@@ -10,7 +10,7 @@ public struct AnimationConfiguration: LaunchEnvironmentCodable {
     /// Whether or not animations are enabled.
     public var animationsEnabled: Bool
     
-    public init(enabled: Bool) {
-        self.animationsEnabled = enabled
+    public init(animationsEnabled: Bool) {
+        self.animationsEnabled = animationsEnabled
     }
 }
