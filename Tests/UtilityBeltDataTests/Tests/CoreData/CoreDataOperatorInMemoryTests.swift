@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 import CoreData
 @testable import UtilityBeltData
@@ -73,5 +73,9 @@ final class CoreDataOperatorInMemoryTests: XCTestCase, CoreDataOperatorTesting {
     
     func testDeleteAllObjectsWithPredicate() {
         self.verifyDeleteAllObjectsWithPredicateSucceeds()
+    }
+    
+    func testDeleteAllObjectsUsingBatchDelete() throws {
+        throw XCTSkip("Batch deletes not supported for in-memory stores.")
     }
 }
