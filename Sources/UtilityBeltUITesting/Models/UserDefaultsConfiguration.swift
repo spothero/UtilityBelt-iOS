@@ -39,6 +39,8 @@ public final class UserDefaultsConfiguration: LaunchEnvironmentCodable {
    
     // MARK: Decodable
     
+    public init() {}
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
