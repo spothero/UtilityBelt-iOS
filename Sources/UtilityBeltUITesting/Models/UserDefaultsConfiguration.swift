@@ -44,15 +44,25 @@ public final class UserDefaultsConfiguration: LaunchEnvironmentCodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let standardDictionaryData = try container.decode(Data.self,
-                                                          forKey: .standardDictionaryData)
-        self.standardDictionary = try JSONSerialization
-            .jsonObject(with: standardDictionaryData, options: []) as? [String: Any] ?? [:]
+        let standardDictionaryData = try container.decode(Data.self, forKey: .standardDictionaryData)
+        let standardDictionaryJSON = try JSONSerialization.jsonObject(with: standardDictionaryData, options: [])
+        guard let standardDictionary = standardDictionaryJSON as? [String: Any] else {
+            let debugDescription = "Value for .standardDictionaryData could not be cast to [String: Any]."
+            throw DecodingError.dataCorruptedError(forKey: .standardDictionaryData,
+                                                   in: container,
+                                                   debugDescription: debugDescription)
+        }
+        self.standardDictionary = standardDictionary
         
-        let customSuitesDictionaryData = try container.decode(Data.self,
-                                                              forKey: .customSuitesDictionaryData)
-        self.customSuitesDictionary = try JSONSerialization
-            .jsonObject(with: customSuitesDictionaryData, options: []) as? [String: [String: Any]] ?? [:]
+        let customSuitesDictionaryData = try container.decode(Data.self, forKey: .customSuitesDictionaryData)
+        let customSuitesDictionaryJSON = try JSONSerialization.jsonObject(with: customSuitesDictionaryData, options: [])
+        guard let customSuitesDictionary = customSuitesDictionaryJSON as? [String: [String: Any]] else {
+            let debugDescription = "Value for .customSuitesDictionaryData could not be cast to [String: [String: Any]]."
+            throw DecodingError.dataCorruptedError(forKey: .customSuitesDictionaryData,
+                                                   in: container,
+                                                   debugDescription: debugDescription)
+        }
+        self.customSuitesDictionary = customSuitesDictionary
     }
     
     // MARK: Encodable
