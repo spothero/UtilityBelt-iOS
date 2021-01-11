@@ -20,7 +20,7 @@ public final class UserDefaultsConfiguration: LaunchEnvironmentCodable {
     }
     
     /// Stores a value for the given key in a dictionary under the given suite name.
-    public func storeValue(_ value: Any, forKey key: String: inSuite suite: String) {
+    public func storeValue(_ value: Any, forKey key: String, inSuite suite: String) {
         if self.customSuitesDictionary[suite] == nil {
             self.customSuitesDictionary[suite] = [:]
         }
