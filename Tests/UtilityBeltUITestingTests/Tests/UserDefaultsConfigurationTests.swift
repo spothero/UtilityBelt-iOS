@@ -46,4 +46,25 @@ final class UserDefaultsConfigurationTests: XCTestCase {
         XCTAssertEqual(firstObject.key, "Testing")
         XCTAssertEqual(firstObject.value, .int(1))
     }
+    
+    func testInjectIntoUserDefaults() {
+        let configuration = UserDefaultsConfiguration()
+
+        // Store objects to be saved in the standard UserDefaults.
+        let intKey = "TestInt"
+        let intValue = 2
+        configuration.storeUserDefaultsObject(UserDefaultsObject(key: intKey, value: .int(intValue)))
+        
+        // Verify the current UserDefaults.standard doesn't contain the keys we'll inject.
+        XCTAssertNil(UserDefaults.standard.value(forKey: intKey))
+        
+        // Inject the stored objects.
+        configuration.injectIntoUserDefaults()
+        
+        // Verify they were saved in UserDefaults.standard.
+        XCTAssertEqual(UserDefaults.standard.value(forKey: intKey) as? Int, intValue)
+        
+        // Clean up the UserDefaults.
+        UserDefaults.standard.removeObject(forKey: intKey)
+    }
 }
