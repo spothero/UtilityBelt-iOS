@@ -30,6 +30,7 @@ public extension UserDefaultsObject {
         // MARK: CodingKeys
         
         enum CodingKeys: String, CodingKey {
+            case bool
             case date
             case int
             case object
@@ -38,6 +39,7 @@ public extension UserDefaultsObject {
         
         // MARK: Cases
         
+        case bool(Bool)
         case date(Date)
         case int(Int)
         indirect case object(UserDefaultsObject)
@@ -51,6 +53,9 @@ public extension UserDefaultsObject {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
             switch container.allKeys.first {
+            case .bool:
+                let value = try container.decode(Bool.self, forKey: .bool)
+                self = .bool(value)
             case .date:
                 let value = try container.decode(Date.self, forKey: .date)
                 self = .date(value)
@@ -74,6 +79,8 @@ public extension UserDefaultsObject {
             var container = encoder.container(keyedBy: CodingKeys.self)
             
             switch self {
+            case let .bool(value):
+                try container.encode(value, forKey: .bool)
             case let .date(value):
                 try container.encode(value, forKey: .date)
             case let .int(value):
