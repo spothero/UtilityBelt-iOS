@@ -33,6 +33,7 @@ public extension UserDefaultsObject {
             case date
             case int
             case object
+            case string
         }
         
         // MARK: Cases
@@ -40,6 +41,8 @@ public extension UserDefaultsObject {
         case date(Date)
         case int(Int)
         indirect case object(UserDefaultsObject)
+        case string(String)
+        
         case `nil`
         
         // MARK: Decoding
@@ -57,6 +60,9 @@ public extension UserDefaultsObject {
             case .object:
                 let value = try container.decode(UserDefaultsObject.self, forKey: .object)
                 self = .object(value)
+            case .string:
+                let value = try container.decode(String.self, forKey: .string)
+                self = .string(value)
             case nil:
                 self = .nil
             }
@@ -74,6 +80,8 @@ public extension UserDefaultsObject {
                 try container.encode(value, forKey: .int)
             case let .object(value):
                 try container.encode(value, forKey: .object)
+            case let .string(value):
+                try container.encode(value, forKey: .string)
             case .nil:
                 break
             }
