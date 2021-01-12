@@ -31,45 +31,48 @@ public extension UserDefaultsObject {
         
         enum CodingKeys: String, CodingKey {
             case bool
+            case data
             case date
             case int
-            case object
             case string
         }
         
         // MARK: Cases
         
         case bool(Bool)
+        case data(Data)
         case date(Date)
         case int(Int)
-        indirect case object(UserDefaultsObject)
         case string(String)
-        
-        case `nil`
         
         // MARK: Decoding
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
-            switch container.allKeys.first {
+            guard let key = container.allKeys.first else {
+                let debugDescription = "Container should have 1 key but none were found."
+                let context = DecodingError.Context(codingPath: container.codingPath,
+                                                    debugDescription: debugDescription)
+                throw DecodingError.dataCorrupted(context)
+            }
+            
+            switch key {
             case .bool:
                 let value = try container.decode(Bool.self, forKey: .bool)
                 self = .bool(value)
+            case .data:
+                let value = try container.decode(Data.self, forKey: .data)
+                self = .data(value)
             case .date:
                 let value = try container.decode(Date.self, forKey: .date)
                 self = .date(value)
             case .int:
                 let value = try container.decode(Int.self, forKey: .int)
                 self = .int(value)
-            case .object:
-                let value = try container.decode(UserDefaultsObject.self, forKey: .object)
-                self = .object(value)
             case .string:
                 let value = try container.decode(String.self, forKey: .string)
                 self = .string(value)
-            case nil:
-                self = .nil
             }
         }
         
@@ -81,16 +84,14 @@ public extension UserDefaultsObject {
             switch self {
             case let .bool(value):
                 try container.encode(value, forKey: .bool)
+            case let .data(value):
+                try container.encode(value, forKey: .data)
             case let .date(value):
                 try container.encode(value, forKey: .date)
             case let .int(value):
                 try container.encode(value, forKey: .int)
-            case let .object(value):
-                try container.encode(value, forKey: .object)
             case let .string(value):
                 try container.encode(value, forKey: .string)
-            case .nil:
-                break
             }
         }
     }
@@ -101,14 +102,16 @@ public extension UserDefaultsObject {
 extension UserDefaultsObject.Value: Equatable {
     public static func == (lhs: UserDefaultsObject.Value, rhs: UserDefaultsObject.Value) -> Bool {
         switch (lhs, rhs) {
+        case let (.bool(leftBool), .bool(rightBool)):
+            return leftBool == rightBool
         case let (.date(leftDate), .date(rightDate)):
             return leftDate == rightDate
+        case let (.data(leftData), .data(rightData)):
+            return leftData == rightData
         case let (.int(leftInt), .int(rightInt)):
             return leftInt == rightInt
-        case let (.object(leftObject), .object(rightObject)):
-            return leftObject == rightObject
-        case (.nil, .nil):
-            return true
+        case let (.string(leftString), .string(rightString)):
+            return leftString == rightString
         default:
             return false
         }
