@@ -80,7 +80,7 @@ let package = Package(
         .testTarget(
             name: "UtilityBeltUITestingTests",
             dependencies: [
-                .target(name: "UtilityBeltUITesting")
+                .target(name: "UtilityBeltUITesting"),
             ]
         ),
     ],
