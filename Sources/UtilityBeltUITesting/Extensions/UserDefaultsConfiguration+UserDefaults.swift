@@ -6,14 +6,32 @@ public extension UserDefaultsConfiguration {
     /// Injects the configuration into the appropriate `UserDefaults`.
     func injectIntoUserDefaults() {
         for object in self.standard {
-            UserDefaults.standard.setValue(object.value, forKey: object.key)
+            self.storeObject(object, in: UserDefaults.standard)
         }
         
         for (suiteName, objects) in self.customSuites {
-            let defaults = UserDefaults(suiteName: suiteName)
-            for object in objects {
-                defaults?.setValue(object.value, forKey: object.key)
+            guard let defaults = UserDefaults(suiteName: suiteName) else {
+                continue
             }
+            
+            for object in objects {
+                self.storeObject(object, in: defaults)
+            }
+        }
+    }
+    
+    private func storeObject(_ object: UserDefaultsObject, in userDefaults: UserDefaults) {
+        switch object.value {
+        case let .bool(value):
+            userDefaults.setValue(value, forKey: object.key)
+        case let .data(value):
+            userDefaults.setValue(value, forKey: object.key)
+        case let .date(value):
+            userDefaults.setValue(value, forKey: object.key)
+        case let .int(value):
+            userDefaults.setValue(value, forKey: object.key)
+        case let .string(value):
+            userDefaults.setValue(value, forKey: object.key)
         }
     }
 }
