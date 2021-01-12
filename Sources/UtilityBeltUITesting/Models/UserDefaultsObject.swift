@@ -33,8 +33,11 @@ public extension UserDefaultsObject {
             case bool
             case data
             case date
+            case double
+            case float
             case int
             case string
+            case uint
         }
         
         // MARK: Cases
@@ -42,8 +45,11 @@ public extension UserDefaultsObject {
         case bool(Bool)
         case data(Data)
         case date(Date)
+        case double(Double)
+        case float(Float)
         case int(Int)
         case string(String)
+        case uint(UInt)
         
         // MARK: Decoding
         
@@ -67,12 +73,21 @@ public extension UserDefaultsObject {
             case .date:
                 let value = try container.decode(Date.self, forKey: .date)
                 self = .date(value)
+            case .double:
+                let value = try container.decode(Double.self, forKey: .double)
+                self = .double(value)
+            case .float:
+                let value = try container.decode(Float.self, forKey: .float)
+                self = .float(value)
             case .int:
                 let value = try container.decode(Int.self, forKey: .int)
                 self = .int(value)
             case .string:
                 let value = try container.decode(String.self, forKey: .string)
                 self = .string(value)
+            case .uint:
+                let value = try container.decode(UInt.self, forKey: .uint)
+                self = .uint(value)
             }
         }
         
@@ -88,10 +103,16 @@ public extension UserDefaultsObject {
                 try container.encode(value, forKey: .data)
             case let .date(value):
                 try container.encode(value, forKey: .date)
+            case let .double(value):
+                try container.encode(value, forKey: .double)
+            case let .float(value):
+                try container.encode(value, forKey: .float)
             case let .int(value):
                 try container.encode(value, forKey: .int)
             case let .string(value):
                 try container.encode(value, forKey: .string)
+            case let .uint(value):
+                try container.encode(value, forKey: .uint)
             }
         }
     }
@@ -102,16 +123,22 @@ public extension UserDefaultsObject {
 extension UserDefaultsObject.Value: Equatable {
     public static func == (lhs: UserDefaultsObject.Value, rhs: UserDefaultsObject.Value) -> Bool {
         switch (lhs, rhs) {
-        case let (.bool(leftBool), .bool(rightBool)):
-            return leftBool == rightBool
-        case let (.date(leftDate), .date(rightDate)):
-            return leftDate == rightDate
-        case let (.data(leftData), .data(rightData)):
-            return leftData == rightData
-        case let (.int(leftInt), .int(rightInt)):
-            return leftInt == rightInt
-        case let (.string(leftString), .string(rightString)):
-            return leftString == rightString
+        case let (.bool(leftValue), .bool(rightValue)):
+            return leftValue == rightValue
+        case let (.date(leftValue), .date(rightValue)):
+            return leftValue == rightValue
+        case let (.data(leftValue), .data(rightValue)):
+            return leftValue == rightValue
+        case let (.double(leftValue), .double(rightValue)):
+            return leftValue == rightValue
+        case let (.float(leftValue), .float(rightValue)):
+            return leftValue == rightValue
+        case let (.int(leftValue), .int(rightValue)):
+            return leftValue == rightValue
+        case let (.string(leftValue), .string(rightValue)):
+            return leftValue == rightValue
+        case let (.uint(leftValue), .uint(rightValue)):
+            return leftValue == rightValue
         default:
             return false
         }

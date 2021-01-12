@@ -28,9 +28,15 @@ public extension UserDefaultsConfiguration {
             userDefaults.setValue(value, forKey: object.key)
         case let .date(value):
             userDefaults.setValue(value, forKey: object.key)
+        case let .double(value):
+            userDefaults.setValue(value, forKey: object.key)
+        case let .float(value):
+            userDefaults.setValue(value, forKey: object.key)
         case let .int(value):
             userDefaults.setValue(value, forKey: object.key)
         case let .string(value):
+            userDefaults.setValue(value, forKey: object.key)
+        case let .uint(value):
             userDefaults.setValue(value, forKey: object.key)
         }
     }
