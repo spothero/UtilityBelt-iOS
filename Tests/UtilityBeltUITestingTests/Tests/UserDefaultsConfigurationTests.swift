@@ -47,24 +47,34 @@ final class UserDefaultsConfigurationTests: XCTestCase {
         XCTAssertEqual(firstObject.value, .int(1))
     }
     
-    func testInjectIntoUserDefaults() {
+    func testInjectIntoUserDefaults() throws {
         let configuration = UserDefaultsConfiguration()
 
-        // Store objects to be saved in the standard UserDefaults.
-        let intKey = "TestInt"
-        let intValue = 2
-        configuration.storeUserDefaultsObject(UserDefaultsObject(key: intKey, value: .int(intValue)))
+        // Store objects to be saved in the both the standard and custom UserDefaults.
+        let dateKey = "TestDate"
+        let dateValue = Date()
+        let dateObject = UserDefaultsObject(key: dateKey, value: .date(dateValue))
+        configuration.storeUserDefaultsObject(dateObject)
         
-        // Verify the current UserDefaults.standard doesn't contain the keys we'll inject.
-        XCTAssertNil(UserDefaults.standard.value(forKey: intKey))
+        let suiteName = "TestSuite"
+        configuration.storeUserDefaultsObject(dateObject, inSuite: suiteName)
+                
+        // Verify the UserDefaults do not contain the keys we'll inject.
+        XCTAssertNil(UserDefaults.standard.value(forKey: dateKey))
+        let customDefaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        XCTAssertNil(customDefaults.value(forKey: dateKey))
         
         // Inject the stored objects.
         configuration.injectIntoUserDefaults()
         
-        // Verify they were saved in UserDefaults.standard.
-        XCTAssertEqual(UserDefaults.standard.value(forKey: intKey) as? Int, intValue)
+        // Verify the object was saved in UserDefaults.standard.
+        XCTAssertEqual(UserDefaults.standard.value(forKey: dateKey) as? Date, dateValue)
         
+        // Verify the object was saved in the custom suite.
+        XCTAssertEqual(customDefaults.value(forKey: dateKey) as? Date, dateValue)
+
         // Clean up the UserDefaults.
-        UserDefaults.standard.removeObject(forKey: intKey)
+        UserDefaults.standard.removeObject(forKey: dateKey)
+        customDefaults.removeObject(forKey: dateKey)
     }
 }
