@@ -77,6 +77,12 @@ let package = Package(
                 .target(name: "UtilityBeltNetworking"),
             ]
         ),
+        .testTarget(
+            name: "UtilityBeltUITestingTests",
+            dependencies: [
+                .target(name: "UtilityBeltUITesting"),
+            ]
+        ),
     ],
     swiftLanguageVersions: [
         .v5,
