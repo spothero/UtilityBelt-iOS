@@ -10,7 +10,7 @@
         /// - Parameter objects: An array of launch argument objects that will be adding into the launch arguments.
         func updateLaunchArguments(_ arguments: [LaunchArgument]) {
             arguments.forEach { argument in
-                // Remove the argument in the case that it already there.
+                // Remove the argument in the case that it already exists.
                 self.removeLaunchArgument(argument)
                 self.launchArguments += [argument.rawValue]
             }
