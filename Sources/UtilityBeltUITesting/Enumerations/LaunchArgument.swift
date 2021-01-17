@@ -3,6 +3,6 @@
 import Foundation
 
 /// An enumeration of launch arguments used when launching an XCUIApplication.
-public enum LaunchArgument: String {
-    case xcuiTestCase
+public enum LaunchArgument {
+    case custom(value: String)
 }
