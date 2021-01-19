@@ -15,7 +15,7 @@
                     self.launchArguments.append(argument.formattedKey)
                 case let .argument(_, value),
                      let .userDefault(_, value):
-                    self.launchArguments += [argument.formattedKey, value]
+                    self.launchArguments.append(contentsOf: [argument.formattedKey, value])
                 }
             }
         }
