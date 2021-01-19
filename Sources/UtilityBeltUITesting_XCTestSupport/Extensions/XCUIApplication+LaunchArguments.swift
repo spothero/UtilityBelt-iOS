@@ -11,11 +11,8 @@
         func appendLaunchArguments(_ arguments: [LaunchArgument]) {
             arguments.forEach { argument in
                 switch argument {
-                case .custom:
-                    self.launchArguments.append(argument.formattedKey)
-                case let .argument(_, value),
-                     let .userDefault(_, value):
-                    self.launchArguments.append(contentsOf: [argument.formattedKey, value])
+                case let .custom(value):
+                    self.launchArguments += [value]
                 }
             }
         }
