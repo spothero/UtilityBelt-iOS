@@ -12,7 +12,7 @@
             arguments.forEach { argument in
                 switch argument {
                 case let .custom(value):
-                    self.launchArguments += [value]
+                    self.launchArguments.append(value)
                 }
             }
         }
