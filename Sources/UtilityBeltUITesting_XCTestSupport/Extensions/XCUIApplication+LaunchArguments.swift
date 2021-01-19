@@ -13,8 +13,8 @@
                 switch argument {
                 case .custom:
                     self.launchArguments += [argument.formattedKey]
-                case let .userDefault(_, value),
-                     let .argument(_, value):
+                case let .argument(_, value),
+                     let .userDefault(_, value):
                     self.launchArguments += [argument.formattedKey, value]
                 }
             }
