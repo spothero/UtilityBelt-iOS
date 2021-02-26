@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -36,11 +36,13 @@ extension URLComponents {
                 // Example: array[][][] (no indexes!)
                 self.evaluatedQueryItems(for: (key: "\(parameter.key)[]", value: $0))
             }
-        case let bool as Bool:
-            // TODO: Allow encoding of bools as numbers
-            return [URLQueryItem(name: parameter.key, value: "\(bool)")]
         case let value:
-            return [URLQueryItem(name: parameter.key, value: String(describing: value))]
+            // If the value is a boolean, display it as "true"/"false"
+            if let nsNumber = value as? NSNumber, nsNumber.isBoolean {
+                return [URLQueryItem(name: parameter.key, value: String(describing: nsNumber.boolValue))]
+            } else {
+                return [URLQueryItem(name: parameter.key, value: String(describing: value))]
+            }
         }
     }
 }
