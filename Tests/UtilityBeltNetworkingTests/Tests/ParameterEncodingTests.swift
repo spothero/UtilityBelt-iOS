@@ -4,7 +4,7 @@
 import XCTest
 
 final class ParameterEncodingTests: XCTestCase {
-    private var parameters: [String: Any] = [
+    private static let parameters: [String: Any] = [
         "bool": true,
         "double": 2.5,
         "integer": 1,
@@ -31,12 +31,6 @@ final class ParameterEncodingTests: XCTestCase {
             "bob",
             "carol",
         ],
-    ]
-    private var nsNumberParameters: [String: Any] = [
-        "boolNSNumber": NSNumber(true),
-        "intNSNumber": NSNumber(1),
-        "bool": false,
-        "int": 3,
     ]
     
     func testPostDefaultRequest() {
@@ -117,35 +111,40 @@ final class ParameterEncodingTests: XCTestCase {
     }
     
     func testNSNumberURLEncoding() throws {
-        let method = HTTPMethod.get
-        let url = try XCTUnwrap("spothero.com".asURL())
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
+        let nsNumberParameters: [String: Any] = [
+            "boolNSNumber": NSNumber(true),
+            "intNSNumber": NSNumber(1),
+            "bool": false,
+            "int": 0,
+        ]
         
         // GIVEN: I create a request that contains parameter values that are NSNumbers.
-        request.setParameters(self.nsNumberParameters, method: method, encoding: nil)
+        let request = try XCTUnwrap(self.request(withMethod: .get, parameters: nsNumberParameters))
         let requestURL = try XCTUnwrap(request.url)
         let queryItems = try XCTUnwrap(URLComponents(url: requestURL, resolvingAgainstBaseURL: true)?.queryItems)
         
-        // THEN: The NSNumber values are properly serialized.
+        // THEN: The values are properly serialized.
         XCTAssertTrue(queryItems.first { $0.name == "boolNSNumber" }?.value == "true")
         XCTAssertTrue(queryItems.first { $0.name == "intNSNumber" }?.value == "1")
         XCTAssertTrue(queryItems.first { $0.name == "bool" }?.value == "false")
-        XCTAssertTrue(queryItems.first { $0.name == "int" }?.value == "3")
+        XCTAssertTrue(queryItems.first { $0.name == "int" }?.value == "0")
     }
     
     /// Helper to create a request.
     /// - Parameters:
     ///   - method: The HTTP method for the request.
-    ///   - encoding: The encoding for the parameters
+    ///   - parameters: The parameters to to set on the request. Defaults to a pre-defined parameters object.
+    ///   - encoding: The encoding for the parameters.
     /// - Throws: If there's an error creating the request.
     /// - Returns: The URLRequest
-    private func request(withMethod method: HTTPMethod, encoding: ParameterEncoding? = nil) throws -> URLRequest {
+    private func request(withMethod method: HTTPMethod,
+                         parameters: [String: Any]? = ParameterEncodingTests.parameters,
+                         encoding: ParameterEncoding? = nil) throws -> URLRequest {
         let url = try "spothero.com".asURL()
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         
-        request.setParameters(self.parameters, method: method, encoding: encoding)
+        request.setParameters(parameters, method: method, encoding: encoding)
         
         return request
     }
@@ -161,7 +160,7 @@ final class ParameterEncodingTests: XCTestCase {
             options = []
         }
         
-        guard let serializedJSON = try? JSONSerialization.data(withJSONObject: self.parameters, options: options) else {
+        guard let serializedJSON = try? JSONSerialization.data(withJSONObject: Self.parameters, options: options) else {
             assertionFailure("Failed to serialized mocked parameters")
             return
         }
@@ -173,7 +172,7 @@ final class ParameterEncodingTests: XCTestCase {
     /// - Parameter request: The request to check.
     private func queryIsInBody(request: URLRequest) {
         var components = URLComponents()
-        components.setQueryItems(with: self.parameters)
+        components.setQueryItems(with: Self.parameters)
         guard let testQueryData = components.percentEncodedQuery?.data(using: .utf8) else {
             assertionFailure("Failed to create test query.")
             return
@@ -191,7 +190,7 @@ final class ParameterEncodingTests: XCTestCase {
         }
         
         var components = URLComponents()
-        components.setQueryItems(with: self.parameters)
+        components.setQueryItems(with: Self.parameters)
         guard let testQuery = components.percentEncodedQuery else {
             assertionFailure("Failed to create test query.")
             return
