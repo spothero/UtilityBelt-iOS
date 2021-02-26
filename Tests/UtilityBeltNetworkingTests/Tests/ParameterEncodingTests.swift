@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 @testable import UtilityBeltNetworking
 import XCTest
@@ -31,6 +31,12 @@ final class ParameterEncodingTests: XCTestCase {
             "bob",
             "carol",
         ],
+    ]
+    private var nsNumberParameters: [String: Any] = [
+        "boolNSNumber": NSNumber(booleanLiteral: true),
+        "intNSNumber": NSNumber(integerLiteral: 1),
+        "bool": false,
+        "int": 3,
     ]
     
     func testPostDefaultRequest() {
@@ -108,6 +114,24 @@ final class ParameterEncodingTests: XCTestCase {
         
         // THEN: The body contains the serialized data.
         self.dataIsInBody(request: request)
+    }
+    
+    func testNSNumberURLEncoding() throws {
+        let method = HTTPMethod.get
+        let url = try XCTUnwrap("spothero.com".asURL())
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        
+        // GIVEN: I create a request that contains parameter values that are NSNumbers.
+        request.setParameters(self.nsNumberParameters, method: method, encoding: nil)
+        let requestURL = try XCTUnwrap(request.url)
+        let queryItems = try XCTUnwrap(URLComponents(url: requestURL, resolvingAgainstBaseURL: true)?.queryItems)
+        
+        // THEN: The NSNumber values are properly serialized.
+        XCTAssertTrue(queryItems.filter { $0.name == "boolNSNumber" }.first?.value == "true")
+        XCTAssertTrue(queryItems.filter { $0.name == "intNSNumber" }.first?.value == "1")
+        XCTAssertTrue(queryItems.filter { $0.name == "bool" }.first?.value == "false")
+        XCTAssertTrue(queryItems.filter { $0.name == "int" }.first?.value == "3")
     }
     
     /// Helper to create a request.
