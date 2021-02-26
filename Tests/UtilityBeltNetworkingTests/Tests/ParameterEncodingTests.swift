@@ -128,10 +128,10 @@ final class ParameterEncodingTests: XCTestCase {
         let queryItems = try XCTUnwrap(URLComponents(url: requestURL, resolvingAgainstBaseURL: true)?.queryItems)
         
         // THEN: The NSNumber values are properly serialized.
-        XCTAssertTrue(queryItems.filter { $0.name == "boolNSNumber" }.first?.value == "true")
-        XCTAssertTrue(queryItems.filter { $0.name == "intNSNumber" }.first?.value == "1")
-        XCTAssertTrue(queryItems.filter { $0.name == "bool" }.first?.value == "false")
-        XCTAssertTrue(queryItems.filter { $0.name == "int" }.first?.value == "3")
+        XCTAssertTrue(queryItems.first { $0.name == "boolNSNumber" }?.value == "true")
+        XCTAssertTrue(queryItems.first { $0.name == "intNSNumber" }?.value == "1")
+        XCTAssertTrue(queryItems.first { $0.name == "bool" }?.value == "false")
+        XCTAssertTrue(queryItems.first { $0.name == "int" }?.value == "3")
     }
     
     /// Helper to create a request.
