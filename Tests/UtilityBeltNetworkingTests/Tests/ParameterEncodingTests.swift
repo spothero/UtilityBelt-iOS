@@ -133,7 +133,7 @@ final class ParameterEncodingTests: XCTestCase {
     /// Helper to create a request.
     /// - Parameters:
     ///   - method: The HTTP method for the request.
-    ///   - parameters: The parameters to to set on the request. Defaults to a pre-defined parameters object.
+    ///   - parameters: The parameters to set on the request. Defaults to a pre-defined parameters object.
     ///   - encoding: The encoding for the parameters.
     /// - Throws: If there's an error creating the request.
     /// - Returns: The URLRequest
