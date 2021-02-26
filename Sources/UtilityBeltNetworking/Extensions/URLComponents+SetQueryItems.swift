@@ -38,7 +38,7 @@ extension URLComponents {
             }
         case let value:
             // If the value is a boolean, display it as "true"/"false"
-            if let nsNumber = value as? NSNumber, CFGetTypeID(nsNumber as CFTypeRef) == CFBooleanGetTypeID() {
+            if let nsNumber = value as? NSNumber, nsNumber.isBoolean {
                 return [URLQueryItem(name: parameter.key, value: String(describing: nsNumber.boolValue))]
             } else {
                 return [URLQueryItem(name: parameter.key, value: String(describing: value))]
