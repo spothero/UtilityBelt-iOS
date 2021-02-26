@@ -10,7 +10,7 @@ class NSNumberExtensionTests: XCTestCase {
         // THEN: The `isBoolean` property will return true.
         XCTAssertTrue(booleanNSNumber.isBoolean)
         
-        // WHEN: I have a boolean NSNumber
+        // WHEN: I have a non-boolean NSNumber
         let integerNSNumber = NSNumber(1)
         // THEN: The `isBoolean` property will return false.
         XCTAssertFalse(integerNSNumber.isBoolean)
