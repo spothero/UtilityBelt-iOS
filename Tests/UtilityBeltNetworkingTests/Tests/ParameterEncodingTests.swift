@@ -33,8 +33,8 @@ final class ParameterEncodingTests: XCTestCase {
         ],
     ]
     private var nsNumberParameters: [String: Any] = [
-        "boolNSNumber": NSNumber(booleanLiteral: true),
-        "intNSNumber": NSNumber(integerLiteral: 1),
+        "boolNSNumber": NSNumber(true),
+        "intNSNumber": NSNumber(1),
         "bool": false,
         "int": 3,
     ]
