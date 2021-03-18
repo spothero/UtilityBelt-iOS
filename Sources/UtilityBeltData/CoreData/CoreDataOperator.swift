@@ -55,10 +55,20 @@ public class CoreDataOperator {
     ///   - databaseURL: The URL where the database should be persisted. If no URL is given, all data will be stored in memory.
     ///   - bundle: The bundle used to lookup the Core Data model file. Defaults to `.main`.
     public func initializeCoreDataStack(modelName: String, databaseURL: URL?, bundle: Bundle = .main) {
-        guard let url = bundle.url(forResource: modelName, withExtension: "momd") else {
+        guard let modelURL = bundle.url(forResource: modelName, withExtension: "momd") else {
             fatalError("Failed to find \(modelName).momd in bundle \(bundle).")
         }
         
+        self.initializeCoreDataStack(modelURL: modelURL, databaseURL: databaseURL)
+    }
+    
+    /// Initializes a new Core Data stack using the passed in arguments to create a `NSPersistentContainer`.
+    ///
+    /// Ensure `clearCoreData` is called before subsequent calls to this method.
+    /// - Parameters:
+    ///   - modelURL: The URL path to the model (.momd) file to use.
+    ///   - databaseURL: The URL where the database should be persisted. If no URL is given, all data will be stored in memory.
+    public func initializeCoreDataStack(modelURL: URL, databaseURL: URL?) {
         guard let managedObjectModel = NSManagedObjectModel(contentsOf: url) else {
             fatalError("Failed to initialize managed object model with contents of url: \(url)")
         }
