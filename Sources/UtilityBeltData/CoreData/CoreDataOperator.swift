@@ -69,8 +69,8 @@ public class CoreDataOperator {
     ///   - modelURL: The URL path to the model (.momd) file to use.
     ///   - databaseURL: The URL where the database should be persisted. If no URL is given, all data will be stored in memory.
     public func initializeCoreDataStack(modelURL: URL, databaseURL: URL?) {
-        guard let managedObjectModel = NSManagedObjectModel(contentsOf: url) else {
-            fatalError("Failed to initialize managed object model with contents of url: \(url)")
+        guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Failed to initialize managed object model with contents of url: \(modelURL)")
         }
         
         let container = NSPersistentContainer(name: "CoreData", managedObjectModel: managedObjectModel)

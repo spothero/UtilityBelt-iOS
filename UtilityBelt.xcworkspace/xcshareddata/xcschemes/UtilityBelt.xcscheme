@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UtilityBelt"
-               BuildableName = "UtilityBelt"
-               BlueprintName = "UtilityBelt"
+               BlueprintIdentifier = "Sham"
+               BuildableName = "Sham"
+               BlueprintName = "Sham"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Sham"
-               BuildableName = "Sham"
-               BlueprintName = "Sham"
+               BlueprintIdentifier = "Sham_XCTestSupport"
+               BuildableName = "Sham_XCTestSupport"
+               BlueprintName = "Sham_XCTestSupport"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -59,6 +59,34 @@
                BlueprintIdentifier = "UtilityBeltNetworking"
                BuildableName = "UtilityBeltNetworking"
                BlueprintName = "UtilityBeltNetworking"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityBeltUITesting"
+               BuildableName = "UtilityBeltUITesting"
+               BlueprintName = "UtilityBeltUITesting"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityBeltUITesting_XCTestSupport"
+               BuildableName = "UtilityBeltUITesting_XCTestSupport"
+               BlueprintName = "UtilityBeltUITesting_XCTestSupport"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -117,6 +145,17 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UtilityBeltUITestingTests"
+               BuildableName = "UtilityBeltUITestingTests"
+               BlueprintName = "UtilityBeltUITestingTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -139,9 +178,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "UtilityBelt"
-            BuildableName = "UtilityBelt"
-            BlueprintName = "UtilityBelt"
+            BlueprintIdentifier = "Sham"
+            BuildableName = "Sham"
+            BlueprintName = "Sham"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
