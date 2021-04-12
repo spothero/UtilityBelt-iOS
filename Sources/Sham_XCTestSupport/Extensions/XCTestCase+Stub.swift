@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 #if canImport(XCTest)
 
@@ -11,14 +11,14 @@
         /// - Parameter stubRequest: The request to stub.
         /// - Parameter response: The response to return.
         func stub(_ stubRequest: StubRequest, with response: StubResponse) {
-            MockService.shared.stub(stubRequest, with: response)
+            MockService.shared.stubbedDataCollection.stub(stubRequest, with: response)
         }
     
         /// Convenience method for stubbing new requests within an XCTestCase.
         /// - Parameter urlRequest: The request to stub.
         /// - Parameter response: The response to return.
         func stub(_ urlRequest: URLRequestConvertible, with response: StubResponse) {
-            MockService.shared.stub(urlRequest, with: response)
+            MockService.shared.stubbedDataCollection.stub(urlRequest, with: response)
         }
     }
 
