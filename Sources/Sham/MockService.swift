@@ -29,7 +29,7 @@ public class MockService {
     }()
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
-    private var stubbedDataCollection = StubbedDataCollection()
+    public private(set) var stubbedDataCollection = StubbedDataCollection()
     
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
@@ -84,14 +84,6 @@ public class MockService {
     public func canMockData(for urlRequest: URLRequestConvertible) -> Bool {
         let request = StubRequest(urlRequest: urlRequest)
         return self.canMockData(for: request)
-    }
-    
-    /// Adds a response to the stub response collection.
-    /// - Parameter urlRequest: The URL, URLRequest, or URL String to stub.
-    /// - Parameter response: The response to return upon receiving the given request.
-    public func stub(_ urlRequest: URLRequestConvertible, with response: StubResponse) {
-        let request = StubRequest(urlRequest: urlRequest)
-        return self.stubbedDataCollection.stub(request, with: response)
     }
     
     // MARK: Utilities
