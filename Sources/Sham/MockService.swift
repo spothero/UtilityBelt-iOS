@@ -66,10 +66,7 @@ public class MockService {
     /// Clears the current stub information and updates to use the information on the passed in collection.
     /// - Parameter collection: The collection to use.
     public func updateStubbedData(withCollection collection: StubbedDataCollection) {
-        self.clearData()
-        collection.stubbedData.forEach { request, response in
-            self.stub(request, with: response)
-        }
+        self.stubbedDataCollection = collection
     }
     
     /// Determines whether or not the service can attempt to mock a given request.
