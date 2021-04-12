@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -31,6 +31,12 @@ public final class StubbedDataCollection: Codable {
         }
         
         self.stubbedData[request] = response
+    }
+    
+    /// Determines whether or not a matching request has been stubbed.
+    /// - Parameter request: The request to match against stubbed requests.
+    public func hasStub(for request: StubRequest) -> Bool {
+        return self.getResponse(for: request) != nil
     }
     
     /// Returns the stubbed response that matches the request.

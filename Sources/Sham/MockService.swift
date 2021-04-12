@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 import Foundation
 import UtilityBeltNetworking
@@ -72,24 +72,11 @@ public class MockService {
         }
     }
     
-    /// Returns the stubbed response that matches the request.
-    /// Returns nil if there is no matching stubbed request found.
-    /// - Parameter request: The request to match against stubbed requests.
-    public func getResponse(for request: StubRequest) -> StubResponse? {
-        return self.stubbedDataCollection.getResponse(for: request)
-    }
-    
-    /// Determines whether or not a matching request has been stubbed.
-    /// - Parameter request: The request to match against stubbed requests.
-    public func hasStub(for request: StubRequest) -> Bool {
-        return self.getResponse(for: request) != nil
-    }
-    
     /// Determines whether or not the service can attempt to mock a given request.
     /// Returns true if the service is attempting to intercept and mock all requests.
     /// - Parameter request: The request to match against stubbed requests.
     public func canMockData(for request: StubRequest) -> Bool {
-        return self.isMockingAllRequests || self.hasStub(for: request)
+        return self.isMockingAllRequests || self.stubbedDataCollection.hasStub(for: request)
     }
     
     /// Adds a response to the stub response collection for the MockService.
@@ -105,14 +92,14 @@ public class MockService {
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to match against stubbed requests.
     public func getResponse(for urlRequest: URLRequestConvertible) -> StubResponse? {
         let request = StubRequest(urlRequest: urlRequest)
-        return self.getResponse(for: request)
+        return self.stubbedDataCollection.getResponse(for: request)
     }
     
     /// Determines whether or not a matching request has been stubbed.
     /// - Parameter urlRequest: The URL, URLRequest, or URL String to match against stubbed requests.
     public func hasStub(for urlRequest: URLRequestConvertible) -> Bool {
         let request = StubRequest(urlRequest: urlRequest)
-        return self.hasStub(for: request)
+        return self.stubbedDataCollection.hasStub(for: request)
     }
     
     /// Determines whether or not the service can attempt to mock a given request.
