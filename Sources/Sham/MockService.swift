@@ -29,7 +29,7 @@ public class MockService {
     }()
     
     /// A dictionary of stubbed responses keyed by stubbed requests.
-    public private(set) var stubbedDataCollection = StubbedDataCollection()
+    public var stubbedDataCollection = StubbedDataCollection()
     
     /// Whether or not there are any stubbed response.
     public var hasStubs: Bool {
@@ -62,12 +62,6 @@ public class MockService {
     }
     
     // MARK: Stubbing
-    
-    /// Clears the current stub information and updates to use the information on the passed in collection.
-    /// - Parameter collection: The collection to use.
-    public func updateStubbedData(withCollection collection: StubbedDataCollection) {
-        self.stubbedDataCollection = collection
-    }
     
     /// Determines whether or not the service can attempt to mock a given request.
     /// Returns true if the service is attempting to intercept and mock all requests.

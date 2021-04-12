@@ -10,6 +10,6 @@ public extension MockService {
         guard let stubbedDataCollection = ProcessInfo.fetchFromLaunchEnvironment(withType: StubbedDataCollection.self) else {
             return
         }
-        MockService.shared.updateStubbedData(withCollection: stubbedDataCollection)
+        MockService.shared.stubbedDataCollection = stubbedDataCollection
     }
 }
