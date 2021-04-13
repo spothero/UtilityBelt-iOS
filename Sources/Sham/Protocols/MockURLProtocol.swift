@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 import Foundation
 import UtilityBeltNetworking
@@ -32,7 +32,7 @@ public class MockURLProtocol: URLProtocol {
             return
         }
         
-        let stubResponse = MockService.shared.getResponse(for: self.request)
+        let stubResponse = MockService.shared.stubbedDataCollection.getResponse(for: self.request)
         
         let httpResponse = HTTPURLResponse(url: url,
                                            statusCode: stubResponse?.statusCode.rawValue ?? HTTPStatusCode.badRequest.rawValue,

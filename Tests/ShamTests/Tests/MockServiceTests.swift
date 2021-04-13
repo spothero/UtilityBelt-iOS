@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 @testable import Sham
 import Sham_XCTestSupport
@@ -77,7 +77,7 @@ final class MockServiceTests: XCTestCase {
     func testStubbingGetFailsPostRequests() {
         self.stub(.get(self.fullURL), with: .encodable(self.mockData))
         
-        let hasData = MockService.shared.hasStub(for: .post(self.fullURL))
+        let hasData = MockService.shared.stubbedDataCollection.hasStub(for: .post(self.fullURL))
         
         XCTAssertTrue(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
@@ -87,7 +87,7 @@ final class MockServiceTests: XCTestCase {
         // Attempting to stub a scheme-only URL should not load any data into the MockService
         self.stub(self.schemeOnlyURL, with: .encodable(self.mockData))
         
-        let hasData = MockService.shared.hasStub(for: self.schemeOnlyURL)
+        let hasData = MockService.shared.stubbedDataCollection.hasStub(for: self.schemeOnlyURL)
         
         XCTAssertFalse(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
@@ -97,7 +97,7 @@ final class MockServiceTests: XCTestCase {
         // Attempting to stub a query-only URL should not load any data into the MockService
         self.stub(self.queryOnlyURL, with: .encodable(self.mockData))
         
-        let hasData = MockService.shared.hasStub(for: self.queryOnlyURL)
+        let hasData = MockService.shared.stubbedDataCollection.hasStub(for: self.queryOnlyURL)
         
         XCTAssertFalse(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
