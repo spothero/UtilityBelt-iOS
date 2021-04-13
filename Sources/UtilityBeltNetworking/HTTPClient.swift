@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -20,14 +20,8 @@ public class HTTPClient {
     /// The URLSession that is used for all requests.
     let session: URLSession
     
-    /// Whether or not the client should be logging requests.
-    public var isDebugLoggingEnabled: Bool = {
-        #if DEBUG
-            return true
-        #else
-            return false
-        #endif
-    }()
+    /// Whether or not the client should be logging requests. Defaults to `false`.
+    public var isDebugLoggingEnabled = false
     
     /// The timeout interval to use when waiting for additional data. When the request timer reaches the specified interval without receiving
     /// any new data, it triggers a timeout. If this property is set to `nil`, this property is ignored and the default value of 60 seconds is used.
