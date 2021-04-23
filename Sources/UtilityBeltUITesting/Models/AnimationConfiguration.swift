@@ -11,6 +11,7 @@ public struct AnimationConfiguration: LaunchEnvironmentCodable {
     public var animationsEnabled: Bool
     
     /// The value with which to set the application's key window layer speed.
+    ///
     /// See Apple's [documentation](https://developer.apple.com/documentation/quartzcore/camediatiming/1427647-speed) for more information.
     public var layerAnimationSpeed: Float
     
