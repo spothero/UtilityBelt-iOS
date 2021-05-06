@@ -43,39 +43,20 @@ public class HTTPClient {
     // MARK: Data Response
     
     /// Creates and sends a request which fetches raw data from an endpoint.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-    /// - Parameter completion: The completion block to call when the request is completed.
+    /// - Parameters:
+    ///   - request:    The `URLRequest` to make the request with.
+    ///   - completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
-    public func request(_ url: URLConvertible,
-                        method: HTTPMethod = .get,
-                        parameters: ParameterDictionaryConvertible? = nil,
-                        headers: HTTPHeaderDictionaryConvertible? = nil,
-                        encoding: ParameterEncoding? = nil,
+    public func request(_ request: URLRequest,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
-        let request: URLRequest
+        var request = request
         
-        do {
-            request = try self.configuredURLRequest(
-                url: url,
-                method: method,
-                parameters: parameters,
-                headers: headers,
-                encoding: encoding
-            )
-        } catch {
-            DispatchQueue.main.async {
-                completion?(.failure(error))
-            }
-            return nil
-        }
+        self.logStart(of: request)
         
-        if let urlString = request.url?.absoluteString {
-            self.log("Starting \(method.rawValue) request to \(urlString)")
+        // Set the timeout interval for the request, if applicable.
+        if let timeoutInterval = self.timeoutInterval {
+            request.timeoutInterval = timeoutInterval
         }
         
         let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
@@ -139,56 +120,19 @@ public class HTTPClient {
         return task
     }
     
-    /// Creates and sends a request which fetches raw data from an endpoint.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-    /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
-    @discardableResult
-    // swiftlint:disable:next function_default_parameter_at_end
-    public func request(_ url: URLConvertible,
-                        method: HTTPMethod = .get,
-                        parameters: Encodable,
-                        headers: HTTPHeaderDictionaryConvertible? = nil,
-                        encoding: ParameterEncoding? = nil,
-                        completion: DataTaskCompletion? = nil) -> URLSessionTask? {
-        self.request(url,
-                     method: method,
-                     parameters: try? parameters.asDictionary(),
-                     headers: headers,
-                     encoding: encoding,
-                     completion: completion)
-    }
-    
     // MARK: Decodable Object Response
     
     /// Creates and sends a request which fetches raw data from an endpoint and decodes it.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
-    /// - Parameter completion: The completion block to call when the request is completed.
+    /// - Parameters:
+    ///   - request:    The `URLRequest` to make the request with.
+    ///   - decoder:    The `JSONDecoder` to use when decoding the response data.
+    ///   - completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
-    public func request<T: Decodable>(_ url: URLConvertible,
-                                      method: HTTPMethod = .get,
-                                      parameters: ParameterDictionaryConvertible? = nil,
-                                      headers: HTTPHeaderDictionaryConvertible? = nil,
-                                      encoding: ParameterEncoding? = nil,
+    public func request<T: Decodable>(_ request: URLRequest,
                                       decoder: JSONDecoder = JSONDecoder(),
                                       completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
-        return self.request(
-            url,
-            method: method,
-            parameters: parameters,
-            headers: headers,
-            encoding: encoding
-        ) { dataResponse in
+        return self.request(request) { dataResponse in
             // Create a result object for improved handling of the response
             let result: Result<T, Error> = {
                 switch dataResponse.result {
@@ -201,10 +145,10 @@ public class HTTPClient {
                     }
                 case let .success(data):
                     // TODO: Implement mime type checking for JSON before attempting to decode JSON (IOS-1967)
-//                    // If the mime type for the response isn't JSON, we can't decode it
-//                    guard dataResponse.response?.mimeType == "application/json" else {
-//                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
-//                    }
+                    // // If the mime type for the response isn't JSON, we can't decode it
+                    // guard dataResponse.response?.mimeType == "application/json" else {
+                    //     return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
+                    // }
                     
                     do {
                         let decodedObject = try decoder.decode(T.self, from: data)
@@ -230,63 +174,7 @@ public class HTTPClient {
         }
     }
     
-    /// Creates and sends a request which fetches raw data from an endpoint and decodes it.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
-    /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
-    @discardableResult
-    // swiftlint:disable:next function_default_parameter_at_end
-    public func request<T: Decodable>(_ url: URLConvertible,
-                                      method: HTTPMethod = .get,
-                                      parameters: Encodable,
-                                      headers: HTTPHeaderDictionaryConvertible? = nil,
-                                      encoding: ParameterEncoding? = nil,
-                                      decoder: JSONDecoder = JSONDecoder(),
-                                      completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
-        self.request(url,
-                     method: method,
-                     parameters: try? parameters.asDictionary(),
-                     headers: headers,
-                     encoding: encoding,
-                     decoder: decoder,
-                     completion: completion)
-    }
-    
-    // MARK: URL Request Configuration
-    
-    /// Creates a configured URLRequest.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-    /// - Returns: The configured `URLRequest` object.
-    func configuredURLRequest(url: URLConvertible,
-                              method: HTTPMethod = .get,
-                              parameters: ParameterDictionaryConvertible? = nil,
-                              headers: HTTPHeaderDictionaryConvertible? = nil,
-                              encoding: ParameterEncoding? = nil) throws -> URLRequest {
-        let url = try url.asURL()
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        
-        if let timeoutInterval = self.timeoutInterval {
-            request.timeoutInterval = timeoutInterval
-        }
-        
-        request.setHeaders(headers)
-        
-        // Parameters must be set after setting headers, because encoding dictates (and therefore overrides) the Content-Type header
-        request.setParameters(parameters, method: method, encoding: encoding)
-        
-        return request
-    }
+    // MARK: Utilities
     
     func log(_ message: Any) {
         guard self.isDebugLoggingEnabled else {
@@ -295,18 +183,10 @@ public class HTTPClient {
         
         print("[UtilityBeltNetworking] \(message)")
     }
-}
-
-// MARK: - Extensions
-
-private extension DataResponse {
-    /// Initializes a `DataResponse` object with `nil` request, response, and data properties
-    /// and a failure result containing the given error.
-    /// - Parameter error: The error to return in the result of the response.
-    static func failure<T>(_ error: Error) -> DataResponse<T, Error> {
-        return DataResponse<T, Error>(request: nil,
-                                      response: nil,
-                                      data: nil,
-                                      result: .failure(error))
+    
+    func logStart(of request: URLRequest) {
+        if self.isDebugLoggingEnabled, let urlString = request.url?.absoluteString {
+            self.log("Starting request to \(urlString): \(request)")
+        }
     }
 }

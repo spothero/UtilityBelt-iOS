@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 #if canImport(Combine)
     import Combine
@@ -9,34 +9,12 @@
         // MARK: Data Response
     
         /// Creates a request publisher which fetches raw data from an endpoint.
-        /// - Parameter url: The URL for the request. Accepts a URL or a String.
-        /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-        /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-        /// - Parameter headers: The HTTP headers to send with the request.
-        /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameters:
+        ///   - request: The `URLRequest` to make the request with.
+        ///   - dispatchQueue: The `DispatchQueue` to make the request on.
         /// - Returns: A publisher that wraps a data task for the URL.
-        func requestPublisher(_ url: URLConvertible,
-                              method: HTTPMethod = .get,
-                              parameters: ParameterDictionaryConvertible? = nil,
-                              headers: HTTPHeaderDictionaryConvertible? = nil,
-                              encoding: ParameterEncoding? = nil) -> AnyPublisher<Data, Error> {
-            let request: URLRequest
-        
-            do {
-                request = try self.configuredURLRequest(
-                    url: url,
-                    method: method,
-                    parameters: parameters,
-                    headers: headers,
-                    encoding: encoding
-                )
-            } catch {
-                return Result<Data, Error>.Publisher(error).eraseToAnyPublisher()
-            }
-        
-            if self.isDebugLoggingEnabled, let urlString = request.url?.absoluteString {
-                self.log("Starting \(method.rawValue) request to \(urlString)")
-            }
+        func requestPublisher(_ request: URLRequest, on dispatchQueue: DispatchQueue = .main) -> AnyPublisher<Data, Error> {
+            self.logStart(of: request)
         
             return self.session
                 .dataTaskPublisher(for: request)
@@ -55,55 +33,30 @@
                         throw UBNetworkError.unexpectedError
                     }
                 
-                    // Attempt to lob the data as pretty printed JSON, otherwise just encode to utf8
+                    // Attempt to log the data as pretty printed JSON, otherwise just encode to utf8
                     if self.isDebugLoggingEnabled,
-                        let dataString: String = element.data.asPrettyPrintedJSON ?? String(data: element.data, encoding: .utf8) {
+                       let dataString: String = element.data.asPrettyPrintedJSON ?? String(data: element.data, encoding: .utf8) {
                         self.log(dataString)
                     }
                 
                     return element.data
                 }
-                .receive(on: DispatchQueue.main)
+                .receive(on: dispatchQueue)
                 .eraseToAnyPublisher()
-        }
-    
-        /// Creates a request publisher which fetches raw data from an endpoint.
-        /// - Parameter url: The URL for the request. Accepts a URL or a String.
-        /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-        /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-        /// - Parameter headers: The HTTP headers to send with the request.
-        /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-        /// - Returns: A publisher that wraps a data task for the URL.
-        // swiftlint:disable:next function_default_parameter_at_end
-        func requestPublisher(_ url: URLConvertible,
-                              method: HTTPMethod = .get,
-                              parameters: Encodable,
-                              headers: HTTPHeaderDictionaryConvertible? = nil,
-                              encoding: ParameterEncoding? = nil) -> AnyPublisher<Data, Error> {
-            return self.requestPublisher(url,
-                                         method: method,
-                                         parameters: try? parameters.asDictionary(),
-                                         headers: headers,
-                                         encoding: encoding)
         }
     
         // MARK: Decodable Object Response
     
         /// Creates a request publisher which fetches raw data from an endpoint and decodes it.
-        /// - Parameter url: The URL for the request. Accepts a URL or a String.
-        /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-        /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-        /// - Parameter headers: The HTTP headers to send with the request.
-        /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+        /// - Parameters:
+        ///   - request:       The `URLRequest` to make the request with.
+        ///   - decoder:       The `JSONDecoder` to use when decoding the response data.
+        ///   - dispatchQueue: The `DispatchQueue` to make the request on.
         /// - Returns: A publisher that wraps a data task for the URL.
-        func requestPublisher<T: Decodable>(_ url: URLConvertible,
-                                            method: HTTPMethod = .get,
-                                            parameters: ParameterDictionaryConvertible? = nil,
-                                            headers: HTTPHeaderDictionaryConvertible? = nil,
-                                            encoding: ParameterEncoding? = nil,
-                                            decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
-            return self.requestPublisher(url, method: method, parameters: parameters, headers: headers, encoding: encoding)
+        func requestPublisher<T: Decodable>(_ request: URLRequest,
+                                            decoder: JSONDecoder = JSONDecoder(),
+                                            on dispatchQueue: DispatchQueue = .main) -> AnyPublisher<T, Error> {
+            return self.requestPublisher(request, on: dispatchQueue)
                 .decode(type: T.self, decoder: decoder)
                 .mapError { error in
                     switch error {
@@ -115,28 +68,6 @@
                 }
                 .eraseToAnyPublisher()
         }
-    
-        /// Creates a request publisher which fetches raw data from an endpoint and decodes it.
-        /// - Parameter url: The URL for the request. Accepts a URL or a String.
-        /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-        /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-        /// - Parameter headers: The HTTP headers to send with the request.
-        /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
-        /// - Returns: A publisher that wraps a data task for the URL.
-        // swiftlint:disable:next function_default_parameter_at_end
-        func requestPublisher<T: Decodable>(_ url: URLConvertible,
-                                            method: HTTPMethod = .get,
-                                            parameters: Encodable,
-                                            headers: HTTPHeaderDictionaryConvertible? = nil,
-                                            encoding: ParameterEncoding? = nil,
-                                            decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
-            return self.requestPublisher(url,
-                                         method: method,
-                                         parameters: try? parameters.asDictionary(),
-                                         headers: headers,
-                                         encoding: encoding,
-                                         decoder: decoder)
-        }
     }
+
 #endif
