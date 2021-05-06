@@ -1,6 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
-
-import Foundation
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 /// A list of standard HTTP response status codes.
 ///
