@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 /// Determines the method by which parameters are encoded when sent via HTTP bodies.
 public enum HTTPBodyEncoding: String {
