@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -24,8 +24,8 @@ extension DecodingError {
     }
 }
 
-extension Array where Element == CodingKey {
-    fileprivate var jsonPath: String {
+private extension Array where Element == CodingKey {
+    var jsonPath: String {
         var path = ""
         
         for key in self {

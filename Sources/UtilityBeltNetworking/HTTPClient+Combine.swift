@@ -1,4 +1,4 @@
-// Copyright © 2020 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 #if canImport(Combine)
     import Combine
@@ -57,7 +57,7 @@
                 
                     // Attempt to lob the data as pretty printed JSON, otherwise just encode to utf8
                     if self.isDebugLoggingEnabled,
-                        let dataString: String = element.data.asPrettyPrintedJSON ?? String(data: element.data, encoding: .utf8) {
+                       let dataString: String = element.data.asPrettyPrintedJSON ?? String(data: element.data, encoding: .utf8) {
                         self.log(dataString)
                     }
                 
