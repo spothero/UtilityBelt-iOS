@@ -70,11 +70,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 2.2.0)
   danger (~> 8.2.1)
   danger-swiftformat (~> 0.7.0)
   danger-swiftlint (~> 0.24.5)
   xcpretty (~> 0.3.0)
 
 BUNDLED WITH
-   2.2.3
+   2.2.11
