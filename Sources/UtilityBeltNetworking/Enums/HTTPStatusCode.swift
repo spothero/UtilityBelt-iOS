@@ -1,5 +1,7 @@
 // Copyright © 2021 SpotHero, Inc. All rights reserved.
 
+import Foundation
+
 /// A list of standard HTTP response status codes.
 ///
 /// All HTTP response status codes are separated into five classes (or categories).

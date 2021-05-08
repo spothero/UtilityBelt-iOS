@@ -1,6 +1,6 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 
-// Copyright © 2019 SpotHero, Inc. All rights reserved.
+// Copyright © 2021 SpotHero, Inc. All rights reserved.
 
 import PackageDescription
 
@@ -19,14 +19,6 @@ let package = Package(
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
         .library(name: "UtilityBeltUITesting", targets: ["UtilityBeltUITesting"]),
         .library(name: "UtilityBeltUITesting_XCTestSupport", targets: ["UtilityBeltUITesting_XCTestSupport"]),
-        // Dynamic Libraries
-        // These libraries are required due to the Xcode 11.3+ static linking bug: https://bugs.swift.org/browse/SR-12303
-        .library(name: "ShamDynamic", type: .dynamic, targets: ["Sham"]),
-        .library(name: "Sham_XCTestSupportDynamic", type: .dynamic, targets: ["Sham_XCTestSupport"]),
-        .library(name: "UtilityBeltDataDynamic", type: .dynamic, targets: ["UtilityBeltData"]),
-        .library(name: "UtilityBeltNetworkingDynamic", type: .dynamic, targets: ["UtilityBeltNetworking"]),
-        .library(name: "UtilityBeltUITestingDynamic", type: .dynamic, targets: ["UtilityBeltUITesting"]),
-        .library(name: "UtilityBeltUITesting_XCTestSupportDynamic", type: .dynamic, targets: ["UtilityBeltUITesting_XCTestSupport"]),
     ],
     dependencies: [],
     targets: [
