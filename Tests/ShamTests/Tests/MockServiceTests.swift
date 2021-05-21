@@ -17,6 +17,8 @@ final class MockServiceTests: XCTestCase {
     let querylessURL = "https://foo.com/foo"
     let secondaryMockData = ["bar", "foo"]
     
+    let manyQueryParamsURL = "https://foo.com/foo?foo=bar&foo2=bar2&foo3=bar3"
+    
     override func setUp() {
         super.setUp()
         
@@ -123,11 +125,12 @@ final class MockServiceTests: XCTestCase {
     }
     
     func testReturnsStubWithMostEqualParametersUsingBestMatch() throws {
-        // GIVEN: I stub a queryless URL.
-        self.stub(self.querylessURL, with: .encodable(self.mockData))
+        // GIVEN: I stub a URL with only one query.
+        self.stub(self.fullURL, with: .encodable(self.mockData))
         
-        // THEN: The values should return correctly even if the URL that is requested has parameters.
-        self.request(url: self.fullURL, data: self.mockData)
+        // THEN: The values should return correctly even if the URL that is requested has multiple
+        // query parameters.
+        self.request(url: self.manyQueryParamsURL, data: self.mockData)
     }
     
     private func request<T>(url: URLConvertible,
