@@ -105,10 +105,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
         // Include any stubbed response where the path matches the incoming URL's path or is empty
         let validPath = url.trimmedPath.isEmpty || url.trimmedPath == requestURL.trimmedPath
         
-        // Include any stubbed response where the query matches the incoming URL's query or is nil or empty
-        let validQuery = url.query.isNilOrEmpty || url.sortedQueryString == requestURL.sortedQueryString
-        
-        return validScheme && validHost && validPort && validPath && validQuery
+        return validScheme && validHost && validPort && validPath
     }
     
     /// A function that generates a score to represent how well a stored stubbed request matches an incoming request, with
@@ -142,11 +139,32 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
             score += 1
         }
         
-        if url.sortedQueryString == request.url?.sortedQueryString {
-            score += 1
+        return score
+    }
+    
+    /// Returns the count of parameters that the stub request has in common with the current stub. Compares
+    /// key and value.
+    /// - Parameter request: The request to compare with.
+    /// - Returns: The count of parmaters that have the same key and value.
+    public func matchingParameterCount(for request: StubRequest) -> Int {
+        guard
+            let url = self.url,
+            let urlQueryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
+            let requestURL = request.url,
+            let requestURLQueryItems = URLComponents(url: requestURL, resolvingAgainstBaseURL: false)?.queryItems else {
+            return 0
         }
         
-        return score
+        // Now, we see what parameters we have that are equivalent.
+        let equivalentParameters = requestURLQueryItems.filter {
+            for query in urlQueryItems {
+                if query.name == $0.name, query.value == $0.value {
+                    return true
+                }
+            }
+            return false
+        }
+        return equivalentParameters.count
     }
 }
 

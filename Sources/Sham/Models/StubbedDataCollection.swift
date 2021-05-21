@@ -45,20 +45,12 @@ public final class StubbedDataCollection: Codable {
     public func getResponse(for request: StubRequest) -> StubResponse? {
         self.log("Attempting to stub request: \(request.description)")
         
-        // Check for a match with the exact URL
+        // Check for a match with the exact URL.
         var response = self.stubbedData[request]
         
-        // If response had no exact match, we need to find the closest match
+        // If response had no exact match, we need to find the closest match.
         if response == nil {
-            // Filter out stubs that can not mock this request
-            let availableStubs = self.stubbedData.filter {
-                return $0.key.canMockData(for: request)
-            }
-            
-            // Find the highest priority matching score to get the best response
-            response = availableStubs.max {
-                $0.key.priorityScore(for: request) < $1.key.priorityScore(for: request)
-            }?.value
+            response = self.findBestMatch(for: request)
         }
         
         // Log response debugging information
@@ -81,5 +73,42 @@ public final class StubbedDataCollection: Codable {
     
     private func log(_ message: String) {
         print("[Sham] \(message)")
+    }
+    
+    private func findBestMatch(for request: StubRequest) -> StubResponse? {
+        // Filter out stubs that can not mock this request.
+        let availableStubs = self.stubbedData.filter {
+            $0.key.canMockData(for: request)
+        }
+        
+        // Finds the highest priority matching stubs to get the best response.
+        let maxPriorityScore = availableStubs.map {
+            $0.key.priorityScore(for: request)
+        }.max()
+        let highestPriorityStubs = availableStubs.filter {
+            $0.key.priorityScore(for: request) == maxPriorityScore
+        }
+        
+        // If there only one, it's the best match.
+        guard highestPriorityStubs.count > 1 else {
+            return highestPriorityStubs.first?.value
+        }
+        
+        // If there are no parameters on the request find a response stub
+        // without parameters, if it exists.
+        if request.url?.query?.isEmpty != false {
+            let highestPriorityStub = highestPriorityStubs.first(where: {
+                $0.key.url?.query?.isEmpty == true
+            })?.value
+            
+            if let highestPriorityStub = highestPriorityStub {
+                return highestPriorityStub
+            }
+        }
+        
+        // With the highest priority stubs, now compare based on parameter values.
+        return highestPriorityStubs.max {
+            $0.key.matchingParameterCount(for: request) < $1.key.matchingParameterCount(for: request)
+        }?.value
     }
 }
