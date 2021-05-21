@@ -134,6 +134,21 @@ final class MockServiceTests: XCTestCase {
         self.request(url: self.manyQueryParamsURL, data: self.secondaryMockData)
     }
     
+    func testReturnsStubWithQueryParametersEvenIfTheRequestDoesNotHaveQueryParameters() throws {
+        // GIVEN: Two stub URLs have the same base base URL and path.
+        let fullURL = try XCTUnwrap(URL(string: self.fullURL))
+        let queryLessURL = try XCTUnwrap(URL(string: self.querylessURL))
+        XCTAssertEqual(fullURL.baseURL, queryLessURL.baseURL)
+        XCTAssertEqual(fullURL.path, queryLessURL.path)
+        
+        // GIVEN: I stub a URL with query params.
+        self.stub(self.fullURL, with: .encodable(self.mockData))
+        
+        // THEN: The value should return correctly, even if the request does not have query
+        // params.
+        self.request(url: self.querylessURL, data: self.mockData)
+    }
+    
     private func request<T>(url: URLConvertible,
                             data: T,
                             shouldFail: Bool = false,
