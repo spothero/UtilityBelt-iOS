@@ -89,11 +89,6 @@ public final class StubbedDataCollection: Codable {
             $0.key.priorityScore(for: request) == maxPriorityScore
         }
         
-        // If there only one, it's the best match.
-        guard highestPriorityStubs.count > 1 else {
-            return highestPriorityStubs.first?.value
-        }
-        
         // With the highest priority stubs, now compare based on parameter values.
         return highestPriorityStubs.max {
             $0.key.matchingParameterCount(for: request) < $1.key.matchingParameterCount(for: request)
