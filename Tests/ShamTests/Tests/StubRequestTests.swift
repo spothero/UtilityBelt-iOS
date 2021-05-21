@@ -25,4 +25,14 @@ final class StubRequestTests: XCTestCase {
         let request = StubRequest(url: self.baseURLString)
         XCTAssertEqual(request.description, "ALL: \(self.baseURLString)")
     }
+    
+    func testAccuratelyCountsMatchingQueryParameters() {
+        let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
+        let request1: StubRequest = .get(queryParametersURL)
+        
+        let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
+        let request2: StubRequest = .get(similarURL)
+        
+        XCTAssertEqual(2, request1.matchingParameterCount(for: request2))
+    }
 }

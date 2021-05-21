@@ -14,6 +14,9 @@ final class MockServiceTests: XCTestCase {
     
     let mockData = ["foo", "bar"]
     
+    let querylessURL = "https://foo.com/foo"
+    let secondaryMockData = ["bar", "foo"]
+    
     override func setUp() {
         super.setUp()
         
@@ -101,6 +104,30 @@ final class MockServiceTests: XCTestCase {
         
         XCTAssertFalse(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
+    }
+    
+    func testReturnsStubWithMostEqualParameters() throws {
+        // GIVEN: Two URLs have the same base base URL and path.
+        let fullURL = try XCTUnwrap(URL(string: self.fullURL))
+        let queryLessURL = try XCTUnwrap(URL(string: self.querylessURL))
+        XCTAssertEqual(fullURL.baseURL, queryLessURL.baseURL)
+        XCTAssertEqual(fullURL.path, queryLessURL.path)
+        
+        // GIVEN: I stub similar URLs with different query params.
+        self.stub(self.fullURL, with: .encodable(self.mockData))
+        self.stub(self.querylessURL, with: .encodable(self.secondaryMockData))
+        
+        // THEN: The values should return correctly.
+        self.request(url: self.fullURL, data: self.mockData)
+        self.request(url: self.querylessURL, data: self.secondaryMockData)
+    }
+    
+    func testReturnsStubWithMostEqualParametersUsingBestMatch() throws {
+        // GIVEN: I stub a queryless URL.
+        self.stub(self.querylessURL, with: .encodable(self.mockData))
+        
+        // THEN: The values should return correctly even if the URL that is requested has parameters.
+        self.request(url: self.fullURL, data: self.mockData)
     }
     
     private func request<T>(url: URLConvertible,
