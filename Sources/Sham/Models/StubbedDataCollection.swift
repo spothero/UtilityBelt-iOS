@@ -94,18 +94,6 @@ public final class StubbedDataCollection: Codable {
             return highestPriorityStubs.first?.value
         }
         
-        // If there are no parameters on the request find a response stub
-        // without parameters, if it exists.
-        if request.url?.query?.isEmpty != false {
-            let highestPriorityStub = highestPriorityStubs.first(where: {
-                $0.key.url?.query?.isEmpty == true
-            })?.value
-            
-            if let highestPriorityStub = highestPriorityStub {
-                return highestPriorityStub
-            }
-        }
-        
         // With the highest priority stubs, now compare based on parameter values.
         return highestPriorityStubs.max {
             $0.key.matchingParameterCount(for: request) < $1.key.matchingParameterCount(for: request)
