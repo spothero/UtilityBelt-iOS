@@ -194,7 +194,8 @@ public class HTTPClient {
             method: method,
             parameters: parameters,
             headers: headers,
-            encoding: encoding
+            encoding: encoding,
+            dispatchQueue: dispatchQueue
         ) { dataResponse in
             // Create a result object for improved handling of the response
             let result: Result<T, Error> = {
