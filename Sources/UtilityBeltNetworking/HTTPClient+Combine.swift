@@ -7,6 +7,8 @@
     @available(iOS 13, macOS 10.15, tvOS 13.0, watchOS 6, *)
     public extension HTTPClient {
         // MARK: Data Response
+        
+        typealias Validator = (URLSession.DataTaskPublisher.Output) throws -> Void
     
         /// Creates a request publisher which fetches raw data from an endpoint.
         /// - Parameter url: The URL for the request. Accepts a URL or a String.
@@ -21,6 +23,7 @@
                               parameters: ParameterDictionaryConvertible? = nil,
                               headers: HTTPHeaderDictionaryConvertible? = nil,
                               encoding: ParameterEncoding? = nil,
+                              validators: [Validator] = [],
                               dispatchQueue: DispatchQueue = .main) -> AnyPublisher<Data, Error> {
             let request: URLRequest
         
@@ -48,6 +51,10 @@
                     self.log("Request finished.")
                 
                     self.log("[Response] \(element.response)")
+                    
+                    for validator in validators {
+                        try validator(element)
+                    }
                 
                     // Convert the URLResponse into an HTTPURLResponse object.
                     // If it cannot be converted, use the undefined HTTPURLResponse object
@@ -112,11 +119,19 @@
                                             encoding: ParameterEncoding? = nil,
                                             dispatchQueue: DispatchQueue = .main,
                                             decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
+            let mimeTypeValidator: Validator = { element in
+                let mimeType = element.response.mimeType
+                if mimeType != "application/json" {
+                    throw UBNetworkError.invalidContentType(mimeType ?? "unknown")
+                }
+            }
+            
             return self.requestPublisher(url,
                                          method: method,
                                          parameters: parameters,
                                          headers: headers,
                                          encoding: encoding,
+                                         validators: [mimeTypeValidator],
                                          dispatchQueue: dispatchQueue)
                 .decode(type: T.self, decoder: decoder)
                 .mapError { error in
