@@ -79,6 +79,7 @@
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
+        // swiftlint:disable:next function_default_parameter_at_end
         func requestPublisher(_ url: URLConvertible,
                               method: HTTPMethod = .get,
                               parameters: Encodable,
@@ -111,7 +112,8 @@
                                             encoding: ParameterEncoding? = nil,
                                             dispatchQueue: DispatchQueue = .main,
                                             decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
-            return self.requestPublisher(url, method: method,
+            return self.requestPublisher(url,
+                                         method: method,
                                          parameters: parameters,
                                          headers: headers,
                                          encoding: encoding,
