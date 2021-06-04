@@ -14,12 +14,14 @@
         /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter dispatchQueue: The dispatch queue on which the result will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher(_ url: URLConvertible,
                               method: HTTPMethod = .get,
                               parameters: ParameterDictionaryConvertible? = nil,
                               headers: HTTPHeaderDictionaryConvertible? = nil,
-                              encoding: ParameterEncoding? = nil) -> AnyPublisher<Data, Error> {
+                              encoding: ParameterEncoding? = nil,
+                              dispatchQueue: DispatchQueue = .main) -> AnyPublisher<Data, Error> {
             let request: URLRequest
         
             do {
@@ -31,7 +33,9 @@
                     encoding: encoding
                 )
             } catch {
-                return Result<Data, Error>.Publisher(error).eraseToAnyPublisher()
+                return Result<Data, Error>.Publisher(error)
+                    .receive(on: dispatchQueue)
+                    .eraseToAnyPublisher()
             }
         
             if self.isDebugLoggingEnabled, let urlString = request.url?.absoluteString {
@@ -63,7 +67,7 @@
                 
                     return element.data
                 }
-                .receive(on: DispatchQueue.main)
+                .receive(on: dispatchQueue)
                 .eraseToAnyPublisher()
         }
     
