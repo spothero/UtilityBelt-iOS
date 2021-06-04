@@ -208,11 +208,10 @@ public class HTTPClient {
                         return .failure(UBNetworkError.unableToDecode(String(describing: T.self), nil))
                     }
                 case let .success(data):
-                    // TODO: Implement mime type checking for JSON before attempting to decode JSON (IOS-1967)
-//                    // If the mime type for the response isn't JSON, we can't decode it
-//                    guard dataResponse.response?.mimeType == "application/json" else {
-//                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
-//                    }
+                    // If the mime type for the response isn't JSON, we can't decode it
+                    guard dataResponse.response?.mimeType == "application/json" else {
+                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
+                    }
                     
                     do {
                         let decodedObject = try decoder.decode(T.self, from: data)
