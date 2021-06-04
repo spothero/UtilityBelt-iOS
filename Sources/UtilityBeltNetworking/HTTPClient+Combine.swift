@@ -14,12 +14,14 @@
         /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher(_ url: URLConvertible,
                               method: HTTPMethod = .get,
                               parameters: ParameterDictionaryConvertible? = nil,
                               headers: HTTPHeaderDictionaryConvertible? = nil,
-                              encoding: ParameterEncoding? = nil) -> AnyPublisher<Data, Error> {
+                              encoding: ParameterEncoding? = nil,
+                              dispatchQueue: DispatchQueue = .main) -> AnyPublisher<Data, Error> {
             let request: URLRequest
         
             do {
@@ -31,7 +33,9 @@
                     encoding: encoding
                 )
             } catch {
-                return Result<Data, Error>.Publisher(error).eraseToAnyPublisher()
+                return Result<Data, Error>.Publisher(error)
+                    .receive(on: dispatchQueue)
+                    .eraseToAnyPublisher()
             }
         
             if self.isDebugLoggingEnabled, let urlString = request.url?.absoluteString {
@@ -63,7 +67,7 @@
                 
                     return element.data
                 }
-                .receive(on: DispatchQueue.main)
+                .receive(on: dispatchQueue)
                 .eraseToAnyPublisher()
         }
     
@@ -73,18 +77,21 @@
         /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         // swiftlint:disable:next function_default_parameter_at_end
         func requestPublisher(_ url: URLConvertible,
                               method: HTTPMethod = .get,
                               parameters: Encodable,
                               headers: HTTPHeaderDictionaryConvertible? = nil,
-                              encoding: ParameterEncoding? = nil) -> AnyPublisher<Data, Error> {
+                              encoding: ParameterEncoding? = nil,
+                              dispatchQueue: DispatchQueue = .main) -> AnyPublisher<Data, Error> {
             return self.requestPublisher(url,
                                          method: method,
                                          parameters: try? parameters.asDictionary(),
                                          headers: headers,
-                                         encoding: encoding)
+                                         encoding: encoding,
+                                         dispatchQueue: dispatchQueue)
         }
     
         // MARK: Decodable Object Response
@@ -95,6 +102,7 @@
         /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher<T: Decodable>(_ url: URLConvertible,
@@ -102,8 +110,14 @@
                                             parameters: ParameterDictionaryConvertible? = nil,
                                             headers: HTTPHeaderDictionaryConvertible? = nil,
                                             encoding: ParameterEncoding? = nil,
+                                            dispatchQueue: DispatchQueue = .main,
                                             decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
-            return self.requestPublisher(url, method: method, parameters: parameters, headers: headers, encoding: encoding)
+            return self.requestPublisher(url,
+                                         method: method,
+                                         parameters: parameters,
+                                         headers: headers,
+                                         encoding: encoding,
+                                         dispatchQueue: dispatchQueue)
                 .decode(type: T.self, decoder: decoder)
                 .mapError { error in
                     switch error {
@@ -122,6 +136,7 @@
         /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
         /// - Returns: A publisher that wraps a data task for the URL.
         // swiftlint:disable:next function_default_parameter_at_end
@@ -130,12 +145,14 @@
                                             parameters: Encodable,
                                             headers: HTTPHeaderDictionaryConvertible? = nil,
                                             encoding: ParameterEncoding? = nil,
+                                            dispatchQueue: DispatchQueue = .main,
                                             decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
             return self.requestPublisher(url,
                                          method: method,
                                          parameters: try? parameters.asDictionary(),
                                          headers: headers,
                                          encoding: encoding,
+                                         dispatchQueue: dispatchQueue,
                                          decoder: decoder)
         }
     }

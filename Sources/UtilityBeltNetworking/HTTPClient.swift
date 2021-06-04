@@ -48,6 +48,7 @@ public class HTTPClient {
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
@@ -56,6 +57,7 @@ public class HTTPClient {
                         parameters: ParameterDictionaryConvertible? = nil,
                         headers: HTTPHeaderDictionaryConvertible? = nil,
                         encoding: ParameterEncoding? = nil,
+                        dispatchQueue: DispatchQueue = .main,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
         let request: URLRequest
         
@@ -68,7 +70,7 @@ public class HTTPClient {
                 encoding: encoding
             )
         } catch {
-            DispatchQueue.main.async {
+            dispatchQueue.async {
                 completion?(.failure(error))
             }
             return nil
@@ -118,7 +120,7 @@ public class HTTPClient {
                                             data: data,
                                             result: result)
             
-            DispatchQueue.main.async {
+            dispatchQueue.async {
                 // Fire the completion!
                 completion?(dataResponse)
             }
@@ -145,6 +147,7 @@ public class HTTPClient {
     /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
@@ -154,12 +157,14 @@ public class HTTPClient {
                         parameters: Encodable,
                         headers: HTTPHeaderDictionaryConvertible? = nil,
                         encoding: ParameterEncoding? = nil,
+                        dispatchQueue: DispatchQueue = .main,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
         self.request(url,
                      method: method,
                      parameters: try? parameters.asDictionary(),
                      headers: headers,
                      encoding: encoding,
+                     dispatchQueue: dispatchQueue,
                      completion: completion)
     }
     
@@ -171,6 +176,7 @@ public class HTTPClient {
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
@@ -180,6 +186,7 @@ public class HTTPClient {
                                       parameters: ParameterDictionaryConvertible? = nil,
                                       headers: HTTPHeaderDictionaryConvertible? = nil,
                                       encoding: ParameterEncoding? = nil,
+                                      dispatchQueue: DispatchQueue = .main,
                                       decoder: JSONDecoder = JSONDecoder(),
                                       completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
         return self.request(
@@ -187,7 +194,8 @@ public class HTTPClient {
             method: method,
             parameters: parameters,
             headers: headers,
-            encoding: encoding
+            encoding: encoding,
+            dispatchQueue: dispatchQueue
         ) { dataResponse in
             // Create a result object for improved handling of the response
             let result: Result<T, Error> = {
@@ -236,6 +244,7 @@ public class HTTPClient {
     /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
@@ -246,6 +255,7 @@ public class HTTPClient {
                                       parameters: Encodable,
                                       headers: HTTPHeaderDictionaryConvertible? = nil,
                                       encoding: ParameterEncoding? = nil,
+                                      dispatchQueue: DispatchQueue = .main,
                                       decoder: JSONDecoder = JSONDecoder(),
                                       completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
         self.request(url,
@@ -253,6 +263,7 @@ public class HTTPClient {
                      parameters: try? parameters.asDictionary(),
                      headers: headers,
                      encoding: encoding,
+                     dispatchQueue: dispatchQueue,
                      decoder: decoder,
                      completion: completion)
     }
