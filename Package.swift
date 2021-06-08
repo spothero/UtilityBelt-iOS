@@ -17,8 +17,6 @@ let package = Package(
         .library(name: "Sham_XCTestSupport", targets: ["Sham_XCTestSupport"]),
         .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
-        .library(name: "UtilityBeltUITesting", targets: ["UtilityBeltUITesting"]),
-        .library(name: "UtilityBeltUITesting_XCTestSupport", targets: ["UtilityBeltUITesting_XCTestSupport"]),
     ],
     dependencies: [],
     targets: [
@@ -37,18 +35,6 @@ let package = Package(
         ),
         .target(name: "UtilityBeltData"),
         .target(name: "UtilityBeltNetworking"),
-        .target(
-            name: "UtilityBeltUITesting",
-            dependencies: [
-                .target(name: "Sham"),
-            ]
-        ),
-        .target(
-            name: "UtilityBeltUITesting_XCTestSupport",
-            dependencies: [
-                .target(name: "UtilityBeltUITesting"),
-            ]
-        ),
         // Test Targets
         .testTarget(
             name: "ShamTests",
@@ -67,12 +53,6 @@ let package = Package(
             name: "UtilityBeltNetworkingTests",
             dependencies: [
                 .target(name: "UtilityBeltNetworking"),
-            ]
-        ),
-        .testTarget(
-            name: "UtilityBeltUITestingTests",
-            dependencies: [
-                .target(name: "UtilityBeltUITesting"),
             ]
         ),
     ],
