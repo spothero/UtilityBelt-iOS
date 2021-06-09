@@ -8,7 +8,22 @@
     public extension HTTPClient {
         // MARK: Data Response
         
+        /// A function that validates the output from a DataTaskPublisher.  Throwing an error indicates a failed validation.
         typealias Validator = (URLSession.DataTaskPublisher.Output) throws -> Void
+        
+        private enum Validators {
+            /// Creates a validator that will ensure the response has a specific mime type
+            /// - Parameter mimeType: The mime type we want to validate the existance of.
+            /// - Returns: The validator that will do this check.
+            static func ensureMimeType(_ mimeType: MimeType) -> Validator {
+                return { element in
+                    let responseMimeType = element.response.mimeType
+                    if responseMimeType != mimeType.rawValue {
+                        throw UBNetworkError.invalidContentType(responseMimeType ?? "unknown")
+                    }
+                }
+            }
+        }
     
         /// Creates a request publisher which fetches raw data from an endpoint.
         /// - Parameter url: The URL for the request. Accepts a URL or a String.
@@ -16,6 +31,7 @@
         /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter validators: An array of validation functions applied to responses for the request..
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher(_ url: URLConvertible,
@@ -119,19 +135,12 @@
                                             encoding: ParameterEncoding? = nil,
                                             dispatchQueue: DispatchQueue = .main,
                                             decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
-            let mimeTypeValidator: Validator = { element in
-                let mimeType = element.response.mimeType
-                if mimeType != "application/json" {
-                    throw UBNetworkError.invalidContentType(mimeType ?? "unknown")
-                }
-            }
-            
             return self.requestPublisher(url,
                                          method: method,
                                          parameters: parameters,
                                          headers: headers,
                                          encoding: encoding,
-                                         validators: [mimeTypeValidator],
+                                         validators: [Validators.ensureMimeType(.json)],
                                          dispatchQueue: dispatchQueue)
                 .decode(type: T.self, decoder: decoder)
                 .mapError { error in

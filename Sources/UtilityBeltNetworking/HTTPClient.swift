@@ -209,7 +209,7 @@ public class HTTPClient {
                     }
                 case let .success(data):
                     // If the mime type for the response isn't JSON, we can't decode it
-                    guard dataResponse.response?.mimeType == "application/json" else {
+                    guard dataResponse.response?.mimeType == MimeType.json.rawValue else {
                         return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
                     }
                     
