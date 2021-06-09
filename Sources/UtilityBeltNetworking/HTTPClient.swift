@@ -30,6 +30,11 @@ public class HTTPClient {
     /// set to be more restrictive. https://stackoverflow.com/a/54806389
     public var timeoutInterval: TimeInterval?
     
+    /// Validators that will be applied to all responses.
+    private let defaultValidators: [ResponseValidator] = [
+        .validateStatusCode,
+    ]
+    
     // MARK: - Methods
     
     // MARK: Initializers
@@ -57,6 +62,7 @@ public class HTTPClient {
                         parameters: ParameterDictionaryConvertible? = nil,
                         headers: HTTPHeaderDictionaryConvertible? = nil,
                         encoding: ParameterEncoding? = nil,
+                        validators: [ResponseValidator] = [],
                         dispatchQueue: DispatchQueue = .main,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
         let request: URLRequest
@@ -93,6 +99,13 @@ public class HTTPClient {
             
             // Create a result object for improved handling of the response
             let result: Result<Data, Error> = {
+                if let response = httpResponse {
+                    do {
+                        try self.validate(response: response, with: validators)
+                    } catch {
+                        return .failure(error)
+                    }
+                }
                 if let data = data {
                     return .success(data)
                 } else if let error = error {
@@ -195,6 +208,7 @@ public class HTTPClient {
             parameters: parameters,
             headers: headers,
             encoding: encoding,
+            validators: [.ensureMimeType(.json)],
             dispatchQueue: dispatchQueue
         ) { dataResponse in
             // Create a result object for improved handling of the response
@@ -208,11 +222,6 @@ public class HTTPClient {
                         return .failure(UBNetworkError.unableToDecode(String(describing: T.self), nil))
                     }
                 case let .success(data):
-                    // If the mime type for the response isn't JSON, we can't decode it
-                    guard dataResponse.response?.mimeType == MimeType.json.rawValue else {
-                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
-                    }
-                    
                     do {
                         let decodedObject = try decoder.decode(T.self, from: data)
                         return .success(decodedObject)
@@ -304,6 +313,17 @@ public class HTTPClient {
         }
         
         print("[UtilityBeltNetworking] \(message)")
+    }
+    
+    /// Validates a response against `defaultValidators` and passed in validators.
+    /// - Parameters:
+    ///   - response: The response to perform the validation on.
+    ///   - validators: Additional validators on top of the default validators that should be applied to the response.
+    /// - Throws: Throws any validation errors, indicating failed validation.
+    private func validate(response: HTTPURLResponse, with validators: [ResponseValidator]) throws {
+        try (self.defaultValidators + validators).forEach { validator in
+            try validator.validate(response: response)
+        }
     }
 }
 

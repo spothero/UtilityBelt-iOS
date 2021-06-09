@@ -8,23 +8,6 @@
     public extension HTTPClient {
         // MARK: Data Response
         
-        /// A function that validates the output from a DataTaskPublisher.  Throwing an error indicates a failed validation.
-        typealias Validator = (URLSession.DataTaskPublisher.Output) throws -> Void
-        
-        private enum Validators {
-            /// Creates a validator that will ensure the response has a specific mime type
-            /// - Parameter mimeType: The mime type we want to validate the existance of.
-            /// - Returns: The validator that will do this check.
-            static func ensureMimeType(_ mimeType: MimeType) -> Validator {
-                return { element in
-                    let responseMimeType = element.response.mimeType
-                    if responseMimeType != mimeType.rawValue {
-                        throw UBNetworkError.invalidContentType(responseMimeType ?? "unknown")
-                    }
-                }
-            }
-        }
-    
         /// Creates a request publisher which fetches raw data from an endpoint.
         /// - Parameter url: The URL for the request. Accepts a URL or a String.
         /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
@@ -39,7 +22,7 @@
                               parameters: ParameterDictionaryConvertible? = nil,
                               headers: HTTPHeaderDictionaryConvertible? = nil,
                               encoding: ParameterEncoding? = nil,
-                              validators: [Validator] = [],
+                              validators: [ResponseValidator] = [],
                               dispatchQueue: DispatchQueue = .main) -> AnyPublisher<Data, Error> {
             let request: URLRequest
         
@@ -63,32 +46,22 @@
         
             return self.session
                 .dataTaskPublisher(for: request)
-                .tryMap { element -> Data in
+                .tryMap { data, response -> Data in
                     self.log("Request finished.")
                 
-                    self.log("[Response] \(element.response)")
+                    self.log("[Response] \(response)")
                     
-                    for validator in validators {
-                        try validator(element)
-                    }
-                
-                    // Convert the URLResponse into an HTTPURLResponse object.
-                    // If it cannot be converted, use the undefined HTTPURLResponse object
-                    let httpResponse = element.response as? HTTPURLResponse
-                    let status = httpResponse?.status
-                
-                    if status?.responseType == .clientError || status?.responseType == .serverError {
-                        // TODO: Update with better error
-                        throw UBNetworkError.unexpectedError
+                    if let httpResponse = response as? HTTPURLResponse {
+                        try self.validateResponse(response: httpResponse, with: validators)
                     }
                 
                     // Attempt to lob the data as pretty printed JSON, otherwise just encode to utf8
                     if self.isDebugLoggingEnabled,
-                       let dataString: String = element.data.asPrettyPrintedJSON ?? String(data: element.data, encoding: .utf8) {
+                       let dataString: String = data.asPrettyPrintedJSON ?? String(data: data, encoding: .utf8) {
                         self.log(dataString)
                     }
                 
-                    return element.data
+                    return data
                 }
                 .receive(on: dispatchQueue)
                 .eraseToAnyPublisher()
@@ -140,7 +113,7 @@
                                          parameters: parameters,
                                          headers: headers,
                                          encoding: encoding,
-                                         validators: [Validators.ensureMimeType(.json)],
+                                         validators: [.ensureMimeType(.json)],
                                          dispatchQueue: dispatchQueue)
                 .decode(type: T.self, decoder: decoder)
                 .mapError { error in
