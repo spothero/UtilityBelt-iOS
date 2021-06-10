@@ -14,7 +14,7 @@
         /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-        /// - Parameter validators: An array of validation functions applied to responses for the request..
+        /// - Parameter validators: An array of validators that will be applied to the response.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher(_ url: URLConvertible,
@@ -73,6 +73,7 @@
         /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter validators: An array of validators that will be applied to the response.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         // swiftlint:disable:next function_default_parameter_at_end
@@ -81,12 +82,14 @@
                               parameters: Encodable,
                               headers: HTTPHeaderDictionaryConvertible? = nil,
                               encoding: ParameterEncoding? = nil,
+                              validators: [ResponseValidator] = [],
                               dispatchQueue: DispatchQueue = .main) -> AnyPublisher<Data, Error> {
             return self.requestPublisher(url,
                                          method: method,
                                          parameters: try? parameters.asDictionary(),
                                          headers: headers,
                                          encoding: encoding,
+                                         validators: validators,
                                          dispatchQueue: dispatchQueue)
         }
     
@@ -98,6 +101,7 @@
         /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter validators: An array of validators that will be applied to the response.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
         /// - Returns: A publisher that wraps a data task for the URL.
@@ -106,14 +110,20 @@
                                             parameters: ParameterDictionaryConvertible? = nil,
                                             headers: HTTPHeaderDictionaryConvertible? = nil,
                                             encoding: ParameterEncoding? = nil,
+                                            validators: [ResponseValidator] = [],
                                             dispatchQueue: DispatchQueue = .main,
                                             decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
+            // Given that we expect to decode JSON from the response, add
+            // an additional validator that checks the appropriate mime type.
+            var validators = validators
+            validators.append(.ensureMimeType(.json))
+            
             return self.requestPublisher(url,
                                          method: method,
                                          parameters: parameters,
                                          headers: headers,
                                          encoding: encoding,
-                                         validators: [.ensureMimeType(.json)],
+                                         validators: validators,
                                          dispatchQueue: dispatchQueue)
                 .decode(type: T.self, decoder: decoder)
                 .mapError { error in
@@ -133,6 +143,7 @@
         /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+        /// - Parameter validators: An array of validators that will be applied to the response.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
         /// - Returns: A publisher that wraps a data task for the URL.
@@ -142,6 +153,7 @@
                                             parameters: Encodable,
                                             headers: HTTPHeaderDictionaryConvertible? = nil,
                                             encoding: ParameterEncoding? = nil,
+                                            validators: [ResponseValidator] = [],
                                             dispatchQueue: DispatchQueue = .main,
                                             decoder: JSONDecoder = JSONDecoder()) -> AnyPublisher<T, Error> {
             return self.requestPublisher(url,
@@ -149,6 +161,7 @@
                                          parameters: try? parameters.asDictionary(),
                                          headers: headers,
                                          encoding: encoding,
+                                         validators: validators,
                                          dispatchQueue: dispatchQueue,
                                          decoder: decoder)
         }
