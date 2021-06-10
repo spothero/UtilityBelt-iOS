@@ -320,7 +320,7 @@ public class HTTPClient {
     ///   - response: The response to perform the validation on.
     ///   - validators: Additional validators on top of the default validators that should be applied to the response.
     /// - Throws: Throws any validation errors, indicating failed validation.
-    private func validate(response: HTTPURLResponse, with validators: [ResponseValidator]) throws {
+    func validate(response: HTTPURLResponse, with validators: [ResponseValidator]) throws {
         try (self.defaultValidators + validators).forEach { validator in
             try validator.validate(response: response)
         }
