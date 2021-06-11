@@ -22,7 +22,7 @@ public struct ResponseValidator {
 
 public extension ResponseValidator {
     /// Creates a validator that will ensure the response has a specific mime type
-    /// - Parameter mimeType: The mime type we want to validate the existance of.
+    /// - Parameter mimeType: The mime type we want to validate the existence of.
     /// - Returns: The validator that will do this check.
     static func ensureMimeType(_ mimeType: MimeType) -> ResponseValidator {
         return ResponseValidator { response in
