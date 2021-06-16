@@ -30,11 +30,6 @@ public class HTTPClient {
     /// set to be more restrictive. https://stackoverflow.com/a/54806389
     public var timeoutInterval: TimeInterval?
     
-    /// Validators that will be applied to all responses.
-    private let defaultValidators: [ResponseValidator] = [
-        .validateStatusCode,
-    ]
-    
     // MARK: - Methods
     
     // MARK: Initializers
@@ -102,7 +97,9 @@ public class HTTPClient {
             let result: Result<Data, Error> = {
                 if let response = httpResponse {
                     do {
-                        try self.validate(response: response, with: validators)
+                        for validator in validators {
+                            try validator.validate(response: response)
+                        }
                     } catch {
                         return .failure(error)
                     }
@@ -327,17 +324,6 @@ public class HTTPClient {
         }
         
         print("[UtilityBeltNetworking] \(message)")
-    }
-    
-    /// Validates a response against `defaultValidators` and passed in validators.
-    /// - Parameters:
-    ///   - response: The response to perform the validation on.
-    ///   - validators: Additional validators on top of the default validators that should be applied to the response.
-    /// - Throws: Throws any validation errors, indicating failed validation.
-    func validate(response: HTTPURLResponse, with validators: [ResponseValidator]) throws {
-        try (self.defaultValidators + validators).forEach { validator in
-            try validator.validate(response: response)
-        }
     }
 }
 

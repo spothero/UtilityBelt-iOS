@@ -52,7 +52,9 @@
                     self.log("[Response] \(response)")
                     
                     if let httpResponse = response as? HTTPURLResponse {
-                        try self.validate(response: httpResponse, with: validators)
+                        for validator in validators {
+                            try validator.validate(response: httpResponse)
+                        }
                     }
                 
                     // Attempt to lob the data as pretty printed JSON, otherwise just encode to utf8
