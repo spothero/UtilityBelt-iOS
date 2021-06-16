@@ -38,8 +38,7 @@ public extension ResponseValidator {
     static let validateStatusCode = ResponseValidator { response in
         let status = response.status
         if status.responseType == .clientError || status.responseType == .serverError {
-            // TODO: Update with better error
-            throw UBNetworkError.unexpectedError
+            throw UBNetworkError.invalidStatusCode(status)
         }
     }
 }
