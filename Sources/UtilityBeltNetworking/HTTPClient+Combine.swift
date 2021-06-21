@@ -103,7 +103,7 @@
         /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-        /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
+        /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
         /// - Returns: A publisher that wraps a data task for the URL.
@@ -140,7 +140,7 @@
         /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-        /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
+        /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
         /// - Returns: A publisher that wraps a data task for the URL.
