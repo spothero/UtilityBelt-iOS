@@ -48,20 +48,29 @@ public final class StubbedDataCollection: Codable {
         // Check for a match with the exact URL.
         var response = self.stubbedData[request]
         
-        // If response had no exact match, we need to find the closest match.
-        if response == nil {
-            response = self.findBestMatch(for: request)
+        switch request.validationRule {
+        case .explicit:
+            self.logResponse(response)
+            return response
+        case .allowMissingParameters:
+            // If response had no exact match, we need to find the closest match.
+            if response == nil {
+                // Filter out stubs that can not mock this request.
+                let availableStubs = self.stubbedData.filter {
+                    $0.key.canMockData(for: request)
+                }
+                
+                // With the given stubs, now compare based on parameter values.
+                response = availableStubs.first {
+                    $0.key.hasAllProvidedParameters(for: request)
+                }?.value
+            }
+            
+            self.logResponse(response)
+            
+            // Return the response
+            return response
         }
-        
-        // Log response debugging information
-        if let stubResponse = response {
-            self.log("Found stub response: \(stubResponse)")
-        } else {
-            self.log("No stub response found.")
-        }
-        
-        // Return the response
-        return response
     }
     
     // MARK: Utilities
@@ -71,27 +80,16 @@ public final class StubbedDataCollection: Codable {
         self.stubbedData = [:]
     }
     
-    private func log(_ message: String) {
-        print("[Sham] \(message)")
+    private func logResponse(_ response: StubResponse?) {
+        // Log response debugging information.
+        if let stubResponse = response {
+            self.log("Found stub response: \(stubResponse)")
+        } else {
+            self.log("No stub response found.")
+        }
     }
     
-    private func findBestMatch(for request: StubRequest) -> StubResponse? {
-        // Filter out stubs that can not mock this request.
-        let availableStubs = self.stubbedData.filter {
-            $0.key.canMockData(for: request)
-        }
-        
-        // Finds the highest priority matching stubs to get the best response.
-        let maxPriorityScore = availableStubs.map {
-            $0.key.priorityScore(for: request)
-        }.max()
-        let highestPriorityStubs = availableStubs.filter {
-            $0.key.priorityScore(for: request) == maxPriorityScore
-        }
-        
-        // With the highest priority stubs, now compare based on parameter values.
-        return highestPriorityStubs.max {
-            $0.key.matchingParameterCount(for: request) < $1.key.matchingParameterCount(for: request)
-        }?.value
+    private func log(_ message: String) {
+        print("[Sham] \(message)")
     }
 }

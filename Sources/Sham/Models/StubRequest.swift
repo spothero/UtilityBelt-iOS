@@ -5,6 +5,12 @@ import UtilityBeltNetworking
 
 /// A request for stubbing response meant to mirror a URLRequest.
 public struct StubRequest: Hashable, CustomStringConvertible, Codable {
+    /// A struct that defines possible validation rules.
+    public enum StubRequestValidationRule: String, Codable {
+        case explicit
+        case allowMissingParameters
+    }
+    
     // MARK: - Properties
     
     /// The HTTP method to stub. If nil, stubs all methods.
@@ -20,6 +26,9 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     ///
     /// Query parameters are also evaluated, but the order does not matter.
     public let url: URL?
+    
+    /// The validation rule to use when comparing requests.
+    public let validationRule: StubRequestValidationRule
     
     /// The string representation of the request.
     public var description: String {
@@ -43,23 +52,33 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     // MARK: Initializers
     
     /// Initializes a StubRequest.
-    /// - Parameter method: The HTTP method to stub.
-    /// - Parameter url: The URL to stub.
-    public init(method: HTTPMethod, url: URLConvertible) {
+    /// - Parameters:
+    ///   - method: The HTTP method to stub.
+    ///   - url: The URL to stub.
+    ///   - validationRule: The validation rule to use when comparing requests.
+    public init(method: HTTPMethod,
+                url: URLConvertible,
+                validationRule: StubRequestValidationRule = .allowMissingParameters) {
         self.method = method
         self.url = try? url.asURL()
+        self.validationRule = validationRule
     }
     
     /// Initializes a StubRequest that stubs all HTTP methods for a given URL.
-    /// - Parameter url: The URL to stub.
-    public init(url: URLConvertible) {
+    /// - Parameters:
+    ///   - url: The URL to stub.
+    ///   - validationRule: The validation rule to use when comparing requests.
+    public init(url: URLConvertible, validationRule: StubRequestValidationRule = .allowMissingParameters) {
         self.method = .none
         self.url = try? url.asURL()
+        self.validationRule = validationRule
     }
     
     /// Initializes a StubRequest by attempting to parse a URL and HTTP method out of a URLRequest.
-    /// - Parameter urlRequest: The URLRequest to stub.
-    public init(urlRequest: URLRequestConvertible) {
+    /// - Parameters:
+    ///   - urlRequest: The URLRequest to stub.
+    ///   - validationRule: The validation rule to use when comparing requests.
+    public init(urlRequest: URLRequestConvertible, validationRule: StubRequestValidationRule = .allowMissingParameters) {
         if let rawHttpMethod = (try? urlRequest.asURLRequest())?.httpMethod,
            let httpMethod = HTTPMethod(rawValue: rawHttpMethod) {
             self.method = httpMethod
@@ -68,6 +87,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
         }
         
         self.url = try? urlRequest.asURLRequest().url
+        self.validationRule = validationRule
     }
     
     /// Determines whether or not this request is able to mock data for a given request.
@@ -108,63 +128,21 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
         return validScheme && validHost && validPort && validPath
     }
     
-    /// A function that generates a score to represent how well a stored stubbed request matches an incoming request, with
-    /// 0 indicating no match and higher scores representing better matches.
-    /// - Parameter request: The incoming request to generate the priority score against.
-    /// - Returns: A score representing how well this request matches an incoming request.  Hight scores indicate better matches.
-    public func priorityScore(for request: StubRequest) -> Int {
-        var score = 0
-        
-        if self.method == request.method {
-            score += 1
-        }
-        
-        guard let url = self.url else {
-            return score
-        }
-        
-        if url.scheme == request.url?.scheme {
-            score += 1
-        }
-        
-        if url.host == request.url?.host {
-            score += 1
-        }
-        
-        if url.port == request.url?.port {
-            score += 1
-        }
-        
-        if url.trimmedPath == request.url?.trimmedPath {
-            score += 1
-        }
-        
-        return score
-    }
-    
-    /// Returns the count of parameters that the stub request has in common with the current stub. Compares
+    /// Returns whether or not the stub request has all provided parameters in common with the current stub. Compares
     /// key and value.
     /// - Parameter request: The request to compare with.
-    /// - Returns: The count of parmaters that have the same key and value.
-    public func matchingParameterCount(for request: StubRequest) -> Int {
-        guard
-            let url = self.url,
-            let urlQueryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
-            let requestURL = request.url,
-            let requestURLQueryItems = URLComponents(url: requestURL, resolvingAgainstBaseURL: false)?.queryItems else {
-            return 0
-        }
-        
-        // Now, we see what parameters we have that are equivalent.
-        let equivalentParameters = requestURLQueryItems.filter {
-            for query in urlQueryItems {
-                if query.name == $0.name, query.value == $0.value {
-                    return true
-                }
-            }
+    /// - Returns: Whether the request stub has all the parameters with the same values as the current stub.
+    public func hasAllProvidedParameters(for request: StubRequest) -> Bool {
+        guard let url = self.url, let requestURL = request.url else {
             return false
         }
-        return equivalentParameters.count
+        
+        let urlQueryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        let requestURLQueryItems = URLComponents(url: requestURL, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        
+        let urlQueryItemsSet = Set(urlQueryItems)
+        let requestURLQueryItemsSet = Set(requestURLQueryItems)
+        return urlQueryItemsSet.isSubset(of: requestURLQueryItemsSet)
     }
 }
 
@@ -195,9 +173,12 @@ public extension StubRequest {
     }
     
     /// Initializes a StubRequest for a given URL that matches the GET HTTP method.
-    /// - Parameter url: The URL to stub.
-    static func get(_ url: URLConvertible) -> StubRequest {
-        return self.init(method: .get, url: url)
+    /// - Parameters:
+    ///   - url: The URL to stub.
+    ///   - validationRule: The validation rule to compare requests against.
+    /// - Returns: A stub request with a GET HTTP method and the provided values.
+    static func get(_ url: URLConvertible, validationRule: StubRequestValidationRule = .explicit) -> StubRequest {
+        return self.init(method: .get, url: url, validationRule: validationRule)
     }
     
     /// Initializes a StubRequest for a given URL that matches the HEAD HTTP method.
