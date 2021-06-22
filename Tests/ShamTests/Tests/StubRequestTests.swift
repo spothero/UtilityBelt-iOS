@@ -26,13 +26,31 @@ final class StubRequestTests: XCTestCase {
         XCTAssertEqual(request.description, "ALL: \(self.baseURLString)")
     }
     
-    func testAccuratelyCountsMatchingQueryParameters() {
+    // MARK: Query items tests
+    
+    func testAccuratelyValidatesWhenARequestHasAllQueryItems() {
+        // GIVEN: A request with many parameters.
         let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
-        let request1: StubRequest = .get(queryParametersURL)
+        let request: StubRequest = .get(queryParametersURL)
         
+        // GIVEN: A stub with fewer parameters.
         let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
-        let request2: StubRequest = .get(similarURL)
+        let stub: StubRequest = .get(similarURL, validationRule: .allowMissingQueryParameters)
         
-        XCTAssertEqual(2, request1.matchingParameterCount(for: request2))
+        // THEN: The stub has all provided query items for the request.
+        XCTAssertTrue(stub.hasAllProvidedQueryItems(for: request))
+    }
+    
+    func testAccuratelyValidatesWhenARequestDoesNotHaveAllQueryItems() {
+        // GIVEN: A stub with many parameters.
+        let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
+        let stub: StubRequest = .get(queryParametersURL, validationRule: .allowMissingQueryParameters)
+        
+        // GIVEN: A request with fewer parameters.
+        let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
+        let request: StubRequest = .get(similarURL)
+        
+        // THEN: The stub does not have all provided query items for the request.
+        XCTAssertFalse(stub.hasAllProvidedQueryItems(for: request))
     }
 }

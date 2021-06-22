@@ -107,46 +107,56 @@ final class MockServiceTests: XCTestCase {
         XCTAssertFalse(hasData)
     }
     
-    func testReturnsStubWithMostEqualParameters() throws {
-        // GIVEN: I stub a URL with only one query.
-        self.stub(self.fullURL, with: .encodable(self.mockData))
+    func testReturnsStubWithMissingQueryParametersWhenAllowingMissingQueryParameters() throws {
+        // GIVEN: I stub a URL with only one query, and I've allowed missing query parameters.
+        let fulURLRequest = StubRequest(url: self.fullURL, validationRule: .allowMissingQueryParameters)
+        self.stub(fulURLRequest, with: .encodable(self.mockData))
         
         // THEN: The values should return correctly even if the URL that is requested has multiple
         // query parameters.
         self.request(url: self.manyQueryParamsURL, data: self.mockData)
     }
     
-    func testReturnsStubWithMostEqualParametersBasedOnBestMatch() throws {
+    func testDoesNotReturnStubWithoutMatchingQueryParametersWhenAllowingMissingQueryParameters() throws {
         // GIVEN: Two stub URLs have the same base base URL and path.
         let fullURL = try XCTUnwrap(URL(string: self.fullURL))
         let queryLessURL = try XCTUnwrap(URL(string: self.querylessURL))
         XCTAssertEqual(fullURL.baseURL, queryLessURL.baseURL)
         XCTAssertEqual(fullURL.path, queryLessURL.path)
         
-        // GIVEN: I stub similar URLs with different query params.
-        self.stub(self.querylessURL, with: .encodable(self.mockData))
-        self.stub(self.fullURL, with: .encodable(self.secondaryMockData))
+        // GIVEN: I stub a URL and allow missing query parameters.
+        let fulURLRequest = StubRequest(url: self.fullURL, validationRule: .allowMissingQueryParameters)
+        self.stub(fulURLRequest, with: .encodable(self.mockData))
         
-        // THEN: The values should return correctly.
-        self.request(url: self.querylessURL, data: self.mockData)
-        self.request(url: self.fullURL, data: self.secondaryMockData)
-        
-        self.request(url: self.manyQueryParamsURL, data: self.secondaryMockData)
+        // THEN: The request should fail, because the request did not have the given parameters on the stub.
+        self.request(url: self.querylessURL, data: self.mockData, shouldFail: true)
     }
     
-    func testReturnsStubWithQueryParametersEvenIfTheRequestDoesNotHaveQueryParameters() throws {
-        // GIVEN: Two stub URLs have the same base base URL and path.
+    func testDoesNotReturnStubWithQueryParametersWhenValidatingExplicitlyOnARequestWithNoParameters() throws {
+        // GIVEN: Two URLs have the same base base URL and path.
         let fullURL = try XCTUnwrap(URL(string: self.fullURL))
         let queryLessURL = try XCTUnwrap(URL(string: self.querylessURL))
         XCTAssertEqual(fullURL.baseURL, queryLessURL.baseURL)
         XCTAssertEqual(fullURL.path, queryLessURL.path)
         
-        // GIVEN: I stub a URL with query params.
-        self.stub(self.fullURL, with: .encodable(self.mockData))
+        // GIVEN: I stub a URL with query parameters and validate explicitly.
+        let fulURLRequest = StubRequest(url: fullURL, validationRule: .explicit)
+        self.stub(fulURLRequest, with: .encodable(self.mockData))
         
-        // THEN: The value should return correctly, even if the request does not have query
-        // params.
-        self.request(url: self.querylessURL, data: self.mockData)
+        // THEN: The request without query parameters should fail, because the stub had query parameters.
+        self.request(url: queryLessURL, data: self.mockData, shouldFail: true)
+    }
+    
+    func testRequestingExplicityValidatedStubRequestSucceeds() throws {
+        // GIVEN: A URL.
+        let fullURL = try XCTUnwrap(URL(string: self.fullURL))
+        
+        // GIVEN: I stub the specific URL and have it validate explicitly.
+        let fullURLRequest = StubRequest(url: fullURL, validationRule: .explicit)
+        self.stub(fullURLRequest, with: .encodable(self.mockData))
+        
+        // THEN: The request should succeed.
+        self.request(url: fullURL, data: self.mockData)
     }
     
     private func request<T>(url: URLConvertible,
