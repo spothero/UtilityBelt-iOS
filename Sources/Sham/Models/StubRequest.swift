@@ -145,27 +145,27 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     /// - Returns: A score representing how well this request matches an incoming request.  Hight scores indicate better matches.
     public func priorityScore(for request: StubRequest) -> Int {
         var score = 0
-
+        
         if self.method == request.method {
             score += 1
         }
-
+        
         guard let url = self.url else {
             return score
         }
-
+        
         if url.scheme == request.url?.scheme {
             score += 1
         }
-
+        
         if url.host == request.url?.host {
             score += 1
         }
-
+        
         if url.port == request.url?.port {
             score += 1
         }
-
+        
         if url.trimmedPath == request.url?.trimmedPath {
             score += 1
         }
