@@ -34,10 +34,18 @@ public class MockURLProtocol: URLProtocol {
         
         let stubResponse = MockService.shared.stubbedDataCollection.getResponse(for: self.request)
         
+        var headerFields = stubResponse?.headers ?? [:]
+        let contentTypeKey = HTTPHeader.contentType.rawValue
+        
+        // If there is a mime type on the stub response, and the headers don't already contain one, add it to the header dictionary.
+        if let mimeType = stubResponse?.mimeType, !headerFields.keys.contains(contentTypeKey) {
+            headerFields[contentTypeKey] = mimeType.rawValue
+        }
+        
         let httpResponse = HTTPURLResponse(url: url,
                                            statusCode: stubResponse?.statusCode.rawValue ?? HTTPStatusCode.badRequest.rawValue,
                                            httpVersion: nil,
-                                           headerFields: stubResponse?.headers ?? [:])
+                                           headerFields: headerFields)
         
         guard let response = httpResponse else {
             self.client?.urlProtocol(self, didFailWithError: MockURLProtocol.Error.noResponse)

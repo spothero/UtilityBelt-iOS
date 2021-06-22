@@ -48,6 +48,7 @@ public class HTTPClient {
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter validators: An array of validators that will be applied to the response.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
@@ -57,6 +58,7 @@ public class HTTPClient {
                         parameters: ParameterDictionaryConvertible? = nil,
                         headers: HTTPHeaderDictionaryConvertible? = nil,
                         encoding: ParameterEncoding? = nil,
+                        validators: [ResponseValidator] = [],
                         dispatchQueue: DispatchQueue = .main,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
         let request: URLRequest
@@ -93,6 +95,15 @@ public class HTTPClient {
             
             // Create a result object for improved handling of the response
             let result: Result<Data, Error> = {
+                if let response = httpResponse {
+                    do {
+                        for validator in validators {
+                            try validator.validate(response: response)
+                        }
+                    } catch {
+                        return .failure(error)
+                    }
+                }
                 if let data = data {
                     return .success(data)
                 } else if let error = error {
@@ -147,6 +158,7 @@ public class HTTPClient {
     /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter validators: An array of validators that will be applied to the response.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
@@ -157,6 +169,7 @@ public class HTTPClient {
                         parameters: Encodable,
                         headers: HTTPHeaderDictionaryConvertible? = nil,
                         encoding: ParameterEncoding? = nil,
+                        validators: [ResponseValidator] = [],
                         dispatchQueue: DispatchQueue = .main,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
         self.request(url,
@@ -164,6 +177,7 @@ public class HTTPClient {
                      parameters: try? parameters.asDictionary(),
                      headers: headers,
                      encoding: encoding,
+                     validators: validators,
                      dispatchQueue: dispatchQueue,
                      completion: completion)
     }
@@ -176,6 +190,7 @@ public class HTTPClient {
     /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
@@ -186,6 +201,7 @@ public class HTTPClient {
                                       parameters: ParameterDictionaryConvertible? = nil,
                                       headers: HTTPHeaderDictionaryConvertible? = nil,
                                       encoding: ParameterEncoding? = nil,
+                                      validators: [ResponseValidator] = [.ensureMimeType(.json)],
                                       dispatchQueue: DispatchQueue = .main,
                                       decoder: JSONDecoder = JSONDecoder(),
                                       completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
@@ -195,6 +211,7 @@ public class HTTPClient {
             parameters: parameters,
             headers: headers,
             encoding: encoding,
+            validators: validators,
             dispatchQueue: dispatchQueue
         ) { dataResponse in
             // Create a result object for improved handling of the response
@@ -208,12 +225,6 @@ public class HTTPClient {
                         return .failure(UBNetworkError.unableToDecode(String(describing: T.self), nil))
                     }
                 case let .success(data):
-                    // TODO: Implement mime type checking for JSON before attempting to decode JSON (IOS-1967)
-//                    // If the mime type for the response isn't JSON, we can't decode it
-//                    guard dataResponse.response?.mimeType == "application/json" else {
-//                        return .failure(UBNetworkError.invalidContentType(dataResponse.response?.mimeType ?? "unknown"))
-//                    }
-                    
                     do {
                         let decodedObject = try decoder.decode(T.self, from: data)
                         return .success(decodedObject)
@@ -244,6 +255,7 @@ public class HTTPClient {
     /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
@@ -255,6 +267,7 @@ public class HTTPClient {
                                       parameters: Encodable,
                                       headers: HTTPHeaderDictionaryConvertible? = nil,
                                       encoding: ParameterEncoding? = nil,
+                                      validators: [ResponseValidator] = [.ensureMimeType(.json)],
                                       dispatchQueue: DispatchQueue = .main,
                                       decoder: JSONDecoder = JSONDecoder(),
                                       completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
@@ -263,6 +276,7 @@ public class HTTPClient {
                      parameters: try? parameters.asDictionary(),
                      headers: headers,
                      encoding: encoding,
+                     validators: validators,
                      dispatchQueue: dispatchQueue,
                      decoder: decoder,
                      completion: completion)
