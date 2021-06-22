@@ -8,7 +8,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     /// A struct that defines possible validation rules.
     public enum StubRequestValidationRule: String, Codable {
         case explicit
-        case allowMissingParameters
+        case allowMissingQueryParameters
     }
     
     // MARK: - Properties
@@ -58,7 +58,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     ///   - validationRule: The validation rule to use when comparing requests.
     public init(method: HTTPMethod,
                 url: URLConvertible,
-                validationRule: StubRequestValidationRule = .allowMissingParameters) {
+                validationRule: StubRequestValidationRule = .allowMissingQueryParameters) {
         self.method = method
         self.url = try? url.asURL()
         self.validationRule = validationRule
@@ -68,7 +68,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     /// - Parameters:
     ///   - url: The URL to stub.
     ///   - validationRule: The validation rule to use when comparing requests.
-    public init(url: URLConvertible, validationRule: StubRequestValidationRule = .allowMissingParameters) {
+    public init(url: URLConvertible, validationRule: StubRequestValidationRule = .allowMissingQueryParameters) {
         self.method = .none
         self.url = try? url.asURL()
         self.validationRule = validationRule
@@ -78,7 +78,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     /// - Parameters:
     ///   - urlRequest: The URLRequest to stub.
     ///   - validationRule: The validation rule to use when comparing requests.
-    public init(urlRequest: URLRequestConvertible, validationRule: StubRequestValidationRule = .allowMissingParameters) {
+    public init(urlRequest: URLRequestConvertible, validationRule: StubRequestValidationRule = .allowMissingQueryParameters) {
         if let rawHttpMethod = (try? urlRequest.asURLRequest())?.httpMethod,
            let httpMethod = HTTPMethod(rawValue: rawHttpMethod) {
             self.method = httpMethod
@@ -125,14 +125,63 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
         // Include any stubbed response where the path matches the incoming URL's path or is empty
         let validPath = url.trimmedPath.isEmpty || url.trimmedPath == requestURL.trimmedPath
         
-        return validScheme && validHost && validPort && validPath
+        switch self.validationRule {
+        case .explicit:
+            // Include any stubbed response where the query matches the incoming URL's query or is nil or empty
+            let validQuery = url.query.isNilOrEmpty || url.sortedQueryString == requestURL.sortedQueryString
+
+            return validScheme && validHost && validPort && validPath && validQuery
+        case .allowMissingQueryParameters:
+            // If the request does have the provided query items in the stub.
+            let hasAllProvidedQueryItems = self.hasAllProvidedQueryItems(for: request)
+            
+            return validScheme && validHost && validPort && validPath && hasAllProvidedQueryItems
+        }
     }
     
-    /// Returns whether or not the stub request has all provided parameters in common with the current stub. Compares
+    /// A function that generates a score to represent how well a stored stubbed request matches an incoming request, with
+    /// 0 indicating no match and higher scores representing better matches.
+    /// - Parameter request: The incoming request to generate the priority score against.
+    /// - Returns: A score representing how well this request matches an incoming request.  Hight scores indicate better matches.
+    public func priorityScore(for request: StubRequest) -> Int {
+        var score = 0
+
+        if self.method == request.method {
+            score += 1
+        }
+
+        guard let url = self.url else {
+            return score
+        }
+
+        if url.scheme == request.url?.scheme {
+            score += 1
+        }
+
+        if url.host == request.url?.host {
+            score += 1
+        }
+
+        if url.port == request.url?.port {
+            score += 1
+        }
+
+        if url.trimmedPath == request.url?.trimmedPath {
+            score += 1
+        }
+        
+        if url.sortedQueryString == request.url?.sortedQueryString {
+            score += 1
+        }
+        
+        return score
+    }
+    
+    /// Returns whether or not the stub request has all provided query items in common with the current stub. Compares
     /// key and value.
     /// - Parameter request: The request to compare with.
     /// - Returns: Whether the request stub has all the parameters with the same values as the current stub.
-    public func hasAllProvidedParameters(for request: StubRequest) -> Bool {
+    public func hasAllProvidedQueryItems(for request: StubRequest) -> Bool {
         guard let url = self.url, let requestURL = request.url else {
             return false
         }
@@ -140,6 +189,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
         let urlQueryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
         let requestURLQueryItems = URLComponents(url: requestURL, resolvingAgainstBaseURL: false)?.queryItems ?? []
         
+        // Compare sets of query items.
         let urlQueryItemsSet = Set(urlQueryItems)
         let requestURLQueryItemsSet = Set(requestURLQueryItems)
         return urlQueryItemsSet.isSubset(of: requestURLQueryItemsSet)
