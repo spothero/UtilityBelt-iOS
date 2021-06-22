@@ -45,7 +45,7 @@ public final class StubbedDataCollection: Codable {
     public func getResponse(for request: StubRequest) -> StubResponse? {
         self.log("Attempting to stub request: \(request.description)")
         
-        // Check for a match with the exact URL.
+        // Check for a match with the exact URL
         var response = self.stubbedData[request]
         
         // If response had no exact match, we need to find the closest match
@@ -54,13 +54,13 @@ public final class StubbedDataCollection: Codable {
             let availableStubs = self.stubbedData.filter {
                 return $0.key.canMockData(for: request)
             }
-                
+            
             // Find the highest priority matching score to get the best response
             response = availableStubs.max {
                 $0.key.priorityScore(for: request) < $1.key.priorityScore(for: request)
             }?.value
         }
-
+        
         // Log response debugging information
         if let stubResponse = response {
             self.log("Found stub response: \(stubResponse)")
