@@ -8,6 +8,18 @@ public struct MimeType: RawRepresentable, Codable {
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
+}
 
-    public static let json: Self = MimeType(rawValue: "application/json")
+// MARK: - Extensions
+
+extension MimeType: ExpressibleByStringLiteral {
+    public init(stringLiteral: String) {
+        self.rawValue = stringLiteral
+    }
+}
+
+// MARK: - Convenience Values
+
+public extension MimeType {
+    static let json: Self = "application/json"
 }
