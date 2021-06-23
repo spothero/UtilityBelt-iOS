@@ -107,7 +107,7 @@ final class MockServiceTests: XCTestCase {
         XCTAssertFalse(hasData)
     }
     
-    func testReturnsStubWithMissingQueryParametersWhenAllowingMissingQueryParameters() throws {
+    func testReturnsStubWithMissingQueryParametersWhenAllowingMissingQueryParameters() {
         // GIVEN: I stub a URL with only one query, and I've allowed missing query parameters.
         let fulURLRequest = StubRequest(url: self.fullURL, validationRule: .allowMissingQueryParameters)
         self.stub(fulURLRequest, with: .encodable(self.mockData))
@@ -117,23 +117,23 @@ final class MockServiceTests: XCTestCase {
         self.request(url: self.manyQueryParamsURL, data: self.mockData)
     }
     
-    func testDoesNotReturnStubWithoutMatchingQueryParametersWhenAllowingMissingQueryParameters() throws {
-        // GIVEN: Two stub URLs have the same base base URL and path.
+    func testDoesNotReturnStubWithoutMatchingProvidedQueryParametersWhenAllowingMissingQueryParameters() throws {
+        // GIVEN: Two stub URLs have the same base URL and path.
         let fullURL = try XCTUnwrap(URL(string: self.fullURL))
         let queryLessURL = try XCTUnwrap(URL(string: self.querylessURL))
         XCTAssertEqual(fullURL.baseURL, queryLessURL.baseURL)
         XCTAssertEqual(fullURL.path, queryLessURL.path)
         
-        // GIVEN: I stub a URL and allow missing query parameters.
+        // GIVEN: I stub a URL that has some query parameters and allow missing query parameters.
         let fulURLRequest = StubRequest(url: self.fullURL, validationRule: .allowMissingQueryParameters)
         self.stub(fulURLRequest, with: .encodable(self.mockData))
         
-        // THEN: The request should fail, because the request did not have the given parameters on the stub.
+        // THEN: The request should fail, because querylessURL must at least contain the query parameters from the stub request.
         self.request(url: self.querylessURL, data: self.mockData, shouldFail: true)
     }
     
     func testDoesNotReturnStubWithQueryParametersWhenValidatingExplicitlyOnARequestWithNoParameters() throws {
-        // GIVEN: Two URLs have the same base base URL and path.
+        // GIVEN: Two URLs have the same base URL and path.
         let fullURL = try XCTUnwrap(URL(string: self.fullURL))
         let queryLessURL = try XCTUnwrap(URL(string: self.querylessURL))
         XCTAssertEqual(fullURL.baseURL, queryLessURL.baseURL)

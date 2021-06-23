@@ -33,7 +33,7 @@ final class StubRequestTests: XCTestCase {
         let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
         let request: StubRequest = .get(queryParametersURL)
         
-        // GIVEN: A stub with fewer parameters.
+        // GIVEN: A stub with a subset of the previous URL's parameters and set to allowing missing query parameters.
         let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
         let stub: StubRequest = .get(similarURL, validationRule: .allowMissingQueryParameters)
         
@@ -46,7 +46,7 @@ final class StubRequestTests: XCTestCase {
         let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
         let stub: StubRequest = .get(queryParametersURL, validationRule: .allowMissingQueryParameters)
         
-        // GIVEN: A request with fewer parameters.
+        // GIVEN: A stub with a subset of the previous URL's parameters and set to not allow missing query parameters.
         let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
         let request: StubRequest = .get(similarURL)
         

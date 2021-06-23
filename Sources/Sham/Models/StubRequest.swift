@@ -225,7 +225,7 @@ public extension StubRequest {
     /// Initializes a StubRequest for a given URL that matches the GET HTTP method.
     /// - Parameters:
     ///   - url: The URL to stub.
-    ///   - validationRule: The validation rule to compare requests against.
+    ///   - validationRule: The validation rule to compare requests against. Defaults to `. explicit `.
     /// - Returns: A stub request with a GET HTTP method and the provided values.
     static func get(_ url: URLConvertible, validationRule: StubRequestValidationRule = .explicit) -> StubRequest {
         return self.init(method: .get, url: url, validationRule: validationRule)
