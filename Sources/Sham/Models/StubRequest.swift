@@ -7,7 +7,7 @@ import UtilityBeltNetworking
 public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     /// A struct that defines possible query match rules.
     public enum QueryMatchRule: String, Codable {
-        /// . The query parameters on the request must be an exact match.
+        /// The query parameters on the request must be an exact match.
         case exactMatch
         /// The request may have additional parameters that are not specified in the stub to be a match.
         case allowMissingQueryParameters
