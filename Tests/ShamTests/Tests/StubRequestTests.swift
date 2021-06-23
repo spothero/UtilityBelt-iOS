@@ -38,7 +38,7 @@ final class StubRequestTests: XCTestCase {
         let querySubsetStub: StubRequest = .get(similarURL, queryMatchRule: .allowMissingQueryParameters)
         
         // THEN: The subset stub has all provided query items for the stub.
-        XCTAssertTrue(querySubsetStub.containsAllProvidedQueryItems(in: stub))
+        XCTAssertTrue(querySubsetStub.hasSubsetOfQueryItems(in: stub))
     }
     
     func testAccuratelyValidatesWhenAStubDoesNotHaveASubsetOfAnotherStubsQueryParameters() {
@@ -51,6 +51,6 @@ final class StubRequestTests: XCTestCase {
         let querySupersetStub: StubRequest = .get(queryParametersURL, queryMatchRule: .allowMissingQueryParameters)
         
         // THEN: The stub does not have all provided query items for the superset stub.
-        XCTAssertFalse(querySupersetStub.containsAllProvidedQueryItems(in: stub))
+        XCTAssertFalse(querySupersetStub.hasSubsetOfQueryItems(in: stub))
     }
 }

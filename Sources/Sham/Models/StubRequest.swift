@@ -138,7 +138,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
             return hasSameBaseURL && validQuery
         case .allowMissingQueryParameters:
             // If the request does have the provided query items in the stub.
-            let hasAllProvidedQueryItems = self.containsAllProvidedQueryItems(in: request)
+            let hasAllProvidedQueryItems = self.hasSubsetOfQueryItems(in: request)
             
             return hasSameBaseURL && hasAllProvidedQueryItems
         }
@@ -186,7 +186,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     /// key and value.
     /// - Parameter request: The request to compare with.
     /// - Returns: Whether the request stub has all the parameters with the same values as the current stub.
-    public func containsAllProvidedQueryItems(in request: StubRequest) -> Bool {
+    public func hasSubsetOfQueryItems(in request: StubRequest) -> Bool {
         guard let url = self.url, let requestURL = request.url else {
             return false
         }
