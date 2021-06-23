@@ -5,9 +5,11 @@ import UtilityBeltNetworking
 
 /// A request for stubbing response meant to mirror a URLRequest.
 public struct StubRequest: Hashable, CustomStringConvertible, Codable {
-    /// A struct that defines possible validation rules.
-    public enum StubRequestValidationRule: String, Codable {
-        case explicit
+    /// A struct that defines possible query match rules.
+    public enum QueryMatchRule: String, Codable {
+        /// . The query parameters on the request must be an exact match.
+        case exactMatch
+        /// The request may have additional parameters that are not specified in the stub to be a match.
         case allowMissingQueryParameters
     }
     
@@ -27,8 +29,8 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     /// Query parameters are also evaluated, but the order does not matter.
     public let url: URL?
     
-    /// The validation rule to use when comparing requests.
-    public let validationRule: StubRequestValidationRule
+    /// The validation rule to use when comparing query parameters.
+    public let queryMatchRule: QueryMatchRule
     
     /// The string representation of the request.
     public var description: String {
@@ -55,30 +57,30 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
     /// - Parameters:
     ///   - method: The HTTP method to stub.
     ///   - url: The URL to stub.
-    ///   - validationRule: The validation rule to use when comparing requests.
+    ///   - queryMatchRule: The query matching rule to use when comparing requests. Defaults to `.exactMatch`.
     public init(method: HTTPMethod,
                 url: URLConvertible,
-                validationRule: StubRequestValidationRule = .allowMissingQueryParameters) {
+                queryMatchRule: QueryMatchRule = .exactMatch) {
         self.method = method
         self.url = try? url.asURL()
-        self.validationRule = validationRule
+        self.queryMatchRule = queryMatchRule
     }
     
     /// Initializes a StubRequest that stubs all HTTP methods for a given URL.
     /// - Parameters:
     ///   - url: The URL to stub.
-    ///   - validationRule: The validation rule to use when comparing requests.
-    public init(url: URLConvertible, validationRule: StubRequestValidationRule = .allowMissingQueryParameters) {
+    ///   - queryMatchRule: The query matching rule to use when comparing requests. Defaults to `.exactMatch`.
+    public init(url: URLConvertible, queryMatchRule: QueryMatchRule = .exactMatch) {
         self.method = .none
         self.url = try? url.asURL()
-        self.validationRule = validationRule
+        self.queryMatchRule = queryMatchRule
     }
     
     /// Initializes a StubRequest by attempting to parse a URL and HTTP method out of a URLRequest.
     /// - Parameters:
     ///   - urlRequest: The URLRequest to stub.
-    ///   - validationRule: The validation rule to use when comparing requests.
-    public init(urlRequest: URLRequestConvertible, validationRule: StubRequestValidationRule = .allowMissingQueryParameters) {
+    ///   - queryMatchRule: The validation rule to use when comparing requests. Defaults to `.exactMatch`.
+    public init(urlRequest: URLRequestConvertible, queryMatchRule: QueryMatchRule = .exactMatch) {
         if let rawHttpMethod = (try? urlRequest.asURLRequest())?.httpMethod,
            let httpMethod = HTTPMethod(rawValue: rawHttpMethod) {
             self.method = httpMethod
@@ -87,7 +89,7 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
         }
         
         self.url = try? urlRequest.asURLRequest().url
-        self.validationRule = validationRule
+        self.queryMatchRule = queryMatchRule
     }
     
     /// Determines whether or not this request is able to mock data for a given request.
@@ -125,17 +127,20 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
         // Include any stubbed response where the path matches the incoming URL's path or is empty
         let validPath = url.trimmedPath.isEmpty || url.trimmedPath == requestURL.trimmedPath
         
-        switch self.validationRule {
-        case .explicit:
+        // Determine if the stub and request have the same base URL.
+        let hasSameBaseURL = validScheme && validHost && validPort && validPath
+        
+        switch self.queryMatchRule {
+        case .exactMatch:
             // Include any stubbed response where the query matches the incoming URL's query or is nil or empty
             let validQuery = url.query.isNilOrEmpty || url.sortedQueryString == requestURL.sortedQueryString
 
-            return validScheme && validHost && validPort && validPath && validQuery
+            return hasSameBaseURL && validQuery
         case .allowMissingQueryParameters:
             // If the request does have the provided query items in the stub.
             let hasAllProvidedQueryItems = self.hasAllProvidedQueryItems(for: request)
             
-            return validScheme && validHost && validPort && validPath && hasAllProvidedQueryItems
+            return hasSameBaseURL && hasAllProvidedQueryItems
         }
     }
     
@@ -225,10 +230,10 @@ public extension StubRequest {
     /// Initializes a StubRequest for a given URL that matches the GET HTTP method.
     /// - Parameters:
     ///   - url: The URL to stub.
-    ///   - validationRule: The validation rule to compare requests against. Defaults to `. explicit `.
+    ///   - queryMatchRule: The validation rule to compare requests against. Defaults to `.exactMatch `.
     /// - Returns: A stub request with a GET HTTP method and the provided values.
-    static func get(_ url: URLConvertible, validationRule: StubRequestValidationRule = .explicit) -> StubRequest {
-        return self.init(method: .get, url: url, validationRule: validationRule)
+    static func get(_ url: URLConvertible, queryMatchRule: QueryMatchRule = .exactMatch) -> StubRequest {
+        return self.init(method: .get, url: url, queryMatchRule: queryMatchRule)
     }
     
     /// Initializes a StubRequest for a given URL that matches the HEAD HTTP method.
