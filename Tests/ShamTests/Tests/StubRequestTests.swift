@@ -25,4 +25,32 @@ final class StubRequestTests: XCTestCase {
         let request = StubRequest(url: self.baseURLString)
         XCTAssertEqual(request.description, "ALL: \(self.baseURLString)")
     }
+    
+    // MARK: Query items tests
+    
+    func testAccuratelyValidatesWhenAStubHasASubsetOfAnotherStubsQueryParameters() {
+        // GIVEN: A stub with many query parameters.
+        let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
+        let stub: StubRequest = .get(queryParametersURL)
+        
+        // GIVEN: A stub with a subset of the previous URL's parameters and set to allowing missing query parameters.
+        let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
+        let querySubsetStub: StubRequest = .get(similarURL, queryMatchRule: .allowMissingQueryParameters)
+        
+        // THEN: The subset stub has all provided query items for the stub.
+        XCTAssertTrue(querySubsetStub.hasSubsetOfQueryItems(in: stub))
+    }
+    
+    func testAccuratelyValidatesWhenAStubDoesNotHaveASubsetOfAnotherStubsQueryParameters() {
+        // GIVEN: A stub with a subset of parameters.
+        let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
+        let stub: StubRequest = .get(similarURL)
+        
+        // GIVEN: A stub with a superset of query parameters and set to allow missing query parameters.
+        let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
+        let querySupersetStub: StubRequest = .get(queryParametersURL, queryMatchRule: .allowMissingQueryParameters)
+        
+        // THEN: The stub does not have all provided query items for the superset stub.
+        XCTAssertFalse(querySupersetStub.hasSubsetOfQueryItems(in: stub))
+    }
 }

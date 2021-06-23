@@ -7,6 +7,7 @@ import XCTest
 
 final class MockServiceTests: XCTestCase {
     let fullURL = "https://foo.com/foo?foo=bar"
+    let querylessURL = "https://foo.com/foo"
     let schemeOnlyURL = "https://"
     let hostOnlyURL = "//foo.com"
     let pathOnlyURL = "/foo"
@@ -101,6 +102,59 @@ final class MockServiceTests: XCTestCase {
         
         XCTAssertFalse(MockService.shared.hasStubs)
         XCTAssertFalse(hasData)
+    }
+    
+    func testReturnsStubWithMissingQueryParametersWhenAllowingMissingQueryParameters() {
+        // GIVEN: I stub a URL with only one query, and I've allowed missing query parameters.
+        let fulURLRequest = StubRequest(url: self.fullURL, queryMatchRule: .allowMissingQueryParameters)
+        self.stub(fulURLRequest, with: .encodable(self.mockData))
+        
+        // THEN: The values should return correctly even if the URL that is requested has multiple
+        // query parameters.
+        let manyQueryParamsURL = "https://foo.com/foo?foo=bar&foo2=bar2&foo3=bar3"
+        self.request(url: manyQueryParamsURL, data: self.mockData)
+    }
+    
+    func testDoesNotReturnStubWithoutMatchingProvidedQueryParametersWhenAllowingMissingQueryParameters() throws {
+        // GIVEN: Two stub URLs have the same base URL and path.
+        let fullURL = try XCTUnwrap(URL(string: self.fullURL))
+        let queryLessURL = try XCTUnwrap(URL(string: self.querylessURL))
+        XCTAssertEqual(fullURL.baseURL, queryLessURL.baseURL)
+        XCTAssertEqual(fullURL.path, queryLessURL.path)
+        
+        // GIVEN: I stub a URL that has some query parameters and allow missing query parameters.
+        let fulURLRequest = StubRequest(url: self.fullURL, queryMatchRule: .allowMissingQueryParameters)
+        self.stub(fulURLRequest, with: .encodable(self.mockData))
+        
+        // THEN: The request should fail, because querylessURL must at least contain the query parameters from the stub request.
+        self.request(url: self.querylessURL, data: self.mockData, shouldFail: true)
+    }
+    
+    func testDoesNotReturnStubWithQueryParametersWhenValidatingExplicitlyOnARequestWithNoParameters() throws {
+        // GIVEN: Two URLs have the same base URL and path.
+        let fullURL = try XCTUnwrap(URL(string: self.fullURL))
+        let queryLessURL = try XCTUnwrap(URL(string: self.querylessURL))
+        XCTAssertEqual(fullURL.baseURL, queryLessURL.baseURL)
+        XCTAssertEqual(fullURL.path, queryLessURL.path)
+        
+        // GIVEN: I stub a URL with query parameters and validate explicitly.
+        let fulURLRequest = StubRequest(url: fullURL, queryMatchRule: .exactMatch)
+        self.stub(fulURLRequest, with: .encodable(self.mockData))
+        
+        // THEN: The request without query parameters should fail, because the stub had query parameters.
+        self.request(url: queryLessURL, data: self.mockData, shouldFail: true)
+    }
+    
+    func testRequestingExplicityValidatedStubRequestSucceeds() throws {
+        // GIVEN: A URL.
+        let fullURL = try XCTUnwrap(URL(string: self.fullURL))
+        
+        // GIVEN: I stub the specific URL and have it validate explicitly.
+        let fullURLRequest = StubRequest(url: fullURL, queryMatchRule: .exactMatch)
+        self.stub(fullURLRequest, with: .encodable(self.mockData))
+        
+        // THEN: The request should succeed.
+        self.request(url: fullURL, data: self.mockData)
     }
     
     private func request<T>(url: URLConvertible,
