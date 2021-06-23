@@ -14,9 +14,6 @@ final class MockServiceTests: XCTestCase {
     let queryOnlyURL = "?foo=bar"
     
     let mockData = ["foo", "bar"]
-    let secondaryMockData = ["bar", "foo"]
-    
-    let manyQueryParamsURL = "https://foo.com/foo?foo=bar&foo2=bar2&foo3=bar3"
     
     override func setUp() {
         super.setUp()
@@ -109,12 +106,13 @@ final class MockServiceTests: XCTestCase {
     
     func testReturnsStubWithMissingQueryParametersWhenAllowingMissingQueryParameters() {
         // GIVEN: I stub a URL with only one query, and I've allowed missing query parameters.
-        let fulURLRequest = StubRequest(url: self.fullURL, validationRule: .allowMissingQueryParameters)
+        let fulURLRequest = StubRequest(url: self.fullURL, queryMatchRule: .allowMissingQueryParameters)
         self.stub(fulURLRequest, with: .encodable(self.mockData))
         
         // THEN: The values should return correctly even if the URL that is requested has multiple
         // query parameters.
-        self.request(url: self.manyQueryParamsURL, data: self.mockData)
+        let manyQueryParamsURL = "https://foo.com/foo?foo=bar&foo2=bar2&foo3=bar3"
+        self.request(url: manyQueryParamsURL, data: self.mockData)
     }
     
     func testDoesNotReturnStubWithoutMatchingProvidedQueryParametersWhenAllowingMissingQueryParameters() throws {
@@ -125,7 +123,7 @@ final class MockServiceTests: XCTestCase {
         XCTAssertEqual(fullURL.path, queryLessURL.path)
         
         // GIVEN: I stub a URL that has some query parameters and allow missing query parameters.
-        let fulURLRequest = StubRequest(url: self.fullURL, validationRule: .allowMissingQueryParameters)
+        let fulURLRequest = StubRequest(url: self.fullURL, queryMatchRule: .allowMissingQueryParameters)
         self.stub(fulURLRequest, with: .encodable(self.mockData))
         
         // THEN: The request should fail, because querylessURL must at least contain the query parameters from the stub request.
@@ -140,7 +138,7 @@ final class MockServiceTests: XCTestCase {
         XCTAssertEqual(fullURL.path, queryLessURL.path)
         
         // GIVEN: I stub a URL with query parameters and validate explicitly.
-        let fulURLRequest = StubRequest(url: fullURL, validationRule: .explicit)
+        let fulURLRequest = StubRequest(url: fullURL, queryMatchRule: .exactMatch)
         self.stub(fulURLRequest, with: .encodable(self.mockData))
         
         // THEN: The request without query parameters should fail, because the stub had query parameters.
@@ -152,7 +150,7 @@ final class MockServiceTests: XCTestCase {
         let fullURL = try XCTUnwrap(URL(string: self.fullURL))
         
         // GIVEN: I stub the specific URL and have it validate explicitly.
-        let fullURLRequest = StubRequest(url: fullURL, validationRule: .explicit)
+        let fullURLRequest = StubRequest(url: fullURL, queryMatchRule: .exactMatch)
         self.stub(fullURLRequest, with: .encodable(self.mockData))
         
         // THEN: The request should succeed.

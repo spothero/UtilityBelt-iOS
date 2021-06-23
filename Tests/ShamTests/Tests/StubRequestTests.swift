@@ -28,29 +28,29 @@ final class StubRequestTests: XCTestCase {
     
     // MARK: Query items tests
     
-    func testAccuratelyValidatesWhenARequestHasAllQueryItems() {
-        // GIVEN: A request with many parameters.
+    func testAccuratelyValidatesWhenAStubHasASubsetOfAnotherStubsQueryParameters() {
+        // GIVEN: A stub with many query parameters.
         let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
-        let request: StubRequest = .get(queryParametersURL)
+        let stub: StubRequest = .get(queryParametersURL)
         
         // GIVEN: A stub with a subset of the previous URL's parameters and set to allowing missing query parameters.
         let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
-        let stub: StubRequest = .get(similarURL, validationRule: .allowMissingQueryParameters)
+        let querySubsetStub: StubRequest = .get(similarURL, queryMatchRule: .allowMissingQueryParameters)
         
-        // THEN: The stub has all provided query items for the request.
-        XCTAssertTrue(stub.hasAllProvidedQueryItems(for: request))
+        // THEN: The subset stub has all provided query items for the stub.
+        XCTAssertTrue(querySubsetStub.hasAllProvidedQueryItems(for: stub))
     }
     
-    func testAccuratelyValidatesWhenARequestDoesNotHaveAllQueryItems() {
-        // GIVEN: A stub with many parameters.
-        let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
-        let stub: StubRequest = .get(queryParametersURL, validationRule: .allowMissingQueryParameters)
-        
-        // GIVEN: A stub with a subset of the previous URL's parameters and set to not allow missing query parameters.
+    func testAccuratelyValidatesWhenAStubDoesNotHaveASubsetOfAnotherStubsQueryParameters() {
+        // GIVEN: A stub with a superset of the previous URL's parameters.
         let similarURL = "\(self.baseURLString)?aardvark=other_thing&zebra=thing"
-        let request: StubRequest = .get(similarURL)
+        let querySupersetStub: StubRequest = .get(similarURL)
         
-        // THEN: The stub does not have all provided query items for the request.
-        XCTAssertFalse(stub.hasAllProvidedQueryItems(for: request))
+        // GIVEN: A stub with many parameters and set to allow missing query parameters.
+        let queryParametersURL = "\(self.baseURLString)?zebra=thing&aardvark=other_thing&giraffe=thing_3"
+        let stub: StubRequest = .get(queryParametersURL, queryMatchRule: .allowMissingQueryParameters)
+        
+        // THEN: The stub does not have all provided query items for the superset stub.
+        XCTAssertFalse(stub.hasAllProvidedQueryItems(for: querySupersetStub))
     }
 }
