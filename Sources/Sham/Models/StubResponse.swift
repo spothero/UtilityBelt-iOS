@@ -63,7 +63,7 @@ extension StubResponse: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(self.data, forKey: .data)
         try container.encode(self.headers, forKey: .headers)
-        try container.encode(self.mimeType, forKey: .mimeType)
+        try container.encodeIfPresent(self.mimeType, forKey: .mimeType)
         try container.encode(self.statusCode, forKey: .statusCode)
     }
     
@@ -72,7 +72,7 @@ extension StubResponse: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.data = try container.decodeIfPresent(Data.self, forKey: .data)
         self.headers = try container.decode([String: String].self, forKey: .headers)
-        self.mimeType = try container.decode(MimeType.self, forKey: .headers)
+        self.mimeType = try container.decodeIfPresent(MimeType.self, forKey: .mimeType)
         self.statusCode = try container.decode(HTTPStatusCode.self, forKey: .statusCode)
     }
 }
