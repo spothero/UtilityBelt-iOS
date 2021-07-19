@@ -9,7 +9,7 @@ public typealias DataTaskCompletion = DecodableTaskCompletion<Data>
 public typealias DecodableTaskCompletion<T: Decodable> = (DataResponse<T, Error>) -> Void
 
 /// A lightweight HTTP Client that supports data tasks
-public class HTTPClient {
+open class HTTPClient {
     // MARK: - Shared Instance
     
     /// The shared HTTP Client instance.
@@ -53,14 +53,14 @@ public class HTTPClient {
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
-    public func request(_ url: URLConvertible,
-                        method: HTTPMethod = .get,
-                        parameters: ParameterDictionaryConvertible? = nil,
-                        headers: HTTPHeaderDictionaryConvertible? = nil,
-                        encoding: ParameterEncoding? = nil,
-                        validators: [ResponseValidator] = [],
-                        dispatchQueue: DispatchQueue = .main,
-                        completion: DataTaskCompletion? = nil) -> URLSessionTask? {
+    open func request(_ url: URLConvertible,
+                      method: HTTPMethod = .get,
+                      parameters: ParameterDictionaryConvertible? = nil,
+                      headers: HTTPHeaderDictionaryConvertible? = nil,
+                      encoding: ParameterEncoding? = nil,
+                      validators: [ResponseValidator] = [],
+                      dispatchQueue: DispatchQueue = .main,
+                      completion: DataTaskCompletion? = nil) -> URLSessionTask? {
         let request: URLRequest
         
         do {
