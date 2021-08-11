@@ -113,11 +113,11 @@ public class HTTPClient {
         }
         
         private func createAndResumeDataTask(for request: URLRequest) {
-            let task = self.session.dataTask(with: request) { [weak self] data, response, error in
-                self?.handleCompletedDataTask(originalRequest: request,
-                                              data: data,
-                                              urlResponse: response,
-                                              error: error)
+            let task = self.session.dataTask(with: request) { data, response, error in
+                self.handleCompletedDataTask(originalRequest: request,
+                                             data: data,
+                                             urlResponse: response,
+                                             error: error)
             }
             self.tasks.append(task)
             self.resume()
