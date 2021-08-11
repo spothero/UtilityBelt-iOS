@@ -3,7 +3,7 @@
 import Foundation
 
 public protocol RequestRetrier {
-    func retry(_ request: URLRequest, dueTo error: Error, completion: @escaping (Bool) -> Void)
+    func retry(_ request: URLRequest, statusCode: Int, completion: @escaping (Bool) -> Void)
 }
 
 public protocol RequestAdapter {
@@ -132,8 +132,10 @@ public class HTTPClient {
                 return
             }
             
-            if let error = error, let interceptor = self.interceptor {
-                interceptor.retry(originalRequest, dueTo: error) { retry in
+            if let statusCode = (urlResponse as? HTTPURLResponse)?.statusCode,
+               (400 ..< 600).contains(statusCode),
+               let interceptor = self.interceptor {
+                interceptor.retry(originalRequest, statusCode: statusCode) { retry in
                     if retry {
                         self.retryCount += 1
                         self.perform(request: originalRequest)
