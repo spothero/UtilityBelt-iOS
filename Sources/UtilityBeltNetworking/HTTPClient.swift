@@ -2,6 +2,16 @@
 
 import Foundation
 
+public protocol RequestRetrier {
+    func retry(_ request: URLRequest, dueTo error: Error, completion: @escaping (Bool) -> Void)
+}
+
+public protocol RequestAdapter {
+    func adapt(_ urlRequest: URLRequest, completion: @escaping (Result<URLRequest, Error>) -> Void)
+}
+
+public protocol RequestInterceptor: RequestAdapter, RequestRetrier {}
+
 /// A completion handler for requests that return raw data results.
 public typealias DataTaskCompletion = DecodableTaskCompletion<Data>
 
@@ -19,6 +29,8 @@ public class HTTPClient {
     
     /// The URLSession that is used for all requests.
     let session: URLSession
+    
+    public var interceptor: RequestInterceptor?
     
     /// Whether or not the client should be logging requests. Defaults to `false`.
     public var isDebugLoggingEnabled = false
@@ -41,6 +53,181 @@ public class HTTPClient {
     }
     
     // MARK: Data Response
+
+    // Save the url request
+    // Ask the interceptor if it needs to alter the request
+    // Start the request
+    // Upon the request completing, as the interceptor if it needs to retry the request
+    // Create a new request and retry
+    public class DataRequest {
+        private var urlRequests: [URLRequest] = []
+        var urlRequest: URLRequest? {
+            return self.task?.originalRequest
+        }
+        
+        private var tasks: [URLSessionTask] = []
+        private var task: URLSessionTask? {
+            return self.tasks.last
+        }
+        
+        private let validators: [ResponseValidator]
+        private var interceptor: RequestInterceptor?
+        private let dispatchQueue: DispatchQueue
+        private var completion: DataTaskCompletion?
+        public private(set) var retryCount = 0
+        private var session: URLSession
+        
+        init(session: URLSession,
+             dispatchQueue: DispatchQueue = .main,
+             validators: [ResponseValidator] = [],
+             interceptor: RequestInterceptor? = nil,
+             completion: DataTaskCompletion? = nil) {
+            self.session = session
+            self.dispatchQueue = dispatchQueue
+            self.validators = validators
+            self.interceptor = interceptor
+            self.completion = completion
+        }
+        
+        func resume() {
+            guard let task = self.task, task.state != .completed else {
+                return
+            }
+            
+            task.resume()
+        }
+        
+        func perform(request: URLRequest) {
+            if let interceptor = self.interceptor {
+                interceptor.adapt(request) { result in
+                    switch result {
+                    case let .success(adaptedRequest):
+                        self.createAndResumeDataTask(for: adaptedRequest)
+                    case let .failure(error):
+                        self.completion?(.failure(error))
+                    }
+                }
+            } else {
+                self.createAndResumeDataTask(for: request)
+            }
+        }
+        
+        private func createAndResumeDataTask(for request: URLRequest) {
+            let task = self.session.dataTask(with: request) { [weak self] data, response, error in
+                self?.handleCompletedDataTask(originalRequest: request,
+                                              data: data,
+                                              urlResponse: response,
+                                              error: error)
+            }
+            self.tasks.append(task)
+            self.resume()
+        }
+        
+        private func handleCompletedDataTask(originalRequest: URLRequest,
+                                             data: Data?,
+                                             urlResponse: URLResponse?,
+                                             error: Error?) {
+            guard originalRequest == self.urlRequest else {
+                // This is an old request, just return.
+                return
+            }
+            
+            if let error = error, let interceptor = self.interceptor {
+                interceptor.retry(originalRequest, dueTo: error) { retry in
+                    if retry {
+                        self.retryCount += 1
+                        self.perform(request: originalRequest)
+                    } else {
+                        self.completeDataRequest(request: originalRequest, data: data, urlResponse: urlResponse, error: error)
+                    }
+                }
+            } else {
+                self.completeDataRequest(request: originalRequest, data: data, urlResponse: urlResponse, error: error)
+            }
+        }
+        
+        private func completeDataRequest(request: URLRequest,
+                                         data: Data?,
+                                         urlResponse: URLResponse?,
+                                         error: Error?) {
+            guard let completion = self.completion else {
+                return
+            }
+            
+            // Convert the URLResponse into an HTTPURLResponse object.
+            // If it cannot be converted, use the undefined HTTPURLResponse object
+            let httpResponse = urlResponse as? HTTPURLResponse
+            
+            // Create a result object for improved handling of the response
+            let result: Result<Data, Error> = {
+                if let response = httpResponse {
+                    do {
+                        for validator in validators {
+                            try validator.validate(response: response)
+                        }
+                    } catch {
+                        return .failure(error)
+                    }
+                }
+                if let data = data {
+                    return .success(data)
+                } else if let error = error {
+                    return .failure(error)
+                } else {
+                    return .failure(UBNetworkError.unexpectedError)
+                }
+            }()
+            
+            // Create the DataResponse object containing all necessary information from the response
+            let dataResponse = DataResponse(request: request,
+                                            response: httpResponse,
+                                            data: data,
+                                            result: result)
+            
+            self.dispatchQueue.async {
+                // Fire the completion!
+                completion(dataResponse)
+            }
+        }
+        
+        public func cancel() {
+            self.task?.cancel()
+        }
+    }
+    
+    @discardableResult
+    public func newRequest(_ url: URLConvertible,
+                           method: HTTPMethod = .get,
+                           parameters: ParameterDictionaryConvertible? = nil,
+                           headers: HTTPHeaderDictionaryConvertible? = nil,
+                           encoding: ParameterEncoding? = nil,
+                           validators: [ResponseValidator] = [],
+                           dispatchQueue: DispatchQueue = .main,
+                           completion: DataTaskCompletion? = nil) -> DataRequest? {
+        let urlRequest: URLRequest
+        
+        do {
+            urlRequest = try self.configuredURLRequest(
+                url: url,
+                method: method,
+                parameters: parameters,
+                headers: headers,
+                encoding: encoding
+            )
+        } catch {
+            dispatchQueue.async {
+                completion?(.failure(error))
+            }
+            return nil
+        }
+        
+        let dataRequest = DataRequest(session: self.session,
+                                      interceptor: self.interceptor,
+                                      completion: completion)
+        dataRequest.perform(request: urlRequest)
+        
+        return dataRequest
+    }
     
     /// Creates and sends a request which fetches raw data from an endpoint.
     /// - Parameter url: The URL for the request. Accepts a URL or a String.
@@ -206,6 +393,60 @@ public class HTTPClient {
                                       decoder: JSONDecoder = JSONDecoder(),
                                       completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
         return self.request(
+            url,
+            method: method,
+            parameters: parameters,
+            headers: headers,
+            encoding: encoding,
+            validators: validators,
+            dispatchQueue: dispatchQueue
+        ) { dataResponse in
+            // Create a result object for improved handling of the response
+            let result: Result<T, Error> = {
+                switch dataResponse.result {
+                case let .success(data) where T.self == Data.self:
+                    // If T is Data, we have nothing to decode, so just return it as-is!
+                    if let data = data as? T {
+                        return .success(data)
+                    } else {
+                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self), nil))
+                    }
+                case let .success(data):
+                    do {
+                        let decodedObject = try decoder.decode(T.self, from: data)
+                        return .success(decodedObject)
+                    } catch let error as DecodingError {
+                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self), error))
+                    } catch {
+                        return .failure(UBNetworkError.unableToDecode(String(describing: T.self), nil))
+                    }
+                case let .failure(error):
+                    return .failure(error)
+                }
+            }()
+            
+            // Create the DataResponse object containing all necessary information from the response
+            let response = DataResponse(request: dataResponse.request,
+                                        response: dataResponse.response,
+                                        data: dataResponse.data,
+                                        result: result)
+            
+            // Fire the completion!
+            completion?(response)
+        }
+    }
+    
+    @discardableResult
+    public func newRequest<T: Decodable>(_ url: URLConvertible,
+                                         method: HTTPMethod = .get,
+                                         parameters: ParameterDictionaryConvertible? = nil,
+                                         headers: HTTPHeaderDictionaryConvertible? = nil,
+                                         encoding: ParameterEncoding? = nil,
+                                         validators: [ResponseValidator] = [.ensureMimeType(.json)],
+                                         dispatchQueue: DispatchQueue = .main,
+                                         decoder: JSONDecoder = JSONDecoder(),
+                                         completion: DecodableTaskCompletion<T>? = nil) -> HTTPClient.DataRequest? {
+        return self.newRequest(
             url,
             method: method,
             parameters: parameters,
