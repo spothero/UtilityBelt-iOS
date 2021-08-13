@@ -124,8 +124,8 @@ public struct StubRequest: Hashable, CustomStringConvertible, Codable {
         // Include any stubbed response where the port matches the incoming URL's port or is nil
         let validPort = url.port == nil || url.port == requestURL.port
         
-        // Include any stubbed response where the path matches the incoming URL's path or is empty
-        let validPath = url.trimmedPath.isEmpty || url.trimmedPath == requestURL.trimmedPath
+        // Include any stubbed response where the path matches the incoming URL's case insensitive path or is empty
+        let validPath = url.trimmedPath.isEmpty || url.trimmedPath.lowercased() == requestURL.trimmedPath.lowercased()
         
         // Determine if the stub and request have the same base URL.
         let hasSameBaseURL = validScheme && validHost && validPort && validPath

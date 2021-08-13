@@ -53,4 +53,17 @@ final class StubRequestTests: XCTestCase {
         // THEN: The stub does not have all provided query items for the superset stub.
         XCTAssertFalse(querySupersetStub.hasSubsetOfQueryItems(in: stub))
     }
+    
+    func testDifferentCasedURLPathsStillMatch() {
+        let endpointString = "/aardvark=other_thing&zebra=thing"
+        
+        // GIVEN: A StubRequest with a lowercased endpoint
+        let lowercasedStub: StubRequest = .get("\(self.baseURLString)\(endpointString.lowercased())")
+        
+        // GIVEN: A StubRequest with the same endpoint but with uppercased letters
+        let uppercasedStub: StubRequest = .get("\(self.baseURLString)\(endpointString.uppercased())")
+        
+        // THEN: The lowercased StubRequest can still mock data for the uppercased StubRequest.
+        XCTAssertTrue(lowercasedStub.canMockData(for: uppercasedStub))
+    }
 }
