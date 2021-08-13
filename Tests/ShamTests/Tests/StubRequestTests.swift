@@ -60,7 +60,7 @@ final class StubRequestTests: XCTestCase {
         // GIVEN: A StubRequest with a lowercased path
         let lowercasedStub: StubRequest = .get("\(self.baseURLString)\(endpointString.lowercased())")
         
-        // GIVEN: A StubRequest with the same endpoint but with uppercased letters
+        // GIVEN: A StubRequest with the same path but with uppercased letters
         let uppercasedStub: StubRequest = .get("\(self.baseURLString)\(endpointString.uppercased())")
         
         // THEN: The lowercased StubRequest can still mock data for the uppercased StubRequest.
