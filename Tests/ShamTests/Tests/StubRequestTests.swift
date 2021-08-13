@@ -57,7 +57,7 @@ final class StubRequestTests: XCTestCase {
     func testDifferentCasedURLPathsStillMatch() {
         let endpointString = "/aardvark=other_thing&zebra=thing"
         
-        // GIVEN: A StubRequest with a lowercased endpoint
+        // GIVEN: A StubRequest with a lowercased path
         let lowercasedStub: StubRequest = .get("\(self.baseURLString)\(endpointString.lowercased())")
         
         // GIVEN: A StubRequest with the same endpoint but with uppercased letters
