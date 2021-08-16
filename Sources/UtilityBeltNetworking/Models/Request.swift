@@ -78,6 +78,11 @@ public class Request {
     
     /// Cancels the current task.
     public func cancel() {
+        // TODO: If a cancel request comes in prior to starting the task
+        // (e.x. if the adapt operation is taking awhile), how do we
+        // ensure the task doesn't start anyway and that the proper
+        // cancellation error is returned?
+        // https://spothero.atlassian.net/browse/IOS-3202
         self.task?.cancel()
     }
     
