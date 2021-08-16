@@ -86,7 +86,9 @@ public class HTTPClient {
         
         let request = Request(urlRequest: urlRequest,
                               session: self.session,
+                              validators: validators,
                               interceptor: interceptor,
+                              dispatchQueue: dispatchQueue,
                               completion: completion)
         request.resume()
         return request
