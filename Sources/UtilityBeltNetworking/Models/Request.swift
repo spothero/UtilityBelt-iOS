@@ -61,7 +61,7 @@ public class Request {
             currentTask.resume()
         } else if let interceptor = self.interceptor {
             // If there is not an existing task, and there's a RequestInterceptor,
-            // pass the request off to be adapted, then kick off the request.
+            // pass the request off to be adapted, then create start the task.
             interceptor.adapt(self.initialURLRequest) { result in
                 switch result {
                 case let .success(adaptedRequest):
