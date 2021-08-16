@@ -273,7 +273,7 @@ public class HTTPClient {
 
 // MARK: - Extensions
 
-private extension DataResponse {
+internal extension DataResponse {
     /// Initializes a `DataResponse` object with `nil` request, response, and data properties
     /// and a failure result containing the given error.
     /// - Parameter error: The error to return in the result of the response.
