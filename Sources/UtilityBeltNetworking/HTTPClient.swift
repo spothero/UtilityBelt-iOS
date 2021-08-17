@@ -49,6 +49,7 @@ public class HTTPClient {
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
     /// - Parameter validators: An array of validators that will be applied to the response.
+    /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
@@ -59,12 +60,13 @@ public class HTTPClient {
                         headers: HTTPHeaderDictionaryConvertible? = nil,
                         encoding: ParameterEncoding? = nil,
                         validators: [ResponseValidator] = [],
+                        interceptor: RequestInterceptor? = nil,
                         dispatchQueue: DispatchQueue = .main,
-                        completion: DataTaskCompletion? = nil) -> URLSessionTask? {
-        let request: URLRequest
+                        completion: DataTaskCompletion? = nil) -> Request? {
+        let urlRequest: URLRequest
         
         do {
-            request = try self.configuredURLRequest(
+            urlRequest = try self.configuredURLRequest(
                 url: url,
                 method: method,
                 parameters: parameters,
@@ -78,78 +80,18 @@ public class HTTPClient {
             return nil
         }
         
-        if let urlString = request.url?.absoluteString {
+        if let urlString = urlRequest.url?.absoluteString {
             self.log("Starting \(method.rawValue) request to \(urlString)")
         }
         
-        let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
-            self.log("Request finished.")
-            
-            if let urlResponse = urlResponse {
-                self.log("[Response] \(urlResponse)")
-            }
-            
-            // Convert the URLResponse into an HTTPURLResponse object.
-            // If it cannot be converted, use the undefined HTTPURLResponse object
-            let httpResponse = urlResponse as? HTTPURLResponse
-            
-            // Create a result object for improved handling of the response
-            let result: Result<Data, Error> = {
-                if let response = httpResponse {
-                    do {
-                        for validator in validators {
-                            try validator.validate(response: response)
-                        }
-                    } catch {
-                        return .failure(error)
-                    }
-                }
-                if let data = data {
-                    return .success(data)
-                } else if let error = error {
-                    return .failure(error)
-                } else {
-                    return .failure(UBNetworkError.unexpectedError)
-                }
-            }()
-            
-            switch result {
-            case let .success(data):
-                self.log("Response succeeded.")
-                
-                // Attempt to get the data as pretty printed JSON, otherwise just encode to utf8
-                if let dataString: String = data.asPrettyPrintedJSON ?? String(data: data, encoding: .utf8) {
-                    self.log(dataString)
-                }
-            case let .failure(error):
-                self.log("Response failed. Error: \(error.localizedDescription)")
-            }
-            
-            // Create the DataResponse object containing all necessary information from the response
-            let dataResponse = DataResponse(request: request,
-                                            response: httpResponse,
-                                            data: data,
-                                            result: result)
-            
-            dispatchQueue.async {
-                // Fire the completion!
-                completion?(dataResponse)
-            }
-        }
-        
-        let task: URLSessionTask
-        // When a background request is made, it must use a delegate
-        // and be a download or upload task. Using a data task will fail
-        // and using a completion will cause an assertion failure.
-        if let delegate = self.session.delegate as? HTTPSessionDelegate {
-            delegate.completion = completion
-            task = self.session.downloadTask(with: request)
-        } else {
-            task = self.session.dataTask(with: request, completionHandler: completion)
-        }
-        task.resume()
-        
-        return task
+        let request = Request(urlRequest: urlRequest,
+                              session: self.session,
+                              validators: validators,
+                              interceptor: interceptor,
+                              dispatchQueue: dispatchQueue,
+                              completion: completion)
+        request.resume()
+        return request
     }
     
     /// Creates and sends a request which fetches raw data from an endpoint.
@@ -159,6 +101,7 @@ public class HTTPClient {
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
     /// - Parameter validators: An array of validators that will be applied to the response.
+    /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
@@ -170,14 +113,16 @@ public class HTTPClient {
                         headers: HTTPHeaderDictionaryConvertible? = nil,
                         encoding: ParameterEncoding? = nil,
                         validators: [ResponseValidator] = [],
+                        interceptor: RequestInterceptor? = nil,
                         dispatchQueue: DispatchQueue = .main,
-                        completion: DataTaskCompletion? = nil) -> URLSessionTask? {
+                        completion: DataTaskCompletion? = nil) -> Request? {
         self.request(url,
                      method: method,
                      parameters: try? parameters.asDictionary(),
                      headers: headers,
                      encoding: encoding,
                      validators: validators,
+                     interceptor: interceptor,
                      dispatchQueue: dispatchQueue,
                      completion: completion)
     }
@@ -191,6 +136,7 @@ public class HTTPClient {
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
     /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
+    /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
@@ -202,9 +148,10 @@ public class HTTPClient {
                                       headers: HTTPHeaderDictionaryConvertible? = nil,
                                       encoding: ParameterEncoding? = nil,
                                       validators: [ResponseValidator] = [.ensureMimeType(.json)],
+                                      interceptor: RequestInterceptor? = nil,
                                       dispatchQueue: DispatchQueue = .main,
                                       decoder: JSONDecoder = JSONDecoder(),
-                                      completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
+                                      completion: DecodableTaskCompletion<T>? = nil) -> Request? {
         return self.request(
             url,
             method: method,
@@ -212,6 +159,7 @@ public class HTTPClient {
             headers: headers,
             encoding: encoding,
             validators: validators,
+            interceptor: interceptor,
             dispatchQueue: dispatchQueue
         ) { dataResponse in
             // Create a result object for improved handling of the response
@@ -256,6 +204,7 @@ public class HTTPClient {
     /// - Parameter headers: The HTTP headers to send with the request.
     /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
     /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
+    /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
@@ -268,15 +217,17 @@ public class HTTPClient {
                                       headers: HTTPHeaderDictionaryConvertible? = nil,
                                       encoding: ParameterEncoding? = nil,
                                       validators: [ResponseValidator] = [.ensureMimeType(.json)],
+                                      interceptor: RequestInterceptor? = nil,
                                       dispatchQueue: DispatchQueue = .main,
                                       decoder: JSONDecoder = JSONDecoder(),
-                                      completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
+                                      completion: DecodableTaskCompletion<T>? = nil) -> Request? {
         self.request(url,
                      method: method,
                      parameters: try? parameters.asDictionary(),
                      headers: headers,
                      encoding: encoding,
                      validators: validators,
+                     interceptor: interceptor,
                      dispatchQueue: dispatchQueue,
                      decoder: decoder,
                      completion: completion)
@@ -324,7 +275,7 @@ public class HTTPClient {
 
 // MARK: - Extensions
 
-private extension DataResponse {
+internal extension DataResponse {
     /// Initializes a `DataResponse` object with `nil` request, response, and data properties
     /// and a failure result containing the given error.
     /// - Parameter error: The error to return in the result of the response.
