@@ -4,27 +4,13 @@ import Foundation
 @testable import UtilityBeltNetworking
 import XCTest
 
-final class RequestInterceptorTests: XCTestCase {
-    // MARK: Lifecycle
+final class RequestTests: XCTestCase {
+    // MARK: Request Adapting Tests
     
-    override class func setUp() {
-        super.setUp()
-        // Set a short timeout to avoid waiting on requests to complete.
-        HTTPClient.shared.timeoutInterval = 0.1
-    }
-    
-    override class func tearDown() {
-        // Reset the timeout interval.
-        HTTPClient.shared.timeoutInterval = nil
-        super.tearDown()
-    }
-    
-    // MARK: RequestAdapter Tests
-    
-    func testAdaptedURLIsReturnedInDataResponse() {
+    func testAdaptedURLIsReturnedInDataResponse() throws {
         // Create an adapter that changes the original request.
         struct MockAdapter: RequestInterceptor {
-            static let adaptedURL = "https//www.spothero.com/foo"
+            static let adaptedURL = "spothero.com/foo"
             func adapt(_ request: URLRequest,
                        completion: (Result<URLRequest, Error>) -> Void) {
                 var adaptedRequest = request
@@ -39,19 +25,23 @@ final class RequestInterceptorTests: XCTestCase {
         
         let interceptor = MockAdapter()
         
-        // Start a request for the initial URL.
+        // Create a request with the expectation the response includes the adapted url.
         let expectation = self.expectation(description: "Request has completed")
-        let initialURL = "https//www.spothero.com"
-        HTTPClient.shared.request(initialURL, interceptor: interceptor) { response in
-            // Verify the response returns the adapted URL.
+        let request = Request(session: .shared, interceptor: interceptor) { response in
             XCTAssertEqual(response.request?.url?.absoluteString, MockAdapter.adaptedURL)
             expectation.fulfill()
         }
         
+        // Perform the request.
+        let initialURL = "spothero.com"
+        XCTAssertNotEqual(initialURL, MockAdapter.adaptedURL)
+        request.perform(urlRequest: try self.urlRequest(url: "spothero.com"))
+        
+        // Verify the expectation is met.
         self.wait(for: [expectation], timeout: 1)
     }
     
-    func testErrorDuringRequestAdaptingIsReturnedInDataResponse() {
+    func testErrorDuringRequestAdaptingIsReturnedInDataResponse() throws {
         // Create an adapter that returns an error.
         struct MockAdapter: RequestInterceptor {
             static let errorDescription = "Adapting url failed"
@@ -70,22 +60,25 @@ final class RequestInterceptorTests: XCTestCase {
         
         let interceptor = MockAdapter()
         
-        // Start a request.
+        // Create a request with the expectation the response includes
+        // the error that was returned by the adapter.
         let expectation = self.expectation(description: "Request has completed")
-        let url = "https//www.spothero.com"
-        HTTPClient.shared.request(url, interceptor: interceptor) { response in
-            // Verify the response returns the error from the adapter.
+        let request = Request(session: .shared, interceptor: interceptor) { response in
             XCTAssertEqual(response.error?.localizedDescription,
                            MockAdapter.errorDescription)
             expectation.fulfill()
         }
         
+        // Perform the request.
+        request.perform(urlRequest: try self.urlRequest(url: "spothero.com"))
+        
+        // Verify the expectation is met.
         self.wait(for: [expectation], timeout: 1)
     }
     
-    // MARK: RequestRetrier Tests
+    // MARK: Request Retrying Tests
     
-    func testRetryCountIncreasesWhenRetryIsRequested() {
+    func testRetryCountIncreasesWhenRetryIsRequested() throws {
         // Create an interceptor that will trigger a retry once.
         class MockInterceptor: RequestInterceptor {
             func adapt(_ request: URLRequest, completion: (Result<URLRequest, Error>) -> Void) {
@@ -109,10 +102,37 @@ final class RequestInterceptorTests: XCTestCase {
         let retryExpectation = self.expectation(description: "Retry was called")
         interceptor.retryExpectation = retryExpectation
         
-        // Perform a request.
-        HTTPClient.shared.request("spothero.com", interceptor: interceptor) { _ in }
+        // Perform the request.
+        let request = Request(session: .shared, interceptor: interceptor) { _ in }
+        request.perform(urlRequest: try self.urlRequest(url: "spothero.com"))
         
-        // Verify that the retry expectation was called once as the retryCount was incremented.
+        // Verify that the retry expectation was called.
         self.wait(for: [retryExpectation], timeout: 1)
+        
+        // Verify the retryCount was incremented.
+        XCTAssertEqual(request.retryCount, 1)
+    }
+}
+
+// MARK: - Utilities
+
+private extension RequestTests {
+    func urlRequest(url: URLConvertible,
+                    method: HTTPMethod = .get,
+                    parameters: ParameterDictionaryConvertible? = nil,
+                    headers: HTTPHeaderDictionaryConvertible? = nil,
+                    encoding: ParameterEncoding? = nil,
+                    timeout: TimeInterval? = 0.1) throws -> URLRequest {
+        var request = try HTTPClient.shared.configuredURLRequest(url: url,
+                                                                 method: method,
+                                                                 parameters: parameters,
+                                                                 headers: headers,
+                                                                 encoding: encoding)
+        
+        if let timeout = timeout {
+            request.timeoutInterval = timeout
+        }
+        
+        return request
     }
 }
