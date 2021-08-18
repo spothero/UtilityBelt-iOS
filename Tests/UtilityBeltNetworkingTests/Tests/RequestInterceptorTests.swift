@@ -82,4 +82,37 @@ final class RequestInterceptorTests: XCTestCase {
         
         self.wait(for: [expectation], timeout: 1)
     }
+    
+    // MARK: RequestRetrier Tests
+    
+    func testRetryCountIncreasesWhenRetryIsRequested() {
+        // Create an interceptor that will trigger a retry once.
+        class MockInterceptor: RequestInterceptor {
+            func adapt(_ request: URLRequest, completion: (Result<URLRequest, Error>) -> Void) {
+                completion(.success(request))
+            }
+            
+            var retryExpectation: XCTestExpectation?
+            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+                if request.retryCount < 1 {
+                    completion(true)
+                    self.retryExpectation?.fulfill()
+                } else {
+                    completion(false)
+                }
+            }
+        }
+        
+        let interceptor = MockInterceptor()
+        
+        // Set an expectation that retry will be invoked.
+        let retryExpectation = self.expectation(description: "Retry was called")
+        interceptor.retryExpectation = retryExpectation
+        
+        // Perform a request.
+        HTTPClient.shared.request("spothero.com", interceptor: interceptor) { _ in }
+        
+        // Verify that the retry expectation was called once as the retryCount was incremented.
+        self.wait(for: [retryExpectation], timeout: 1)
+    }
 }
