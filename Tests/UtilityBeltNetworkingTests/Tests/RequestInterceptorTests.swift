@@ -4,7 +4,7 @@ import Foundation
 @testable import UtilityBeltNetworking
 import XCTest
 
-final class RequestAdapterTests: XCTestCase {
+final class RequestInterceptorTests: XCTestCase {
     // MARK: Lifecycle
     
     override class func setUp() {
@@ -19,7 +19,7 @@ final class RequestAdapterTests: XCTestCase {
         super.tearDown()
     }
     
-    // MARK: Tests
+    // MARK: RequestAdapter Tests
     
     func testAdaptedURLIsReturnedInDataResponse() {
         // Create an adapter that changes the original request.
@@ -30,6 +30,10 @@ final class RequestAdapterTests: XCTestCase {
                 var adaptedRequest = request
                 adaptedRequest.url = URL(string: Self.adaptedURL)
                 completion(.success(adaptedRequest))
+            }
+            
+            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+                completion(false)
             }
         }
         
@@ -57,6 +61,10 @@ final class RequestAdapterTests: XCTestCase {
                                     code: 0,
                                     userInfo: [NSLocalizedDescriptionKey: Self.errorDescription])
                 completion(.failure(error))
+            }
+            
+            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+                completion(false)
             }
         }
         
