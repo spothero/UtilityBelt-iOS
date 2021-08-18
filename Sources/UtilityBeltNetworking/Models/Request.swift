@@ -2,7 +2,7 @@
 
 import Foundation
 
-public class Request {
+public final class Request {
     // MARK: Properties
     
     /// The session in which the request will be made.
