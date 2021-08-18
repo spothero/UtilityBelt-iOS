@@ -47,7 +47,10 @@ public class Request {
         self.completion = completion
     }
     
+    /// Creates a new `URLSessionTask` from the given `URLRequest` and resumes the task.
+    /// - Parameter urlRequest: The request to be sent to the server.
     func perform(urlRequest: URLRequest) {
+        // Wrap the logic to create and resume the task in a reusable method.
         func createAndResumeSessionTask(with urlRequest: URLRequest) {
             let wrappedCompletion: HTTPSessionDelegateCompletion = { data, response, error in
                 self.processCompletedTask(urlRequest: urlRequest,
@@ -72,8 +75,8 @@ public class Request {
         }
         
         if let interceptor = self.interceptor {
-            // If there is not an existing task, and there's a RequestInterceptor,
-            // pass the request off to be adapted, then create resume the task.
+            // If there's a RequestInterceptor, pass the request
+            // off to be adapted, then create resume the task.
             interceptor.adapt(urlRequest) { result in
                 switch result {
                 case let .success(adaptedRequest):
