@@ -2,4 +2,4 @@
 
 import Foundation
 
-public protocol RequestInterceptor: RequestAdapter {}
+public protocol RequestInterceptor: RequestAdapter, RequestRetrier {}
