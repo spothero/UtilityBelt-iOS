@@ -14,7 +14,7 @@ public class Request {
     private let session: URLSession
     
     /// The current session task.
-    private var task: URLSessionTask?
+    public private(set) var task: URLSessionTask?
     
     /// An array of validators that will be applied to the response.
     private let validators: [ResponseValidator]
@@ -27,6 +27,9 @@ public class Request {
     
     /// The dispatch queue that the completion will be called on.
     private let dispatchQueue: DispatchQueue
+    
+    /// The number of request retries that have been attempted.
+    public private(set) var retryCount = 0
     
     // MARK: Initialization
     
@@ -95,10 +98,10 @@ public class Request {
     /// - Parameter urlRequest: The URL for the request.
     private func performSessionTask(with urlRequest: URLRequest) {
         let wrappedCompletion: HTTPSessionDelegateCompletion = { data, response, error in
-            self.handleCompletedDataTask(originalURLRequest: urlRequest,
-                                         data: data,
-                                         urlResponse: response,
-                                         error: error)
+            self.processCompletedTask(urlRequest: urlRequest,
+                                      data: data,
+                                      urlResponse: response,
+                                      error: error)
         }
         
         let task: URLSessionTask
@@ -118,10 +121,16 @@ public class Request {
     
     // MARK: Response Handling
     
-    private func handleCompletedDataTask(originalURLRequest: URLRequest,
-                                         data: Data?,
-                                         urlResponse: URLResponse?,
-                                         error: Error?) {
+    /// Processes the result of a completed `URLSessionTask`.
+    /// - Parameters:
+    ///   - urlRequest: The request that was sent to the server.
+    ///   - data: The data returned from the `URLSessionTask`.
+    ///   - urlResponse: The response returned from the `URLSessionTask`.
+    ///   - error: The error returned from the `URLSessionTask`.
+    private func processCompletedTask(urlRequest: URLRequest,
+                                      data: Data?,
+                                      urlResponse: URLResponse?,
+                                      error: Error?) {
         HTTPClient.shared.log("Request finished.")
         
         if let urlResponse = urlResponse {
@@ -160,13 +169,51 @@ public class Request {
             if let dataString: String = data.asPrettyPrintedJSON ?? String(data: data, encoding: .utf8) {
                 HTTPClient.shared.log(dataString)
             }
+            
+            self.completeRequest(urlRequest: urlRequest,
+                                 urlResponse: httpResponse,
+                                 data: data,
+                                 result: result)
         case let .failure(error):
             HTTPClient.shared.log("Response failed. Error: \(error.localizedDescription)")
+            
+            if let interceptor = self.interceptor {
+                interceptor.retry(self, dueTo: error) { shouldRetry in
+                    if shouldRetry {
+                        // If we should retry, bump the retry count and perform the request again.
+                        self.retryCount += 1
+                        self.performSessionTask(with: urlRequest)
+                    } else {
+                        // Otherwise, complete the request.
+                        self.completeRequest(urlRequest: urlRequest,
+                                             urlResponse: httpResponse,
+                                             data: data,
+                                             result: result)
+                    }
+                }
+            } else {
+                self.completeRequest(urlRequest: urlRequest,
+                                     urlResponse: httpResponse,
+                                     data: data,
+                                     result: result)
+            }
         }
-        
+    }
+    
+    /// Completes the request by creating a `DataResponse` object and calling the
+    /// stored `DataTaskCompletion` block.
+    /// - Parameters:
+    ///   - urlRequest: The request that was sent to the server.
+    ///   - urlResponse: The response returned from the `URLSessionTask`.
+    ///   - data: The data returned from the `URLSessionTask`.
+    ///   - result: A `Result` object that can be used to handle the response.
+    private func completeRequest(urlRequest: URLRequest,
+                                 urlResponse: HTTPURLResponse?,
+                                 data: Data?,
+                                 result: Result<Data, Error>) {
         // Create the DataResponse object containing all necessary information from the response
-        let dataResponse = DataResponse(request: originalURLRequest,
-                                        response: httpResponse,
+        let dataResponse = DataResponse(request: urlRequest,
+                                        response: urlResponse,
                                         data: data,
                                         result: result)
         
