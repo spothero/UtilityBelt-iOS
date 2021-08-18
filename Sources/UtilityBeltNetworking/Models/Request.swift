@@ -5,11 +5,6 @@ import Foundation
 public class Request {
     // MARK: Properties
     
-    /// The initial URL request when the `Request` object was created.
-    /// This may differ from the final URL request sent to the server
-    /// if a `RequestAdapter` is used.
-    private let initialURLRequest: URLRequest
-    
     /// The session in which the request will be made.
     private let session: URLSession
     
@@ -35,48 +30,69 @@ public class Request {
     
     /// Create a new instance of a `Request`.
     /// - Parameters:
-    ///   - urlRequest: The URL for the request.
     ///   - session: The session in which the request will be made.
     ///   - validators: An array of validators that will be applied to the response. Defaults to an empty array.
     ///   - interceptor: An object that can intercept the url request. Defaults to `nil`.
     ///   - dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     ///   - completion: The block to call when the request has completed. Defaults to `nil`.
-    public init(urlRequest: URLRequest,
-                session: URLSession,
+    public init(session: URLSession,
                 validators: [ResponseValidator] = [],
                 interceptor: RequestInterceptor? = nil,
                 dispatchQueue: DispatchQueue = .main,
                 completion: DataTaskCompletion? = nil) {
-        self.initialURLRequest = urlRequest
         self.session = session
         self.validators = validators
         self.interceptor = interceptor
         self.dispatchQueue = dispatchQueue
         self.completion = completion
     }
-
-    // MARK: Updating State
     
-    /// Resumes the current task.
-    public func resume() {
-        if let currentTask = self.task {
-            // If there's an existing task, resume that task.
-            currentTask.resume()
-        } else if let interceptor = self.interceptor {
+    func perform(urlRequest: URLRequest) {
+        func createAndResumeSessionTask(with urlRequest: URLRequest) {
+            let wrappedCompletion: HTTPSessionDelegateCompletion = { data, response, error in
+                self.processCompletedTask(urlRequest: urlRequest,
+                                          data: data,
+                                          urlResponse: response,
+                                          error: error)
+            }
+            
+            let task: URLSessionTask
+            // When a background request is made, it must use a delegate
+            // and be a download or upload task. Using a data task will fail
+            // and using a completion will cause an assertion failure.
+            if let delegate = self.session.delegate as? HTTPSessionDelegate {
+                delegate.completion = wrappedCompletion
+                task = self.session.downloadTask(with: urlRequest)
+            } else {
+                task = self.session.dataTask(with: urlRequest, completionHandler: wrappedCompletion)
+            }
+
+            self.task = task
+            task.resume()
+        }
+        
+        if let interceptor = self.interceptor {
             // If there is not an existing task, and there's a RequestInterceptor,
-            // pass the request off to be adapted, then create start the task.
-            interceptor.adapt(self.initialURLRequest) { result in
+            // pass the request off to be adapted, then create resume the task.
+            interceptor.adapt(urlRequest) { result in
                 switch result {
                 case let .success(adaptedRequest):
-                    self.performSessionTask(with: adaptedRequest)
+                    createAndResumeSessionTask(with: adaptedRequest)
                 case let .failure(error):
                     self.completion?(.failure(error))
                 }
             }
         } else {
-            // Otherwise, create and start the task.
-            self.performSessionTask(with: self.initialURLRequest)
+            // Otherwise, create and resume the task.
+            createAndResumeSessionTask(with: urlRequest)
         }
+    }
+    
+    // MARK: Updating State
+    
+    /// Resumes the current task.
+    public func resume() {
+        self.task?.resume()
     }
     
     /// Cancels the current task.
@@ -92,31 +108,6 @@ public class Request {
     /// Suspends the current task.
     public func suspend() {
         self.task?.suspend()
-    }
-    
-    /// Creates and starts a session task with the given URL request.
-    /// - Parameter urlRequest: The URL for the request.
-    private func performSessionTask(with urlRequest: URLRequest) {
-        let wrappedCompletion: HTTPSessionDelegateCompletion = { data, response, error in
-            self.processCompletedTask(urlRequest: urlRequest,
-                                      data: data,
-                                      urlResponse: response,
-                                      error: error)
-        }
-        
-        let task: URLSessionTask
-        // When a background request is made, it must use a delegate
-        // and be a download or upload task. Using a data task will fail
-        // and using a completion will cause an assertion failure.
-        if let delegate = self.session.delegate as? HTTPSessionDelegate {
-            delegate.completion = wrappedCompletion
-            task = self.session.downloadTask(with: urlRequest)
-        } else {
-            task = self.session.dataTask(with: urlRequest, completionHandler: wrappedCompletion)
-        }
-
-        self.task = task
-        task.resume()
     }
     
     // MARK: Response Handling
@@ -182,7 +173,7 @@ public class Request {
                     if shouldRetry {
                         // If we should retry, bump the retry count and perform the request again.
                         self.retryCount += 1
-                        self.performSessionTask(with: urlRequest)
+                        self.perform(urlRequest: urlRequest)
                     } else {
                         // Otherwise, complete the request.
                         self.completeRequest(urlRequest: urlRequest,
