@@ -112,6 +112,42 @@ final class RequestTests: XCTestCase {
         // Verify the retryCount was incremented.
         XCTAssertEqual(request.retryCount, 1)
     }
+    
+    func testRequestCompletionIsOnlyInvokedOnceWhenRequestingRetry() throws {
+        // Create an interceptor that will trigger a retry multiple times.
+        class MockInterceptor: RequestInterceptor {
+            func adapt(_ request: URLRequest, completion: (Result<URLRequest, Error>) -> Void) {
+                completion(.success(request))
+            }
+            
+            var retryExpectation: XCTestExpectation?
+            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+                if request.retryCount < 3 {
+                    completion(true)
+                    self.retryExpectation?.fulfill()
+                } else {
+                    completion(false)
+                }
+            }
+        }
+        
+        let interceptor = MockInterceptor()
+        
+        // Set an expectation that retry will be invoked 3 times.
+        let retryExpectation = self.expectation(description: "Retry was called")
+        retryExpectation.expectedFulfillmentCount = 3
+        interceptor.retryExpectation = retryExpectation
+        
+        // Perform a request.
+        let requestExpectation = self.expectation(description: "Request completed")
+        let request = Request(session: .shared, interceptor: interceptor) { _ in
+            requestExpectation.fulfill()
+        }
+        request.perform(urlRequest: try self.urlRequest(url: "spothero.com"))
+        
+        // Verify retry occurred multiple times yet the request completion was only invoked once.
+        self.wait(for: [retryExpectation, requestExpectation], timeout: 2)
+    }
 }
 
 // MARK: - Utilities
