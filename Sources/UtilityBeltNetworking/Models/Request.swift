@@ -58,7 +58,7 @@ public final class Request {
             interceptor.adapt(urlRequest) { result in
                 switch result {
                 case let .success(adaptedRequest):
-                    createAndResumeSessionTask(with: adaptedRequest)
+                    self.createAndResumeSessionTask(with: adaptedRequest)
                 case let .failure(error):
                     self.completion?(.failure(error))
                 }
