@@ -47,33 +47,11 @@ public final class Request {
         self.completion = completion
     }
     
-    /// Creates a new `URLSessionTask` from the given `URLRequest` and resumes the task.
+    // MARK: Starting a Request
+    
+    /// Performs any necessary request adaptation then creates and resumes a `URLSessionTask`.
     /// - Parameter urlRequest: The request to be sent to the server.
     func perform(urlRequest: URLRequest) {
-        // Wrap the logic to create and resume the task in a reusable method.
-        func createAndResumeSessionTask(with urlRequest: URLRequest) {
-            let wrappedCompletion: HTTPSessionDelegateCompletion = { data, response, error in
-                self.processCompletedTask(urlRequest: urlRequest,
-                                          data: data,
-                                          urlResponse: response,
-                                          error: error)
-            }
-            
-            let task: URLSessionTask
-            // When a background request is made, it must use a delegate
-            // and be a download or upload task. Using a data task will fail
-            // and using a completion will cause an assertion failure.
-            if let delegate = self.session.delegate as? HTTPSessionDelegate {
-                delegate.completion = wrappedCompletion
-                task = self.session.downloadTask(with: urlRequest)
-            } else {
-                task = self.session.dataTask(with: urlRequest, completionHandler: wrappedCompletion)
-            }
-
-            self.task = task
-            task.resume()
-        }
-        
         if let interceptor = self.interceptor {
             // If there's a RequestInterceptor, pass the request
             // off to be adapted, then create resume the task.
@@ -87,8 +65,33 @@ public final class Request {
             }
         } else {
             // Otherwise, create and resume the task.
-            createAndResumeSessionTask(with: urlRequest)
+            self.createAndResumeSessionTask(with: urlRequest)
         }
+    }
+    
+    /// Creates a new `URLSessionTask` from the given `URLRequest` and resumes the task.
+    /// - Parameter urlRequest: The request to be sent to the server.
+    private func createAndResumeSessionTask(with urlRequest: URLRequest) {
+        let wrappedCompletion: HTTPSessionDelegateCompletion = { data, response, error in
+            self.processCompletedTask(urlRequest: urlRequest,
+                                      data: data,
+                                      urlResponse: response,
+                                      error: error)
+        }
+        
+        let task: URLSessionTask
+        // When a background request is made, it must use a delegate
+        // and be a download or upload task. Using a data task will fail
+        // and using a completion will cause an assertion failure.
+        if let delegate = self.session.delegate as? HTTPSessionDelegate {
+            delegate.completion = wrappedCompletion
+            task = self.session.downloadTask(with: urlRequest)
+        } else {
+            task = self.session.dataTask(with: urlRequest, completionHandler: wrappedCompletion)
+        }
+
+        self.task = task
+        task.resume()
     }
     
     // MARK: Updating State
