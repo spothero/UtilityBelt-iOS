@@ -10,7 +10,7 @@ final class RequestTests: XCTestCase {
     func testAdaptedURLIsReturnedInDataResponse() throws {
         // Create an adapter that changes the original request.
         struct MockAdapter: RequestInterceptor {
-            static let adaptedURL = "spothero.com/foo"
+            static let adaptedURL = "https://spothero.com/foo"
             func adapt(_ request: URLRequest,
                        completion: (Result<URLRequest, Error>) -> Void) {
                 var adaptedRequest = request
