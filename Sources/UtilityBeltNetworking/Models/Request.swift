@@ -26,6 +26,14 @@ public final class Request {
     /// The number of request retries that have been attempted.
     public private(set) var retryCount = 0
     
+    private enum RequestedState {
+        case cancel
+        case suspend
+    }
+    
+    /// A state that was requested prior to a task being initialized.
+    private var requestedState: RequestedState?
+    
     // MARK: Initialization
     
     /// Create a new instance of a `Request`.
@@ -91,7 +99,18 @@ public final class Request {
         }
 
         self.task = task
-        task.resume()
+        
+        switch self.requestedState {
+        case .cancel:
+            // A cancellation was requested prior to creating the task.
+            task.cancel()
+        case .suspend:
+            // The task starts in a suspended state, just return.
+            return
+        case .none:
+            // There was no requested state prior to making the task, continue with resuming the task.
+            task.resume()
+        }
     }
     
     // MARK: Updating State
@@ -103,17 +122,24 @@ public final class Request {
     
     /// Cancels the current task.
     public func cancel() {
-        // TODO: If a cancel request comes in prior to starting the task
-        // (e.x. if the adapt operation is taking awhile), how do we
-        // ensure the task doesn't start anyway and that the proper
-        // cancellation error is returned?
-        // https://spothero.atlassian.net/browse/IOS-3202
-        self.task?.cancel()
+        if let task = self.task, task.state != .completed {
+            // If we have a stored task and its not completed, cancel it.
+            task.cancel()
+        } else {
+            // Otherwise, store the requested state so we can apply it when the task is created.
+            self.requestedState = .cancel
+        }
     }
     
     /// Suspends the current task.
     public func suspend() {
-        self.task?.suspend()
+        if let task = self.task, task.state != .completed {
+            // If we have a stored task and its not completed, suspend it.
+            task.suspend()
+        } else {
+            // Otherwise, store the requested state so we can apply it when the task is created.
+            self.requestedState = .suspend
+        }
     }
     
     // MARK: Response Handling
