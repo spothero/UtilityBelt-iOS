@@ -33,9 +33,9 @@ final class RequestTests: XCTestCase {
         }
         
         // Perform the request.
-        let initialURL = "spothero.com"
+        let initialURL = "https://spothero.com"
         XCTAssertNotEqual(initialURL, MockAdapter.adaptedURL)
-        request.perform(urlRequest: try self.urlRequest(url: "spothero.com"))
+        request.perform(urlRequest: try self.urlRequest(url: initialURL))
         
         // Verify the expectation is met.
         self.wait(for: [expectation], timeout: 1)
@@ -70,7 +70,7 @@ final class RequestTests: XCTestCase {
         }
         
         // Perform the request.
-        request.perform(urlRequest: try self.urlRequest(url: "spothero.com"))
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
         
         // Verify the expectation is met.
         self.wait(for: [expectation], timeout: 1)
@@ -104,7 +104,7 @@ final class RequestTests: XCTestCase {
         
         // Perform the request.
         let request = Request(session: .shared, interceptor: interceptor) { _ in }
-        request.perform(urlRequest: try self.urlRequest(url: "spothero.com"))
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
         
         // Verify that the retry expectation was called.
         self.wait(for: [retryExpectation], timeout: 1)
@@ -143,7 +143,7 @@ final class RequestTests: XCTestCase {
         let request = Request(session: .shared, interceptor: interceptor) { _ in
             requestExpectation.fulfill()
         }
-        request.perform(urlRequest: try self.urlRequest(url: "spothero.com"))
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
         
         // Verify retry occurred multiple times yet the request completion was only invoked once.
         self.wait(for: [retryExpectation, requestExpectation], timeout: 2)
