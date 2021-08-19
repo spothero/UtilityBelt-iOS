@@ -2,19 +2,14 @@
 
 import Foundation
 
-public class Request {
+public final class Request {
     // MARK: Properties
-    
-    /// The initial URL request when the `Request` object was created.
-    /// This may differ from the final URL request sent to the server
-    /// if a `RequestAdapter` is used.
-    private let initialURLRequest: URLRequest
     
     /// The session in which the request will be made.
     private let session: URLSession
     
     /// The current session task.
-    private var task: URLSessionTask?
+    public private(set) var task: URLSessionTask?
     
     /// An array of validators that will be applied to the response.
     private let validators: [ResponseValidator]
@@ -28,77 +23,68 @@ public class Request {
     /// The dispatch queue that the completion will be called on.
     private let dispatchQueue: DispatchQueue
     
+    /// The number of request retries that have been attempted.
+    public private(set) var retryCount = 0
+    
+    private enum RequestedState {
+        case cancel
+        case suspend
+    }
+    
+    /// A state that was requested prior to a task being initialized.
+    private var requestedState: RequestedState?
+    
     // MARK: Initialization
     
     /// Create a new instance of a `Request`.
     /// - Parameters:
-    ///   - urlRequest: The URL for the request.
     ///   - session: The session in which the request will be made.
     ///   - validators: An array of validators that will be applied to the response. Defaults to an empty array.
     ///   - interceptor: An object that can intercept the url request. Defaults to `nil`.
     ///   - dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     ///   - completion: The block to call when the request has completed. Defaults to `nil`.
-    public init(urlRequest: URLRequest,
-                session: URLSession,
+    public init(session: URLSession,
                 validators: [ResponseValidator] = [],
                 interceptor: RequestInterceptor? = nil,
                 dispatchQueue: DispatchQueue = .main,
                 completion: DataTaskCompletion? = nil) {
-        self.initialURLRequest = urlRequest
         self.session = session
         self.validators = validators
         self.interceptor = interceptor
         self.dispatchQueue = dispatchQueue
         self.completion = completion
     }
-
-    // MARK: Updating State
     
-    /// Resumes the current task.
-    public func resume() {
-        if let currentTask = self.task {
-            // If there's an existing task, resume that task.
-            currentTask.resume()
-        } else if let interceptor = self.interceptor {
-            // If there is not an existing task, and there's a RequestInterceptor,
-            // pass the request off to be adapted, then create start the task.
-            interceptor.adapt(self.initialURLRequest) { result in
+    // MARK: Starting a Request
+    
+    /// Performs any necessary request adaptation then creates and resumes a `URLSessionTask`.
+    /// - Parameter urlRequest: The request to be sent to the server.
+    func perform(urlRequest: URLRequest) {
+        if let interceptor = self.interceptor {
+            // If there's a RequestInterceptor, pass the request
+            // off to be adapted, then create resume the task.
+            interceptor.adapt(urlRequest) { result in
                 switch result {
                 case let .success(adaptedRequest):
-                    self.performSessionTask(with: adaptedRequest)
+                    self.createAndResumeSessionTask(with: adaptedRequest)
                 case let .failure(error):
                     self.completion?(.failure(error))
                 }
             }
         } else {
-            // Otherwise, create and start the task.
-            self.performSessionTask(with: self.initialURLRequest)
+            // Otherwise, create and resume the task.
+            self.createAndResumeSessionTask(with: urlRequest)
         }
     }
     
-    /// Cancels the current task.
-    public func cancel() {
-        // TODO: If a cancel request comes in prior to starting the task
-        // (e.x. if the adapt operation is taking awhile), how do we
-        // ensure the task doesn't start anyway and that the proper
-        // cancellation error is returned?
-        // https://spothero.atlassian.net/browse/IOS-3202
-        self.task?.cancel()
-    }
-    
-    /// Suspends the current task.
-    public func suspend() {
-        self.task?.suspend()
-    }
-    
-    /// Creates and starts a session task with the given URL request.
-    /// - Parameter urlRequest: The URL for the request.
-    private func performSessionTask(with urlRequest: URLRequest) {
+    /// Creates a new `URLSessionTask` from the given `URLRequest` and resumes the task.
+    /// - Parameter urlRequest: The request to be sent to the server.
+    private func createAndResumeSessionTask(with urlRequest: URLRequest) {
         let wrappedCompletion: HTTPSessionDelegateCompletion = { data, response, error in
-            self.handleCompletedDataTask(originalURLRequest: urlRequest,
-                                         data: data,
-                                         urlResponse: response,
-                                         error: error)
+            self.processCompletedTask(urlRequest: urlRequest,
+                                      data: data,
+                                      urlResponse: response,
+                                      error: error)
         }
         
         let task: URLSessionTask
@@ -113,15 +99,61 @@ public class Request {
         }
 
         self.task = task
-        task.resume()
+        
+        switch self.requestedState {
+        case .cancel:
+            // A cancellation was requested prior to creating the task.
+            task.cancel()
+        case .suspend:
+            // The task starts in a suspended state, just return.
+            return
+        case .none:
+            // There was no requested state prior to making the task, continue with resuming the task.
+            task.resume()
+        }
+    }
+    
+    // MARK: Updating State
+    
+    /// Resumes the current task.
+    public func resume() {
+        self.task?.resume()
+    }
+    
+    /// Cancels the current task.
+    public func cancel() {
+        if let task = self.task, task.state != .completed {
+            // If we have a stored task and its not completed, cancel it.
+            task.cancel()
+        } else {
+            // Otherwise, store the requested state so we can apply it when the task is created.
+            self.requestedState = .cancel
+        }
+    }
+    
+    /// Suspends the current task.
+    public func suspend() {
+        if let task = self.task, task.state != .completed {
+            // If we have a stored task and its not completed, suspend it.
+            task.suspend()
+        } else {
+            // Otherwise, store the requested state so we can apply it when the task is created.
+            self.requestedState = .suspend
+        }
     }
     
     // MARK: Response Handling
     
-    private func handleCompletedDataTask(originalURLRequest: URLRequest,
-                                         data: Data?,
-                                         urlResponse: URLResponse?,
-                                         error: Error?) {
+    /// Processes the result of a completed `URLSessionTask`.
+    /// - Parameters:
+    ///   - urlRequest: The request that was sent to the server.
+    ///   - data: The data returned from the `URLSessionTask`.
+    ///   - urlResponse: The response returned from the `URLSessionTask`.
+    ///   - error: The error returned from the `URLSessionTask`.
+    private func processCompletedTask(urlRequest: URLRequest,
+                                      data: Data?,
+                                      urlResponse: URLResponse?,
+                                      error: Error?) {
         HTTPClient.shared.log("Request finished.")
         
         if let urlResponse = urlResponse {
@@ -160,13 +192,51 @@ public class Request {
             if let dataString: String = data.asPrettyPrintedJSON ?? String(data: data, encoding: .utf8) {
                 HTTPClient.shared.log(dataString)
             }
+            
+            self.completeRequest(urlRequest: urlRequest,
+                                 urlResponse: httpResponse,
+                                 data: data,
+                                 result: result)
         case let .failure(error):
             HTTPClient.shared.log("Response failed. Error: \(error.localizedDescription)")
+            
+            if let interceptor = self.interceptor {
+                interceptor.retry(self, dueTo: error) { shouldRetry in
+                    if shouldRetry {
+                        // If we should retry, bump the retry count and perform the request again.
+                        self.retryCount += 1
+                        self.perform(urlRequest: urlRequest)
+                    } else {
+                        // Otherwise, complete the request.
+                        self.completeRequest(urlRequest: urlRequest,
+                                             urlResponse: httpResponse,
+                                             data: data,
+                                             result: result)
+                    }
+                }
+            } else {
+                self.completeRequest(urlRequest: urlRequest,
+                                     urlResponse: httpResponse,
+                                     data: data,
+                                     result: result)
+            }
         }
-        
+    }
+    
+    /// Completes the request by creating a `DataResponse` object and calling the
+    /// stored `DataTaskCompletion` block.
+    /// - Parameters:
+    ///   - urlRequest: The request that was sent to the server.
+    ///   - urlResponse: The response returned from the `URLSessionTask`.
+    ///   - data: The data returned from the `URLSessionTask`.
+    ///   - result: A `Result` object that can be used to handle the response.
+    private func completeRequest(urlRequest: URLRequest,
+                                 urlResponse: HTTPURLResponse?,
+                                 data: Data?,
+                                 result: Result<Data, Error>) {
         // Create the DataResponse object containing all necessary information from the response
-        let dataResponse = DataResponse(request: originalURLRequest,
-                                        response: httpResponse,
+        let dataResponse = DataResponse(request: urlRequest,
+                                        response: urlResponse,
                                         data: data,
                                         result: result)
         

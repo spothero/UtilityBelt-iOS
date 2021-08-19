@@ -84,13 +84,12 @@ public class HTTPClient {
             self.log("Starting \(method.rawValue) request to \(urlString)")
         }
         
-        let request = Request(urlRequest: urlRequest,
-                              session: self.session,
+        let request = Request(session: self.session,
                               validators: validators,
                               interceptor: interceptor,
                               dispatchQueue: dispatchQueue,
                               completion: completion)
-        request.resume()
+        request.perform(urlRequest: urlRequest)
         return request
     }
     
