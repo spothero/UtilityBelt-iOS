@@ -148,6 +148,106 @@ final class RequestTests: XCTestCase {
         // Verify retry occurred multiple times yet the request completion was only invoked once.
         self.wait(for: [retryExpectation, requestExpectation], timeout: 2)
     }
+    
+    // MARK: Cancelling Tests
+    
+    func testCancellingARequestWhileRequestAdapterIsRunningProducesCancellationError() throws {
+        // Create an interceptor that will adapt the request.
+        class MockInterceptor: RequestInterceptor {
+            func adapt(_ request: URLRequest, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+                // Delay calling the completion block for 1 second to ensure the
+                // cancellation request is received prior to the adapter finishing.
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    completion(.success(request))
+                }
+            }
+            
+            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+                completion(false)
+            }
+        }
+        
+        let interceptor = MockInterceptor()
+        
+        // Start the request.
+        let requestExpectation = self.expectation(description: "Request completed")
+        let request = Request(session: .shared, interceptor: interceptor) { response in
+            // Verify we received a cancellation error after the adapter completed.
+            guard let error = response.error else {
+                XCTFail("Response error should not be nil")
+                return
+            }
+            
+            XCTAssertEqual((error as NSError).domain, NSURLErrorDomain)
+            XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
+            
+            requestExpectation.fulfill()
+        }
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        
+        // Cancel the request while the adapter is running.
+        request.cancel()
+        
+        self.wait(for: [requestExpectation], timeout: 2)
+    }
+    
+    func testCancellingARequestWhileRequestRetrierIsRunningProducesCancellationError() throws {
+        // Create an interceptor that will retry the request.
+        class MockInterceptor: RequestInterceptor {
+            func adapt(_ request: URLRequest, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+                completion(.success(request))
+            }
+            
+            var asyncRetryOperationStartedExpectation: XCTestExpectation?
+            func retry(_ request: Request, dueTo error: Error, completion: @escaping (Bool) -> Void) {
+                guard request.retryCount < 1 else {
+                    completion(false)
+                    return
+                }
+                
+                self.asyncRetryOperationStartedExpectation?.fulfill()
+                
+                // Delay calling the completion block for 1 second to ensure the
+                // cancellation request is received prior to the retrier finishing.
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    completion(true)
+                }
+            }
+        }
+        
+        let interceptor = MockInterceptor()
+        
+        // Create a request.
+        let requestExpectation = self.expectation(description: "Request completed")
+        let request = Request(session: .shared, interceptor: interceptor) { response in
+            // Verify we received a cancellation error after the adapter completed.
+            guard let error = response.error else {
+                XCTFail("Response error should not be nil")
+                return
+            }
+            
+            XCTAssertEqual((error as NSError).domain, NSURLErrorDomain)
+            XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
+            
+            requestExpectation.fulfill()
+        }
+        
+        // Set an expectation for when the RequestRetrier begins.
+        let requestRetrierStartedExpectation = self.expectation(description: "Starting RequestRetrier")
+        interceptor.asyncRetryOperationStartedExpectation = requestRetrierStartedExpectation
+        
+        // Perform the request.
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        
+        // Wait for the RequestRetrier to start.
+        self.wait(for: [requestRetrierStartedExpectation], timeout: 1)
+        
+        // Cancel the request while the retrier is running.
+        request.cancel()
+        
+        // Wait for the request to complete.
+        self.wait(for: [requestExpectation], timeout: 2)
+    }
 }
 
 // MARK: - Utilities
