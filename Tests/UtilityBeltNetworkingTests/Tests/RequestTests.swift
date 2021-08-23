@@ -5,6 +5,109 @@ import Foundation
 import XCTest
 
 final class RequestTests: XCTestCase {
+    // MARK: State Tests
+    
+    func testRequestIsNotRunningUponInitialization() {
+        // Initialize a new Request object.
+        let request = Request(session: .shared)
+        
+        // Verify the Request is not running.
+        XCTAssertFalse(request.isRunning)
+    }
+    
+    func testRequestIsNotRunningAfterCompletionBlockIsCalled() throws {
+        // Initialize a new Request object.
+        let expectation = self.expectation(description: "Request completed")
+        let request = Request(session: .shared) { _ in
+            expectation.fulfill()
+        }
+        
+        // Perform the request.
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        
+        // Wait on the request to complete.
+        self.wait(for: [expectation], timeout: 1)
+        
+        // Verify the Request it no longer running when completed.
+        XCTAssertFalse(request.isRunning)
+    }
+    
+    func testRequestIsRunningWhenAdaptingPriorToInitialSessionTaskStarting() throws {
+        // Create an interceptor that will adapt the request.
+        class MockInterceptor: RequestInterceptor {
+            var adaptationBeganExpectation: XCTestExpectation?
+            func adapt(_ request: URLRequest, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+                self.adaptationBeganExpectation?.fulfill()
+                
+                // Delay calling the completion block for 1 second to ensure
+                // we can check the status of the Request while adapting.
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    completion(.success(request))
+                }
+            }
+            
+            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+                completion(false)
+            }
+        }
+        
+        let interceptor = MockInterceptor()
+        
+        // Set an expectation for when request adaptation begins.
+        let expectation = self.expectation(description: "Starting RequestAdapter")
+        interceptor.adaptationBeganExpectation = expectation
+        
+        // Start the Request.
+        let request = Request(session: .shared, interceptor: interceptor)
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        
+        // Wait for the signal that request adaptation has begun.
+        self.wait(for: [expectation], timeout: 1)
+        
+        // Verify the Request is running.
+        XCTAssertTrue(request.isRunning)
+    }
+    
+    func testRequestIsRunningWhenRequestRetrierIsRunningAfterInitialTaskHasCompleted() throws {
+        // Create an interceptor that will retry the request.
+        class MockInterceptor: RequestInterceptor {
+            func adapt(_ request: URLRequest, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+                completion(.success(request))
+            }
+            
+            var retryBeganExpectation: XCTestExpectation?
+            func retry(_ request: Request, dueTo error: Error, completion: @escaping (Bool) -> Void) {
+                guard request.retryCount < 1 else {
+                    completion(false)
+                    return
+                }
+                
+                self.retryBeganExpectation?.fulfill()
+                
+                // Delay calling the completion block for 1 second to ensure the
+                // cancellation request is received prior to the retrier finishing.
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    completion(true)
+                }
+            }
+        }
+        
+        let interceptor = MockInterceptor()
+        // Set an expectation for when the RequestRetrier begins.
+        let expectation = self.expectation(description: "Starting RequestRetrier")
+        interceptor.retryBeganExpectation = expectation
+        
+        // Perform the Request.
+        let request = Request(session: .shared, interceptor: interceptor)
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        
+        // Wait for the RequestRetrier to start.
+        self.wait(for: [expectation], timeout: 1)
+        
+        // Verify the Request is running.
+        XCTAssertTrue(request.isRunning)
+    }
+    
     // MARK: Request Adapting Tests
     
     func testAdaptedURLIsReturnedInDataResponse() throws {
