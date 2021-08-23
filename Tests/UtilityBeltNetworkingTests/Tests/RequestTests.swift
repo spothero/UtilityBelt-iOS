@@ -36,6 +36,7 @@ final class RequestTests: XCTestCase {
         // Create an interceptor that will adapt the request.
         class MockInterceptor: RequestInterceptor {
             var adaptationBeganExpectation: XCTestExpectation?
+            
             func adapt(_ request: URLRequest, completion: @escaping (Result<URLRequest, Error>) -> Void) {
                 self.adaptationBeganExpectation?.fulfill()
                 
@@ -76,6 +77,7 @@ final class RequestTests: XCTestCase {
             }
             
             var retryBeganExpectation: XCTestExpectation?
+            
             func retry(_ request: Request, dueTo error: Error, completion: @escaping (Bool) -> Void) {
                 guard request.retryCount < 1 else {
                     completion(false)
@@ -114,6 +116,7 @@ final class RequestTests: XCTestCase {
         // Create an adapter that changes the original request.
         struct MockAdapter: RequestInterceptor {
             static let adaptedURL = "https://spothero.com/foo"
+            
             func adapt(_ request: URLRequest,
                        completion: (Result<URLRequest, Error>) -> Void) {
                 var adaptedRequest = request
@@ -148,6 +151,7 @@ final class RequestTests: XCTestCase {
         // Create an adapter that returns an error.
         struct MockAdapter: RequestInterceptor {
             static let errorDescription = "Adapting url failed"
+            
             func adapt(_ request: URLRequest,
                        completion: (Result<URLRequest, Error>) -> Void) {
                 let error = NSError(domain: "testing.domain",
@@ -189,6 +193,7 @@ final class RequestTests: XCTestCase {
             }
             
             var retryExpectation: XCTestExpectation?
+            
             func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
                 if request.retryCount < 1 {
                     completion(true)
@@ -224,6 +229,7 @@ final class RequestTests: XCTestCase {
             }
             
             var retryExpectation: XCTestExpectation?
+            
             func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
                 if request.retryCount < 3 {
                     completion(true)
@@ -302,6 +308,7 @@ final class RequestTests: XCTestCase {
             }
             
             var asyncRetryOperationStartedExpectation: XCTestExpectation?
+            
             func retry(_ request: Request, dueTo error: Error, completion: @escaping (Bool) -> Void) {
                 guard request.retryCount < 1 else {
                     completion(false)
