@@ -39,7 +39,7 @@ private extension HTTPClient {
     // Creates a simple URL request.
     func createSimpleTestRequest() throws -> URLRequest {
         let url = try XCTUnwrap("https://www.spothero.com".asURL())
-        let request = try self.configuredURLRequest(
+        let request = try URLRequest(
             url: url,
             method: .get,
             parameters: nil,

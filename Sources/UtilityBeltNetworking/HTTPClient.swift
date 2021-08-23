@@ -43,43 +43,24 @@ public class HTTPClient {
     // MARK: Data Response
     
     /// Creates and sends a request which fetches raw data from an endpoint.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter request: The `URLRequest` to make the request with.
     /// - Parameter validators: An array of validators that will be applied to the response.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
-    public func request(_ url: URLConvertible,
-                        method: HTTPMethod = .get,
-                        parameters: ParameterDictionaryConvertible? = nil,
-                        headers: HTTPHeaderDictionaryConvertible? = nil,
-                        encoding: ParameterEncoding? = nil,
+    public func request(_ request: URLRequest,
                         validators: [ResponseValidator] = [],
                         dispatchQueue: DispatchQueue = .main,
                         completion: DataTaskCompletion? = nil) -> URLSessionTask? {
-        let request: URLRequest
+        self.logStart(of: request)
         
-        do {
-            request = try self.configuredURLRequest(
-                url: url,
-                method: method,
-                parameters: parameters,
-                headers: headers,
-                encoding: encoding
-            )
-        } catch {
-            dispatchQueue.async {
-                completion?(.failure(error))
-            }
-            return nil
-        }
+        // Make the request mutable.
+        var request = request
         
-        if let urlString = request.url?.absoluteString {
-            self.log("Starting \(method.rawValue) request to \(urlString)")
+        // Set the timeout interval of the request, if applicable.
+        if let timeoutInterval = self.timeoutInterval {
+            request.timeoutInterval = timeoutInterval
         }
         
         let completion: HTTPSessionDelegateCompletion = { data, urlResponse, error in
@@ -152,65 +133,23 @@ public class HTTPClient {
         return task
     }
     
-    /// Creates and sends a request which fetches raw data from an endpoint.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-    /// - Parameter validators: An array of validators that will be applied to the response.
-    /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
-    /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
-    @discardableResult
-    // swiftlint:disable:next function_default_parameter_at_end
-    public func request(_ url: URLConvertible,
-                        method: HTTPMethod = .get,
-                        parameters: Encodable,
-                        headers: HTTPHeaderDictionaryConvertible? = nil,
-                        encoding: ParameterEncoding? = nil,
-                        validators: [ResponseValidator] = [],
-                        dispatchQueue: DispatchQueue = .main,
-                        completion: DataTaskCompletion? = nil) -> URLSessionTask? {
-        self.request(url,
-                     method: method,
-                     parameters: try? parameters.asDictionary(),
-                     headers: headers,
-                     encoding: encoding,
-                     validators: validators,
-                     dispatchQueue: dispatchQueue,
-                     completion: completion)
-    }
-    
     // MARK: Decodable Object Response
     
     /// Creates and sends a request which fetches raw data from an endpoint and decodes it.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter request: The `URLRequest` to make the request with.
     /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The `URLSessionTask` for the request.
     @discardableResult
-    public func request<T: Decodable>(_ url: URLConvertible,
-                                      method: HTTPMethod = .get,
-                                      parameters: ParameterDictionaryConvertible? = nil,
-                                      headers: HTTPHeaderDictionaryConvertible? = nil,
-                                      encoding: ParameterEncoding? = nil,
+    public func request<T: Decodable>(_ request: URLRequest,
                                       validators: [ResponseValidator] = [.ensureMimeType(.json)],
                                       dispatchQueue: DispatchQueue = .main,
                                       decoder: JSONDecoder = JSONDecoder(),
                                       completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
         return self.request(
-            url,
-            method: method,
-            parameters: parameters,
-            headers: headers,
-            encoding: encoding,
+            request,
             validators: validators,
             dispatchQueue: dispatchQueue
         ) { dataResponse in
@@ -249,69 +188,7 @@ public class HTTPClient {
         }
     }
     
-    /// Creates and sends a request which fetches raw data from an endpoint and decodes it.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The `Encodable` object to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-    /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
-    /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
-    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
-    /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
-    @discardableResult
-    // swiftlint:disable:next function_default_parameter_at_end
-    public func request<T: Decodable>(_ url: URLConvertible,
-                                      method: HTTPMethod = .get,
-                                      parameters: Encodable,
-                                      headers: HTTPHeaderDictionaryConvertible? = nil,
-                                      encoding: ParameterEncoding? = nil,
-                                      validators: [ResponseValidator] = [.ensureMimeType(.json)],
-                                      dispatchQueue: DispatchQueue = .main,
-                                      decoder: JSONDecoder = JSONDecoder(),
-                                      completion: DecodableTaskCompletion<T>? = nil) -> URLSessionTask? {
-        self.request(url,
-                     method: method,
-                     parameters: try? parameters.asDictionary(),
-                     headers: headers,
-                     encoding: encoding,
-                     validators: validators,
-                     dispatchQueue: dispatchQueue,
-                     decoder: decoder,
-                     completion: completion)
-    }
-    
-    // MARK: URL Request Configuration
-    
-    /// Creates a configured URLRequest.
-    /// - Parameter url: The URL for the request. Accepts a URL or a String.
-    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
-    /// - Parameter parameters: The parameters to be converted into a String-keyed dictionary to send in the query string or HTTP body.
-    /// - Parameter headers: The HTTP headers to send with the request.
-    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
-    /// - Returns: The configured `URLRequest` object.
-    func configuredURLRequest(url: URLConvertible,
-                              method: HTTPMethod = .get,
-                              parameters: ParameterDictionaryConvertible? = nil,
-                              headers: HTTPHeaderDictionaryConvertible? = nil,
-                              encoding: ParameterEncoding? = nil) throws -> URLRequest {
-        let url = try url.asURL()
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        
-        if let timeoutInterval = self.timeoutInterval {
-            request.timeoutInterval = timeoutInterval
-        }
-        
-        request.setHeaders(headers)
-        
-        // Parameters must be set after setting headers, because encoding dictates (and therefore overrides) the Content-Type header
-        request.setParameters(parameters, method: method, encoding: encoding)
-        
-        return request
-    }
+    // MARK: Utilities
     
     func log(_ message: Any) {
         guard self.isDebugLoggingEnabled else {
@@ -320,18 +197,10 @@ public class HTTPClient {
         
         print("[UtilityBeltNetworking] \(message)")
     }
-}
-
-// MARK: - Extensions
-
-private extension DataResponse {
-    /// Initializes a `DataResponse` object with `nil` request, response, and data properties
-    /// and a failure result containing the given error.
-    /// - Parameter error: The error to return in the result of the response.
-    static func failure<T>(_ error: Error) -> DataResponse<T, Error> {
-        return DataResponse<T, Error>(request: nil,
-                                      response: nil,
-                                      data: nil,
-                                      result: .failure(error))
+    
+    func logStart(of request: URLRequest) {
+        if self.isDebugLoggingEnabled, let urlString = request.url?.absoluteString {
+            self.log("Starting request to \(urlString): \(request)")
+        }
     }
 }
