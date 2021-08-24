@@ -25,7 +25,7 @@ public extension HTTPClient {
         do {
             convertedRequest = try request.asURLRequest()
         } catch {
-            DispatchQueue.main.async {
+            dispatchQueue.async {
                 completion?(.failure(error))
             }
             return nil
@@ -133,7 +133,7 @@ public extension HTTPClient {
     /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
-    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
@@ -142,7 +142,7 @@ public extension HTTPClient {
         validators: [ResponseValidator] = [.ensureMimeType(.json)],
         interceptor: RequestInterceptor? = nil,
         dispatchQueue: DispatchQueue = .main,
-        decoder: JSONDecoder = JSONDecoder(),
+        decoder: JSONDecoder = .init(),
         completion: DecodableTaskCompletion<T>? = nil
     ) -> Request? {
         var convertedRequest: URLRequest
@@ -150,7 +150,7 @@ public extension HTTPClient {
         do {
             convertedRequest = try request.asURLRequest()
         } catch {
-            DispatchQueue.main.async {
+            dispatchQueue.async {
                 completion?(.failure(error))
             }
             return nil
@@ -175,7 +175,7 @@ public extension HTTPClient {
     /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
-    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
@@ -188,7 +188,7 @@ public extension HTTPClient {
         validators: [ResponseValidator] = [.ensureMimeType(.json)],
         interceptor: RequestInterceptor? = nil,
         dispatchQueue: DispatchQueue = .main,
-        decoder: JSONDecoder = JSONDecoder(),
+        decoder: JSONDecoder = .init(),
         completion: DecodableTaskCompletion<T>? = nil
     ) -> Request? {
         let request: URLRequest
@@ -202,7 +202,7 @@ public extension HTTPClient {
                 encoding: encoding
             )
         } catch {
-            DispatchQueue.main.async {
+            dispatchQueue.async {
                 completion?(.failure(error))
             }
             return nil
@@ -227,7 +227,7 @@ public extension HTTPClient {
     /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
-    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
@@ -241,7 +241,7 @@ public extension HTTPClient {
         validators: [ResponseValidator] = [.ensureMimeType(.json)],
         interceptor: RequestInterceptor? = nil,
         dispatchQueue: DispatchQueue = .main,
-        decoder: JSONDecoder = JSONDecoder(),
+        decoder: JSONDecoder = .init(),
         completion: DecodableTaskCompletion<T>? = nil
     ) -> Request? {
         self.request(

@@ -22,13 +22,8 @@
         ) -> AnyPublisher<Data, Error> {
             self.logStart(of: request)
             
-            // Make the request mutable.
-            var request = request
-            
-            // Set the timeout interval of the request, if applicable.
-            if let timeoutInterval = self.timeoutInterval {
-                request.timeoutInterval = timeoutInterval
-            }
+            // Get a modified request with a given timeout interval.
+            let request = request.withTimeout(self.timeoutInterval)
             
             return self.session
                 .dataTaskPublisher(for: request)
@@ -62,14 +57,14 @@
         /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
         /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
-        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher<T: Decodable>(
             _ request: URLRequest,
             validators: [ResponseValidator] = [.ensureMimeType(.json)],
             interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = .init()
         ) -> AnyPublisher<T, Error> {
             return self.requestPublisher(
                 request,

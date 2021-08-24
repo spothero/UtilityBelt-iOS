@@ -12,7 +12,7 @@
         /// - Parameter request: An object defining properties to make the request with.
         /// - Parameter validators: An array of validators that will be applied to the response.
         /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
-        /// - Parameter dispatchQueue: The `DispatchQueue` to make the request on.
+        /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher(
             _ request: URLRequestConvertible,
@@ -119,15 +119,15 @@
         /// - Parameter request: The `URLRequest` to make the request with.
         /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
         /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
-        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
-        /// - Parameter dispatchQueue: The `DispatchQueue` to make the request on.
+        /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
+        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher<T: Decodable>(
             _ request: URLRequestConvertible,
             validators: [ResponseValidator] = [.ensureMimeType(.json)],
             interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = .init()
         ) -> AnyPublisher<T, Error> {
             let convertedRequest: URLRequest
         
@@ -155,7 +155,7 @@
         /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
         /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
-        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher<T: Decodable>(
             _ url: URLConvertible,
@@ -166,7 +166,7 @@
             validators: [ResponseValidator] = [.ensureMimeType(.json)],
             interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = .init()
         ) -> AnyPublisher<T, Error> {
             let request: URLRequest
         
@@ -202,7 +202,7 @@
         /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
         /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
-        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
         /// - Returns: A publisher that wraps a data task for the URL.
         // swiftlint:disable:next function_default_parameter_at_end
         func requestPublisher<T: Decodable>(
@@ -214,7 +214,7 @@
             validators: [ResponseValidator] = [.ensureMimeType(.json)],
             interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = .init()
         ) -> AnyPublisher<T, Error> {
             return self.requestPublisher(
                 url,

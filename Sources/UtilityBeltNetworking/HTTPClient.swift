@@ -50,20 +50,17 @@ public class HTTPClient {
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
-    public func request(_ request: URLRequest,
-                        validators: [ResponseValidator] = [],
-                        interceptor: RequestInterceptor? = nil,
-                        dispatchQueue: DispatchQueue = .main,
-                        completion: DataTaskCompletion? = nil) -> Request? {
+    public func request(
+        _ request: URLRequest,
+        validators: [ResponseValidator] = [],
+        interceptor: RequestInterceptor? = nil,
+        dispatchQueue: DispatchQueue = .main,
+        completion: DataTaskCompletion? = nil
+    ) -> Request? {
         self.logStart(of: request)
         
-        // Make the request mutable.
-        var urlRequest = request
-        
-        // Set the timeout interval of the request, if applicable.
-        if let timeoutInterval = self.timeoutInterval {
-            urlRequest.timeoutInterval = timeoutInterval
-        }
+        // Get a modified request with a given timeout interval.
+        let urlRequest = request.withTimeout(self.timeoutInterval)
         
         let request = Request(session: self.session,
                               validators: validators,
@@ -84,16 +81,18 @@ public class HTTPClient {
     /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
-    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
     /// - Parameter completion: The completion block to call when the request is completed.
     /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
-    public func request<T: Decodable>(_ request: URLRequest,
-                                      validators: [ResponseValidator] = [.ensureMimeType(.json)],
-                                      interceptor: RequestInterceptor? = nil,
-                                      dispatchQueue: DispatchQueue = .main,
-                                      decoder: JSONDecoder = JSONDecoder(),
-                                      completion: DecodableTaskCompletion<T>? = nil) -> Request? {
+    public func request<T: Decodable>(
+        _ request: URLRequest,
+        validators: [ResponseValidator] = [.ensureMimeType(.json)],
+        interceptor: RequestInterceptor? = nil,
+        dispatchQueue: DispatchQueue = .main,
+        decoder: JSONDecoder = .init(),
+        completion: DecodableTaskCompletion<T>? = nil
+    ) -> Request? {
         return self.request(
             request,
             validators: validators,
