@@ -48,7 +48,7 @@ public class HTTPClient {
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
     public func request(_ request: URLRequest,
                         validators: [ResponseValidator] = [],
@@ -86,7 +86,7 @@ public class HTTPClient {
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
     public func request<T: Decodable>(_ request: URLRequest,
                                       validators: [ResponseValidator] = [.ensureMimeType(.json)],

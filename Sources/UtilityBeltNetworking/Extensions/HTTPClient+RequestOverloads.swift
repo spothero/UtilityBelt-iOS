@@ -11,7 +11,7 @@ public extension HTTPClient {
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
     func request(
         _ request: URLRequestConvertible,
@@ -50,7 +50,7 @@ public extension HTTPClient {
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
     func request(
         _ url: URLConvertible,
@@ -99,7 +99,7 @@ public extension HTTPClient {
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
     // swiftlint:disable:next function_default_parameter_at_end
     func request(
@@ -135,7 +135,7 @@ public extension HTTPClient {
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
     func request<T: Decodable>(
         _ request: URLRequestConvertible,
@@ -177,7 +177,7 @@ public extension HTTPClient {
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
     func request<T: Decodable>(
         _ url: URLConvertible,
@@ -229,7 +229,7 @@ public extension HTTPClient {
     /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
     /// - Parameter completion: The completion block to call when the request is completed.
-    /// - Returns: The `URLSessionTask` for the request.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
     @discardableResult
     // swiftlint:disable:next function_default_parameter_at_end
     func request<T: Decodable>(
