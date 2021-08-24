@@ -26,6 +26,15 @@ public final class Request {
     /// The number of request retries that have been attempted.
     public private(set) var retryCount = 0
     
+    /// Whether or not the `Request` is running.
+    ///
+    /// This may differ from the state of the underlying `URLSessionTask`. A
+    /// `Request` is considered "running" if the underlying task has not yet been
+    /// sent to the server but the `Request` is being adapted by a `RequestInterceptor`,
+    /// or if the underlying task has completed but the `RequestInterceptor` is processing
+    /// the result to determine if a retry should be initiated.
+    public private(set) var isRunning = false
+    
     private enum RequestedState {
         case cancel
         case suspend
@@ -60,6 +69,8 @@ public final class Request {
     /// Performs any necessary request adaptation then creates and resumes a `URLSessionTask`.
     /// - Parameter urlRequest: The request to be sent to the server.
     func perform(urlRequest: URLRequest) {
+        self.isRunning = true
+        
         if let interceptor = self.interceptor {
             // If there's a RequestInterceptor, pass the request
             // off to be adapted, then create resume the task.
@@ -234,6 +245,11 @@ public final class Request {
                                  urlResponse: HTTPURLResponse?,
                                  data: Data?,
                                  result: Result<Data, Error>) {
+<<<<<<< HEAD
+=======
+        self.isRunning = false
+        
+>>>>>>> main
         // Create the DataResponse object containing all necessary information from the response
         let dataResponse = DataResponse(request: urlRequest,
                                         response: urlResponse,
