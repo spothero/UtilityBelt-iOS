@@ -19,7 +19,7 @@ public extension HTTPClient {
         interceptor: RequestInterceptor? = nil,
         dispatchQueue: DispatchQueue = .main,
         completion: DataTaskCompletion? = nil
-    ) -> URLSessionTask? {
+    ) -> Request? {
         var convertedRequest: URLRequest
         
         do {
@@ -62,7 +62,7 @@ public extension HTTPClient {
         interceptor: RequestInterceptor? = nil,
         dispatchQueue: DispatchQueue = .main,
         completion: DataTaskCompletion? = nil
-    ) -> URLSessionTask? {
+    ) -> Request? {
         let request: URLRequest
         
         do {
@@ -112,7 +112,7 @@ public extension HTTPClient {
         interceptor: RequestInterceptor? = nil,
         dispatchQueue: DispatchQueue = .main,
         completion: DataTaskCompletion? = nil
-    ) -> URLSessionTask? {
+    ) -> Request? {
         self.request(
             url,
             method: method,
@@ -144,7 +144,7 @@ public extension HTTPClient {
         dispatchQueue: DispatchQueue = .main,
         decoder: JSONDecoder = JSONDecoder(),
         completion: DecodableTaskCompletion<T>? = nil
-    ) -> URLSessionTask? {
+    ) -> Request? {
         var convertedRequest: URLRequest
         
         do {
@@ -190,7 +190,7 @@ public extension HTTPClient {
         dispatchQueue: DispatchQueue = .main,
         decoder: JSONDecoder = JSONDecoder(),
         completion: DecodableTaskCompletion<T>? = nil
-    ) -> URLSessionTask? {
+    ) -> Request? {
         let request: URLRequest
         
         do {
@@ -243,7 +243,7 @@ public extension HTTPClient {
         dispatchQueue: DispatchQueue = .main,
         decoder: JSONDecoder = JSONDecoder(),
         completion: DecodableTaskCompletion<T>? = nil
-    ) -> URLSessionTask? {
+    ) -> Request? {
         self.request(
             url,
             method: method,
