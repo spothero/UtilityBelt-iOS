@@ -369,11 +369,13 @@ private extension RequestTests {
                     headers: HTTPHeaderDictionaryConvertible? = nil,
                     encoding: ParameterEncoding? = nil,
                     timeout: TimeInterval? = 0.1) throws -> URLRequest {
-        var request = try HTTPClient.shared.configuredURLRequest(url: url,
-                                                                 method: method,
-                                                                 parameters: parameters,
-                                                                 headers: headers,
-                                                                 encoding: encoding)
+        var request = try URLRequest(
+            url: url,
+            method: method,
+            parameters: parameters,
+            headers: headers,
+            encoding: encoding
+        )
         
         if let timeout = timeout {
             request.timeoutInterval = timeout
