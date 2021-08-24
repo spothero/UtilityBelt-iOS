@@ -245,11 +245,8 @@ public final class Request {
                                  urlResponse: HTTPURLResponse?,
                                  data: Data?,
                                  result: Result<Data, Error>) {
-<<<<<<< HEAD
-=======
         self.isRunning = false
         
->>>>>>> main
         // Create the DataResponse object containing all necessary information from the response
         let dataResponse = DataResponse(request: urlRequest,
                                         response: urlResponse,
