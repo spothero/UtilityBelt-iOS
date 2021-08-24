@@ -11,11 +11,13 @@
         /// Creates a request publisher which fetches raw data from an endpoint.
         /// - Parameter request: An object defining properties to make the request with.
         /// - Parameter validators: An array of validators that will be applied to the response.
+        /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
         /// - Parameter dispatchQueue: The `DispatchQueue` to make the request on.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher(
             _ request: URLRequestConvertible,
             validators: [ResponseValidator] = [],
+            interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main
         ) -> AnyPublisher<Data, Error> {
             let convertedRequest: URLRequest
@@ -26,7 +28,12 @@
                 return Result<Data, Error>.Publisher(error).eraseToAnyPublisher()
             }
         
-            return self.requestPublisher(convertedRequest, validators: validators, dispatchQueue: dispatchQueue)
+            return self.requestPublisher(
+                convertedRequest,
+                validators: validators,
+                interceptor: interceptor,
+                dispatchQueue: dispatchQueue
+            )
         }
     
         /// Creates a request publisher which fetches raw data from an endpoint.
@@ -36,6 +43,7 @@
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
         /// - Parameter validators: An array of validators that will be applied to the response.
+        /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher(
@@ -45,6 +53,7 @@
             headers: HTTPHeaderDictionaryConvertible? = nil,
             encoding: ParameterEncoding? = nil,
             validators: [ResponseValidator] = [],
+            interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main
         ) -> AnyPublisher<Data, Error> {
             let request: URLRequest
@@ -63,7 +72,12 @@
                     .eraseToAnyPublisher()
             }
         
-            return self.requestPublisher(request, validators: validators, dispatchQueue: dispatchQueue)
+            return self.requestPublisher(
+                request,
+                validators: validators,
+                interceptor: interceptor,
+                dispatchQueue: dispatchQueue
+            )
         }
     
         /// Creates a request publisher which fetches raw data from an endpoint.
@@ -73,6 +87,7 @@
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
         /// - Parameter validators: An array of validators that will be applied to the response.
+        /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Returns: A publisher that wraps a data task for the URL.
         // swiftlint:disable:next function_default_parameter_at_end
@@ -83,6 +98,7 @@
             headers: HTTPHeaderDictionaryConvertible? = nil,
             encoding: ParameterEncoding? = nil,
             validators: [ResponseValidator] = [],
+            interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main
         ) -> AnyPublisher<Data, Error> {
             return self.requestPublisher(
@@ -92,6 +108,7 @@
                 headers: headers,
                 encoding: encoding,
                 validators: validators,
+                interceptor: interceptor,
                 dispatchQueue: dispatchQueue
             )
         }
@@ -99,14 +116,16 @@
         // MARK: Decodable Object Response
     
         /// Creates a request publisher which fetches raw data from an endpoint and decodes it.
-        /// - Parameters:
-        ///   - request: The `URLRequest` to make the request with.
-        ///   - decoder: The `JSONDecoder` to use when decoding the response data.
-        ///   - dispatchQueue: The `DispatchQueue` to make the request on.
+        /// - Parameter request: The `URLRequest` to make the request with.
+        /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
+        /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
+        /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
+        /// - Parameter dispatchQueue: The `DispatchQueue` to make the request on.
         /// - Returns: A publisher that wraps a data task for the URL.
         func requestPublisher<T: Decodable>(
             _ request: URLRequestConvertible,
             validators: [ResponseValidator] = [.ensureMimeType(.json)],
+            interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main,
             decoder: JSONDecoder = JSONDecoder()
         ) -> AnyPublisher<T, Error> {
@@ -118,7 +137,13 @@
                 return Result<T, Error>.Publisher(error).eraseToAnyPublisher()
             }
         
-            return self.requestPublisher(convertedRequest, validators: validators, dispatchQueue: dispatchQueue, decoder: decoder)
+            return self.requestPublisher(
+                convertedRequest,
+                validators: validators,
+                interceptor: interceptor,
+                dispatchQueue: dispatchQueue,
+                decoder: decoder
+            )
         }
     
         /// Creates a request publisher which fetches raw data from an endpoint and decodes it.
@@ -128,6 +153,7 @@
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
         /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
+        /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
         /// - Returns: A publisher that wraps a data task for the URL.
@@ -138,6 +164,7 @@
             headers: HTTPHeaderDictionaryConvertible? = nil,
             encoding: ParameterEncoding? = nil,
             validators: [ResponseValidator] = [.ensureMimeType(.json)],
+            interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main,
             decoder: JSONDecoder = JSONDecoder()
         ) -> AnyPublisher<T, Error> {
@@ -157,7 +184,13 @@
                     .eraseToAnyPublisher()
             }
         
-            return self.requestPublisher(request, validators: validators, dispatchQueue: dispatchQueue, decoder: decoder)
+            return self.requestPublisher(
+                request,
+                validators: validators,
+                interceptor: interceptor,
+                dispatchQueue: dispatchQueue,
+                decoder: decoder
+            )
         }
     
         /// Creates a request publisher which fetches raw data from an endpoint and decodes it.
@@ -167,6 +200,7 @@
         /// - Parameter headers: The HTTP headers to send with the request.
         /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
         /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type.
+        /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
         /// - Parameter dispatchQueue: The dispatch queue on which the response will be published. Defaults to `.main`.
         /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data.
         /// - Returns: A publisher that wraps a data task for the URL.
@@ -178,6 +212,7 @@
             headers: HTTPHeaderDictionaryConvertible? = nil,
             encoding: ParameterEncoding? = nil,
             validators: [ResponseValidator] = [.ensureMimeType(.json)],
+            interceptor: RequestInterceptor? = nil,
             dispatchQueue: DispatchQueue = .main,
             decoder: JSONDecoder = JSONDecoder()
         ) -> AnyPublisher<T, Error> {
@@ -188,6 +223,7 @@
                 headers: headers,
                 encoding: encoding,
                 validators: validators,
+                interceptor: interceptor,
                 dispatchQueue: dispatchQueue,
                 decoder: decoder
             )

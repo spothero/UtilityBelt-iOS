@@ -54,15 +54,15 @@ public class HTTPClient {
                         validators: [ResponseValidator] = [],
                         interceptor: RequestInterceptor? = nil,
                         dispatchQueue: DispatchQueue = .main,
-                        completion: DataTaskCompletion? = nil) -> URLSessionTask? {
+                        completion: DataTaskCompletion? = nil) -> Request? {
         self.logStart(of: request)
         
         // Make the request mutable.
-        var request = request
+        var urlRequest = request
         
         // Set the timeout interval of the request, if applicable.
         if let timeoutInterval = self.timeoutInterval {
-            request.timeoutInterval = timeoutInterval
+            urlRequest.timeoutInterval = timeoutInterval
         }
         
         let request = Request(session: self.session,
@@ -70,7 +70,10 @@ public class HTTPClient {
                               interceptor: interceptor,
                               dispatchQueue: dispatchQueue,
                               completion: completion)
+        
+        // Perform the request.
         request.perform(urlRequest: urlRequest)
+        
         return request
     }
     

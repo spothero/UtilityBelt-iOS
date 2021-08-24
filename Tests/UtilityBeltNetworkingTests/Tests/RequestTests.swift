@@ -11,6 +11,7 @@ final class RequestTests: XCTestCase {
         // Create an adapter that changes the original request.
         struct MockAdapter: RequestInterceptor {
             static let adaptedURL = "https://spothero.com/foo"
+            
             func adapt(_ request: URLRequest,
                        completion: (Result<URLRequest, Error>) -> Void) {
                 var adaptedRequest = request
@@ -45,6 +46,7 @@ final class RequestTests: XCTestCase {
         // Create an adapter that returns an error.
         struct MockAdapter: RequestInterceptor {
             static let errorDescription = "Adapting url failed"
+            
             func adapt(_ request: URLRequest,
                        completion: (Result<URLRequest, Error>) -> Void) {
                 let error = NSError(domain: "testing.domain",
@@ -86,6 +88,7 @@ final class RequestTests: XCTestCase {
             }
             
             var retryExpectation: XCTestExpectation?
+            
             func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
                 if request.retryCount < 1 {
                     completion(true)
@@ -121,6 +124,7 @@ final class RequestTests: XCTestCase {
             }
             
             var retryExpectation: XCTestExpectation?
+            
             func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
                 if request.retryCount < 3 {
                     completion(true)
@@ -199,6 +203,7 @@ final class RequestTests: XCTestCase {
             }
             
             var asyncRetryOperationStartedExpectation: XCTestExpectation?
+            
             func retry(_ request: Request, dueTo error: Error, completion: @escaping (Bool) -> Void) {
                 guard request.retryCount < 1 else {
                     completion(false)
@@ -259,11 +264,13 @@ private extension RequestTests {
                     headers: HTTPHeaderDictionaryConvertible? = nil,
                     encoding: ParameterEncoding? = nil,
                     timeout: TimeInterval? = 0.1) throws -> URLRequest {
-        var request = try HTTPClient.shared.configuredURLRequest(url: url,
-                                                                 method: method,
-                                                                 parameters: parameters,
-                                                                 headers: headers,
-                                                                 encoding: encoding)
+        var request = try URLRequest(
+            url: url,
+            method: method,
+            parameters: parameters,
+            headers: headers,
+            encoding: encoding
+        )
         
         if let timeout = timeout {
             request.timeoutInterval = timeout
