@@ -16,7 +16,7 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: macos-latest
+    runs-on: macos-11
     permissions:
       pull-requests: write
     env:
@@ -32,7 +32,7 @@ jobs:
         run: sh ./scripts/danger_lint.sh
   iOS:
     name: iOS ${{ matrix.os }} ${{ matrix.device_name }}
-    runs-on: macos-latest
+    runs-on: macos-11
     needs: [lint]
     strategy:
       matrix:
@@ -53,7 +53,7 @@ jobs:
           path: ${{ env.DEPLOY_DIRECTORY }}
   macOS:
     name: macOS
-    runs-on: macos-latest
+    runs-on: macos-11
     needs: [lint]
     steps:
       - name: Checkout
@@ -67,7 +67,7 @@ jobs:
           path: ${{ env.DEPLOY_DIRECTORY }}
   tvOS:
     name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
-    runs-on: macos-latest
+    runs-on: macos-11
     needs: [lint]
     strategy:
       matrix:
@@ -89,7 +89,7 @@ jobs:
     needs: [lint]
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-11]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
