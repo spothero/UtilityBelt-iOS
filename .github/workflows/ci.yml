@@ -10,7 +10,7 @@ env:
   PACKAGE_NAME: UtilityBelt
   XCODEBUILD_WORKSPACE: UtilityBelt.xcworkspace
   XCODEBUILD_SCHEME: UtilityBelt
-  DEVELOPER_DIR: /Applications/Xcode_13.0.app
+  DEVELOPER_DIR: /Applications/Xcode_13.0.app/Contents/Developer
   DEPLOY_DIRECTORY: deploy
 
 jobs:
@@ -40,7 +40,7 @@ jobs:
         os: [15.0]
         xcode_version: [13.0]
     env:
-      DEVELOPER_DIR: "/Applications/Xcode_${{ matrix.xcode_version }}.app"
+      DEVELOPER_DIR: "/Applications/Xcode_${{ matrix.xcode_version }}.app/Contents/Developer"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
