@@ -10,7 +10,7 @@ env:
   PACKAGE_NAME: UtilityBelt
   XCODEBUILD_WORKSPACE: UtilityBelt.xcworkspace
   XCODEBUILD_SCHEME: UtilityBelt
-  DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_13.0.app/Contents/Developer
   DEPLOY_DIRECTORY: deploy
 
 jobs:
@@ -37,8 +37,8 @@ jobs:
     strategy:
       matrix:
         device_name: ["iPhone 12 Pro", "iPad Pro (11-inch) (2nd generation)"]
-        os: [14.4]
-        xcode_version: [12.4]
+        os: [15.0]
+        xcode_version: [13.0]
     env:
       DEVELOPER_DIR: "/Applications/Xcode_${{ matrix.xcode_version }}.app/Contents/Developer"
     steps:
@@ -72,7 +72,7 @@ jobs:
     strategy:
       matrix:
         device_name: ["Apple TV 4K"]
-        os: [14.3]
+        os: [15.0]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
