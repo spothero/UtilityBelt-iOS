@@ -7,7 +7,7 @@ import PackageDescription
 let package = Package(
     name: "UtilityBelt",
     platforms: [
-        .iOS(.v10),         // supports NSPersistentContainer
+        .iOS(.v11),         // supports compilation on targets including armv7 and i386 architectures
         .macOS(.v10_12),    // supports NSPersistentContainer
         .tvOS(.v10),        // supports NSPersistentContainer
         .watchOS(.v3),      // supports NSPersistentContainer
