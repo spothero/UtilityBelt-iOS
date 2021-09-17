@@ -42,7 +42,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Switch Xcode Version
-        run: xcode-select -switch "/Applications/Xcode_13.0.app"
+        run: sudo xcode-select -switch "/Applications/Xcode_13.0.app"
       - name: Run Tests
         run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
       - name: Upload Step Output
@@ -58,7 +58,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Switch Xcode Version
-        run: xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
+        run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
         run: sh ./scripts/xcode_build.sh "platform=macOS"
       - name: Upload Step Output
@@ -78,7 +78,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Switch Xcode Version
-        run: xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
+        run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
         run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
       - name: Upload Step Output
