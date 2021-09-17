@@ -10,7 +10,6 @@ env:
   PACKAGE_NAME: UtilityBelt
   XCODEBUILD_WORKSPACE: UtilityBelt.xcworkspace
   XCODEBUILD_SCHEME: UtilityBelt
-  DEVELOPER_DIR: /Applications/Xcode_13.0.app
   DEPLOY_DIRECTORY: deploy
 
 jobs:
@@ -39,11 +38,11 @@ jobs:
         device_name: ["iPhone 12 Pro", "iPad Pro (11-inch) (2nd generation)"]
         os: [15.0]
         xcode_version: [13.0]
-    env:
-      DEVELOPER_DIR: "/Applications/Xcode_${{ matrix.xcode_version }}.app"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Switch Xcode Version
+        run: xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
         run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=iOS Simulator"
       - name: Upload Step Output
@@ -58,6 +57,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Switch Xcode Version
+        run: xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
         run: sh ./scripts/xcode_build.sh "platform=macOS"
       - name: Upload Step Output
@@ -76,6 +77,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Switch Xcode Version
+        run: xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
         run: sh ./scripts/xcode_build.sh "name=${{ matrix.device_name }},OS=${{ matrix.os }},platform=tvOS Simulator"
       - name: Upload Step Output
@@ -93,6 +96,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Switch Xcode Version
+        run: xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
         run: sh ./scripts/swift_build.sh
       - name: Upload Step Output
