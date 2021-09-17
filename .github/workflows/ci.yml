@@ -54,6 +54,9 @@ jobs:
     name: macOS
     runs-on: macos-11
     needs: [lint]
+    strategy:
+      matrix:
+        xcode_version: ["13.0"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -73,7 +76,8 @@ jobs:
     strategy:
       matrix:
         device_name: ["Apple TV 4K"]
-        os: [15.0]
+        os: ["15.0"]
+        xcode_version: ["13.0"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -93,11 +97,12 @@ jobs:
     strategy:
       matrix:
         os: [macos-11]
+        xcode_version: ["13.0"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Switch Xcode Version
-        run: xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
+        run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
         run: sh ./scripts/swift_build.sh
       - name: Upload Step Output
