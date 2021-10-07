@@ -8,14 +8,13 @@ let package = Package(
     name: "UtilityBelt",
     platforms: [
         .iOS(.v11),         // supports compilation on targets including armv7 and i386 architectures
-        .macOS(.v10_12),    // supports NSPersistentContainer
-        .tvOS(.v10),        // supports NSPersistentContainer
-        .watchOS(.v3),      // supports NSPersistentContainer
+        .macOS(.v10_12),
+        .tvOS(.v10),
+        .watchOS(.v3),
     ],
     products: [
         .library(name: "Sham", targets: ["Sham"]),
         .library(name: "Sham_XCTestSupport", targets: ["Sham_XCTestSupport"]),
-        .library(name: "UtilityBeltData", targets: ["UtilityBeltData"]),
         .library(name: "UtilityBeltNetworking", targets: ["UtilityBeltNetworking"]),
     ],
     dependencies: [],
@@ -33,7 +32,6 @@ let package = Package(
                 .target(name: "Sham"),
             ]
         ),
-        .target(name: "UtilityBeltData"),
         .target(name: "UtilityBeltNetworking"),
         // Test Targets
         .testTarget(
@@ -41,12 +39,6 @@ let package = Package(
             dependencies: [
                 .target(name: "Sham"),
                 .target(name: "Sham_XCTestSupport"),
-            ]
-        ),
-        .testTarget(
-            name: "UtilityBeltDataTests",
-            dependencies: [
-                .target(name: "UtilityBeltData"),
             ]
         ),
         .testTarget(
