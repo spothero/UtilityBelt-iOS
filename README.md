@@ -29,6 +29,13 @@ dependencies: [
 
 For app projects, simply follow the [Apple documentation](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) on adding package dependencies to your app.
 
+## Libraries
+UtilityBelt contains the following libraries:
+
+- [UtilityBeltNetworking](./Sources/UtilityBeltNetworking): A lightweight HTTP client.
+- [Sham](./Sources/Sham): A tool to enable mocking network requests.
+- [Sham_XCTestSupport](./Sources/Sham_XCTestSupport): Sham extensions for XCTest.
+
 ## Communication
 
 For all bug reports, feature requests, and general communication, please open an issue to get in contact with us.
