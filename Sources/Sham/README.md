@@ -6,12 +6,12 @@ Sham is a library that can be used to mock HTTP requests and provides multiple w
 ## Introduction
 The core of Sham is made up of two parts, a custom `URLProtocol` called `MockURLProtocol` and a `MockService` to help facilitate storage and retrieval of mocked network requests.
 
-**MockURLProtocol** 
+**MockURLProtocol**  
 `MockURLProtocol` is a subclass of `[URLProtocol](https://developer.apple.com/documentation/foundation/urlprotocol)` and works by overriding `URLProtocol` methods `canInit(with task: URLSessionTask)` and `canInit(with request: URLRequest)` in order to check with the `MockService` to see if the given URLs have been mocked.   
 
 Later, when `URLProtocol.startLoading()` is invoked, `MockURLProtocol` will then retrieve the mocked data from the `MockService` and provide it to the client.
 
-**MockService**
+**MockService**  
 The `MockService` is a singleton that provides access to a repository of mocked network requests. The `MockURLProtocol` subclass will talk to the `MockService` to match outgoing network requests with mocked responses, which can be set by calling `MockService.shared.stubbedDataCollection.stub(_:with:)`.
 
 ### Configuring A URLSession For Mocking
