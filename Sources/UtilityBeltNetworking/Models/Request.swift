@@ -212,7 +212,7 @@ public final class Request {
             HTTPClient.shared.log("Response failed. Error: \(error.localizedDescription)")
             
             if let interceptor = self.interceptor {
-                interceptor.retry(self, dueTo: error) { shouldRetry in
+                interceptor.retry(self, dueTo: error, data: data) { shouldRetry in
                     if shouldRetry {
                         // If we should retry, bump the retry count and perform the request again.
                         self.retryCount += 1

@@ -7,6 +7,7 @@ public protocol RequestRetrier {
     /// - Parameters:
     ///   - request: The `Request` containing the `URLSessionTask` that failed.
     ///   - error: The error that triggered the call to retry.
+    ///   - data: The response data received from the request, if any.
     ///   - completion: A closure to indicate whether or not the request should be retried.
-    func retry(_ request: Request, dueTo error: Error, completion: @escaping (Bool) -> Void)
+    func retry(_ request: Request, dueTo error: Error, data: Data?, completion: @escaping (Bool) -> Void)
 }
