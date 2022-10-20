@@ -124,7 +124,7 @@ final class RequestTests: XCTestCase {
                 completion(.success(adaptedRequest))
             }
             
-            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 completion(false)
             }
         }
