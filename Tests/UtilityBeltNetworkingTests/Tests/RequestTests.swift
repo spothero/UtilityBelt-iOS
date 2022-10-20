@@ -1,4 +1,4 @@
-// Copyright © 2021 SpotHero, Inc. All rights reserved.
+// Copyright © 2022 SpotHero, Inc. All rights reserved.
 
 import Foundation
 @testable import UtilityBeltNetworking
@@ -47,7 +47,7 @@ final class RequestTests: XCTestCase {
                 }
             }
             
-            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 completion(false)
             }
         }
@@ -78,7 +78,7 @@ final class RequestTests: XCTestCase {
             
             var retryBeganExpectation: XCTestExpectation?
             
-            func retry(_ request: Request, dueTo error: Error, completion: @escaping (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: @escaping (Bool) -> Void) {
                 guard request.retryCount < 1 else {
                     completion(false)
                     return
@@ -124,7 +124,7 @@ final class RequestTests: XCTestCase {
                 completion(.success(adaptedRequest))
             }
             
-            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 completion(false)
             }
         }
@@ -160,7 +160,7 @@ final class RequestTests: XCTestCase {
                 completion(.failure(error))
             }
             
-            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 completion(false)
             }
         }
@@ -194,7 +194,7 @@ final class RequestTests: XCTestCase {
             
             var retryExpectation: XCTestExpectation?
             
-            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 if request.retryCount < 1 {
                     completion(true)
                     self.retryExpectation?.fulfill()
@@ -230,7 +230,7 @@ final class RequestTests: XCTestCase {
             
             var retryExpectation: XCTestExpectation?
             
-            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 if request.retryCount < 3 {
                     completion(true)
                     self.retryExpectation?.fulfill()
@@ -271,7 +271,7 @@ final class RequestTests: XCTestCase {
                 }
             }
             
-            func retry(_ request: Request, dueTo error: Error, completion: (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 completion(false)
             }
         }
@@ -309,7 +309,7 @@ final class RequestTests: XCTestCase {
             
             var asyncRetryOperationStartedExpectation: XCTestExpectation?
             
-            func retry(_ request: Request, dueTo error: Error, completion: @escaping (Bool) -> Void) {
+            func retry(_ request: Request, dueTo error: Error, data: Data?, completion: @escaping (Bool) -> Void) {
                 guard request.retryCount < 1 else {
                     completion(false)
                     return
