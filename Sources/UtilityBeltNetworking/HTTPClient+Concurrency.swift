@@ -38,7 +38,8 @@ public extension HTTPClient {
         return try await withCheckedThrowingContinuation { [session] continuation in
             Request(session: session,
                     validators: validators,
-                    interceptor: interceptor) { response in
+                    interceptor: interceptor,
+                    dispatchQueue: .global()) { response in
                 if let error = response.error {
                     continuation.resume(throwing: error)
                 } else if let request = response.request,

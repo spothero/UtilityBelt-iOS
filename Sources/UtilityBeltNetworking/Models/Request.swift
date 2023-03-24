@@ -21,7 +21,7 @@ public final class Request {
     private let completion: DataTaskCompletion?
     
     /// The dispatch queue that the completion will be called on.
-    private let dispatchQueue: DispatchQueue?
+    private let dispatchQueue: DispatchQueue
     
     /// The number of request retries that have been attempted.
     public private(set) var retryCount = 0
@@ -45,7 +45,7 @@ public final class Request {
     
     // MARK: Initialization
     
-    /// Create a new instance of a `Request` that returns on a given dispatch queue.
+    /// Create a new instance of a `Request`.
     /// - Parameters:
     ///   - session: The session in which the request will be made.
     ///   - validators: An array of validators that will be applied to the response. Defaults to an empty array.
@@ -61,23 +61,6 @@ public final class Request {
         self.validators = validators
         self.interceptor = interceptor
         self.dispatchQueue = dispatchQueue
-        self.completion = completion
-    }
-
-    /// Create a new instance of a `Request`.
-    /// - Parameters:
-    ///   - session: The session in which the request will be made.
-    ///   - validators: An array of validators that will be applied to the response. Defaults to an empty array.
-    ///   - interceptor: An object that can intercept the url request. Defaults to `nil`.
-    ///   - completion: The block to call when the request has completed. Defaults to `nil`.
-    public init(session: URLSession,
-                validators: [ResponseValidator] = [],
-                interceptor: RequestInterceptor? = nil,
-                completion: DataTaskCompletion? = nil) {
-        self.session = session
-        self.validators = validators
-        self.interceptor = interceptor
-        self.dispatchQueue = nil
         self.completion = completion
     }
     
@@ -270,12 +253,8 @@ public final class Request {
                                         data: data,
                                         result: result)
 
-        // Fire the completion!
-        if let dispatchQueue {
-            dispatchQueue.async {
-                self.completion?(dataResponse)
-            }
-        } else {
+        self.dispatchQueue.async {
+            // Fire the completion!
             self.completion?(dataResponse)
         }
     }
