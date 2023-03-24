@@ -2,11 +2,13 @@
 
 import Foundation
 
+/// A tuple returned from requests that return raw data.
 @available(iOS 13.0.0, *)
 public typealias DataTaskSuccess = (request: URLRequest,
                                     response: HTTPURLResponse,
                                     data: Data)
 
+/// A tuple returned from requests that return decoded objects.
 @available(iOS 13.0.0, *)
 public typealias DecodableTaskSuccess<T: Decodable> = (request: URLRequest,
                                                        response: HTTPURLResponse,
@@ -17,11 +19,11 @@ public typealias DecodableTaskSuccess<T: Decodable> = (request: URLRequest,
 extension HTTPClient {
     // MARK: Data Response
 
-    /// Creates and sends a request which fetches raw data from an endpoint.
+    /// Sends a request which fetches raw data from an endpoint.
     /// - Parameter request: The `URLRequest` to make the request with.
     /// - Parameter validators: An array of validators that will be applied to the response.
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
-    /// - Returns: The configured `Request` object that is performed upon execution of this method.
+    /// - Returns: The request used, the response and raw data.
     public func request(
         _ urlRequest: URLRequest,
         validators: [ResponseValidator] = [],
@@ -51,12 +53,12 @@ extension HTTPClient {
 
     // MARK: Decodable Object Response
 
-    /// Creates and sends a request which fetches raw data from an endpoint and decodes it.
+    /// Sends a request which fetches raw data from an endpoint and decodes it.
     /// - Parameter request: The `URLRequest` to make the request with.
     /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
     /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
-    /// - Returns: The configured `Request` object that is performed upon execution of this method.
+    /// - Returns: The request used, the response and the raw and decoded data.
     @discardableResult
     public func request<T: Decodable>(
         _ urlRequest: URLRequest,
