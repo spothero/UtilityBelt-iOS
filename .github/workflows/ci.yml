@@ -35,8 +35,8 @@ jobs:
     needs: [lint]
     strategy:
       matrix:
-        device_name: ["iPhone 12 Pro", "iPad Pro (11-inch) (2nd generation)"]
-        os: ["15.0"]
+        device_name: ["iPhone 13 Pro", "iPad Pro (11-inch) (3rd generation)"]
+        os: ["16.2"]
         xcode_version: ["14.2.0"]
     steps:
       - name: Checkout
@@ -75,8 +75,8 @@ jobs:
     needs: [lint]
     strategy:
       matrix:
-        device_name: ["Apple TV 4K"]
-        os: ["15.0"]
+        device_name: ["Apple TV 4K (3rd generation)"]
+        os: ["16.1"]
         xcode_version: ["14.2.0"]
     steps:
       - name: Checkout
