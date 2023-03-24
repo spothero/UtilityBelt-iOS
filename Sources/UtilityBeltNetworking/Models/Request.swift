@@ -1,4 +1,4 @@
-// Copyright © 2022 SpotHero, Inc. All rights reserved.
+// Copyright © 2023 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -21,7 +21,7 @@ public final class Request {
     private let completion: DataTaskCompletion?
     
     /// The dispatch queue that the completion will be called on.
-    private let dispatchQueue: DispatchQueue
+    private let dispatchQueue: DispatchQueue?
     
     /// The number of request retries that have been attempted.
     public private(set) var retryCount = 0
@@ -45,7 +45,7 @@ public final class Request {
     
     // MARK: Initialization
     
-    /// Create a new instance of a `Request`.
+    /// Create a new instance of a `Request` that returns on a given dispatch queue.
     /// - Parameters:
     ///   - session: The session in which the request will be made.
     ///   - validators: An array of validators that will be applied to the response. Defaults to an empty array.
@@ -61,6 +61,23 @@ public final class Request {
         self.validators = validators
         self.interceptor = interceptor
         self.dispatchQueue = dispatchQueue
+        self.completion = completion
+    }
+
+    /// Create a new instance of a `Request`.
+    /// - Parameters:
+    ///   - session: The session in which the request will be made.
+    ///   - validators: An array of validators that will be applied to the response. Defaults to an empty array.
+    ///   - interceptor: An object that can intercept the url request. Defaults to `nil`.
+    ///   - completion: The block to call when the request has completed. Defaults to `nil`.
+    public init(session: URLSession,
+                validators: [ResponseValidator] = [],
+                interceptor: RequestInterceptor? = nil,
+                completion: DataTaskCompletion? = nil) {
+        self.session = session
+        self.validators = validators
+        self.interceptor = interceptor
+        self.dispatchQueue = nil
         self.completion = completion
     }
     
@@ -179,7 +196,7 @@ public final class Request {
         let result: Result<Data, Error> = {
             if let response = httpResponse {
                 do {
-                    for validator in validators {
+                    for validator in self.validators {
                         try validator.validate(response: response)
                     }
                 } catch {
@@ -252,9 +269,13 @@ public final class Request {
                                         response: urlResponse,
                                         data: data,
                                         result: result)
-        
-        self.dispatchQueue.async {
-            // Fire the completion!
+
+        // Fire the completion!
+        if let dispatchQueue {
+            dispatchQueue.async {
+                self.completion?(dataResponse)
+            }
+        } else {
             self.completion?(dataResponse)
         }
     }
