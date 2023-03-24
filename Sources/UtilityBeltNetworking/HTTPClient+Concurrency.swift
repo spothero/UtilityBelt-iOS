@@ -35,21 +35,27 @@ public extension HTTPClient {
         // Get a modified request with a given timeout interval.
         let urlRequest = urlRequest.withTimeout(self.timeoutInterval)
 
-        return try await withCheckedThrowingContinuation { [session] continuation in
-            Request(session: session,
-                    validators: validators,
-                    interceptor: interceptor,
-                    dispatchQueue: .global()) { response in
-                if let error = response.error {
-                    continuation.resume(throwing: error)
-                } else if let request = response.request,
-                          let httpResponse = response.response,
-                          let data = response.data {
-                    continuation.resume(returning: (request, httpResponse, data))
-                } else {
-                    preconditionFailure("Network request failed with no error")
+        let request = Request(session: session,
+                              validators: validators,
+                              interceptor: interceptor,
+                              dispatchQueue: .global())
+
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                request.perform(urlRequest: urlRequest) { response in
+                    if let error = response.error {
+                        continuation.resume(throwing: error)
+                    } else if let request = response.request,
+                              let _ = response.response,
+                              let data = response.data {
+                        continuation.resume(returning: (request, response, data))
+                    } else {
+                        preconditionFailure("Network request failed with no error")
+                    }
                 }
-            }.perform(urlRequest: urlRequest)
+            }
+        } onCancel: {
+            request.cancel()
         }
     }
 

@@ -18,7 +18,7 @@ public final class Request {
     private let interceptor: RequestInterceptor?
     
     /// The block to call when the request has completed.
-    private let completion: DataTaskCompletion?
+    private var completion: DataTaskCompletion?
     
     /// The dispatch queue that the completion will be called on.
     private let dispatchQueue: DispatchQueue
@@ -68,7 +68,8 @@ public final class Request {
     
     /// Performs any necessary request adaptation then creates and resumes a `URLSessionTask`.
     /// - Parameter urlRequest: The request to be sent to the server.
-    func perform(urlRequest: URLRequest) {
+    func perform(urlRequest: URLRequest, completion: DataTaskCompletion? = nil) {
+        self.completion = completion
         self.isRunning = true
         
         if let interceptor = self.interceptor {
