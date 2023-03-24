@@ -3,22 +3,19 @@
 import Foundation
 
 /// A tuple returned from requests that return raw data.
-@available(iOS 13.0.0, *)
-@available(macOS 15.15, *)
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public typealias DataTaskSuccess = (request: URLRequest,
                                     response: HTTPURLResponse,
                                     data: Data)
 
 /// A tuple returned from requests that return decoded objects.
-@available(iOS 13.0.0, *)
-@available(macOS 15.15, *)
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public typealias DecodableTaskSuccess<T: Decodable> = (request: URLRequest,
                                                        response: HTTPURLResponse,
                                                        data: Data,
                                                        value: T)
 
-@available(iOS 13.0.0, *)
-@available(macOS 15.15, *)
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public extension HTTPClient {
     // MARK: Data Response
 
