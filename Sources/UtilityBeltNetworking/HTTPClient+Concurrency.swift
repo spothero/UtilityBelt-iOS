@@ -25,6 +25,7 @@ public extension HTTPClient {
     ///   - validators: An array of validators that will be applied to the response.
     ///   - interceptor: An object that can intercept the url request. Defaults to `nil`.
     /// - Returns: The request used, the response and raw data.
+    /// - Throws: A ``RequestError`` containing the thrown error and a `HTTPURLResponse` if available.
     func request(
         _ urlRequest: URLRequest,
         validators: [ResponseValidator] = [],
@@ -43,12 +44,13 @@ public extension HTTPClient {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 request.perform(urlRequest: urlRequest) { response in
-                    if let error = response.error {
+                    if let underlyingError = response.error {
+                        let error = RequestError(underlyingError: underlyingError, response: response.response)
                         continuation.resume(throwing: error)
                     } else if let request = response.request,
-                              let _ = response.response,
+                              let httpResponse = response.response,
                               let data = response.data {
-                        continuation.resume(returning: (request, response, data))
+                        continuation.resume(returning: (request, httpResponse, data))
                     } else {
                         preconditionFailure("Network request failed with no error")
                     }
@@ -94,4 +96,9 @@ public extension HTTPClient {
             throw UBNetworkError.unableToDecode(String(describing: T.self), nil)
         }
     }
+}
+
+public struct RequestError: Error {
+    public let underlyingError: Error
+    public let response: HTTPURLResponse?
 }
