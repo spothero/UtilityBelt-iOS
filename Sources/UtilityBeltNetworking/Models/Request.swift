@@ -67,9 +67,13 @@ public final class Request {
     // MARK: Starting a Request
     
     /// Performs any necessary request adaptation then creates and resumes a `URLSessionTask`.
-    /// - Parameter urlRequest: The request to be sent to the server.
+    /// - Parameters:
+    ///   - urlRequest: The request to be sent to the server.
+    ///   - completion: The block to call when the request has completed. Overwrites the completion used during initialization.
     func perform(urlRequest: URLRequest, completion: DataTaskCompletion? = nil) {
-        self.completion = completion
+        if let completion {
+            self.completion = completion
+        }
         self.isRunning = true
         
         if let interceptor = self.interceptor {
