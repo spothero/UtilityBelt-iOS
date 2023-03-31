@@ -13,7 +13,7 @@ final class HTTPClientTests: XCTestCase, URLRequesting {
         // We capture the request in a task so we can cancel it later.
         // We're also using async let so that we can begin the request but catch the error later.
         let client = HTTPClient()
-        async let task = Task { client.request(try self.urlRequest(url: "https://spothero.com")) }
+        async let task = Task { try client.request(self.urlRequest(url: "https://spothero.com")) }
 
         // Cancel the request immediately through Swift Concurrency
         await task.cancel()
