@@ -2,6 +2,8 @@
 
 import Foundation
 
+// MARK: - Return Types
+
 /// A tuple returned from requests that return raw data.
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public typealias DataTaskSuccess = (request: URLRequest,
@@ -98,7 +100,13 @@ public extension HTTPClient {
     }
 }
 
+// MARK: - RequestError
+
+/// An error thrown when making a request through ``HTTPClient``
 public struct RequestError: Error {
+    /// The underlying error that caused the request to fail.
     public let underlyingError: Error
+
+    /// The `HTTPURLResponse` for the request if the error occurred at a point where one might exist.
     public let response: HTTPURLResponse?
 }

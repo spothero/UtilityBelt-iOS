@@ -1,10 +1,10 @@
-// Copyright © 2022 SpotHero, Inc. All rights reserved.
+// Copyright © 2023 SpotHero, Inc. All rights reserved.
 
 import Foundation
 @testable import UtilityBeltNetworking
 import XCTest
 
-final class RequestTests: XCTestCase {
+final class RequestTests: XCTestCase, URLRequesting {
     // MARK: State Tests
     
     func testRequestIsNotRunningUponInitialization() {
@@ -13,6 +13,24 @@ final class RequestTests: XCTestCase {
         
         // Verify the Request is not running.
         XCTAssertFalse(request.isRunning)
+    }
+
+    func testRequestCallOverriddenCompletionHandler() throws {
+        // Initialize a new Request object.
+        let originalExpectation = self.expectation(description: "Request completed")
+        originalExpectation.isInverted = true
+        let request = Request(session: .shared) { _ in
+            originalExpectation.fulfill()
+        }
+
+        // Perform the request with the updated completion.
+        let overridingExpectation = self.expectation(description: "Request Completed")
+        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com")) { _ in
+            overridingExpectation.fulfill()
+        }
+
+        // Wait on the request to complete.
+        self.wait(for: [originalExpectation, overridingExpectation], timeout: 1)
     }
     
     func testRequestIsNotRunningAfterCompletionBlockIsCalled() throws {
@@ -357,30 +375,5 @@ final class RequestTests: XCTestCase {
         
         // Wait for the request to complete.
         self.wait(for: [requestExpectation], timeout: 2)
-    }
-}
-
-// MARK: - Utilities
-
-private extension RequestTests {
-    func urlRequest(url: URLConvertible,
-                    method: HTTPMethod = .get,
-                    parameters: ParameterDictionaryConvertible? = nil,
-                    headers: HTTPHeaderDictionaryConvertible? = nil,
-                    encoding: ParameterEncoding? = nil,
-                    timeout: TimeInterval? = 0.1) throws -> URLRequest {
-        var request = try URLRequest(
-            url: url,
-            method: method,
-            parameters: parameters,
-            headers: headers,
-            encoding: encoding
-        )
-        
-        if let timeout = timeout {
-            request.timeoutInterval = timeout
-        }
-        
-        return request
     }
 }
