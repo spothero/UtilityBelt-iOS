@@ -4,8 +4,8 @@ import Foundation
 @testable import UtilityBeltNetworking
 import XCTest
 
-@available(iOS 13.0, *)
 final class HTTPClientTests: XCTestCase, URLRequesting {
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func testCancellation() async throws {
         // We capture the request in a task so we can cancel it later.
         // We're also using async let so that we can begin the request but catch the error later.
