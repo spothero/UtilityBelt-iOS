@@ -1,14 +1,11 @@
 // Copyright © 2023 SpotHero, Inc. All rights reserved.
 
 import Foundation
-import Sham_XCTestSupport
 @testable import UtilityBeltNetworking
 import XCTest
 
 @available(iOS 13.0, *)
 final class HTTPClientTests: XCTestCase, URLRequesting {
-    var task: Task<DataTaskSuccess, Error>!
-
     func testCancellation() async throws {
         // We capture the request in a task so we can cancel it later.
         // We're also using async let so that we can begin the request but catch the error later.
