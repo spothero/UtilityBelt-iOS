@@ -45,7 +45,6 @@ let package = Package(
             name: "UtilityBeltNetworkingTests",
             dependencies: [
                 .target(name: "UtilityBeltNetworking"),
-                .target(name: "Sham_XCTestSupport")
             ]
         ),
     ],

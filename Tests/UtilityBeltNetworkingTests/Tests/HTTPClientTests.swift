@@ -10,9 +10,6 @@ final class HTTPClientTests: XCTestCase, URLRequesting {
     var task: Task<DataTaskSuccess, Error>!
 
     func testCancellation() async throws {
-        // Stub the network so we don't make a live call
-        self.stub(.allRequests, with: .data(Data()))
-
         // We capture the request in a task so we can cancel it later.
         // We're also using async let so that we can begin the request but catch the error later.
         let client = HTTPClient()
