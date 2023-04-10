@@ -38,14 +38,28 @@ public extension HTTPClient {
         // Get a modified request with a given timeout interval.
         let urlRequest = urlRequest.withTimeout(self.timeoutInterval)
 
-        let request = Request(session: session,
-                              validators: validators,
-                              interceptor: interceptor,
-                              dispatchQueue: .global())
+        // We capture the request and a cancellation handler here to cancel the underlying
+        // request should the task get cancelled through Swift Concurrency. We use `let onCancel`
+        // here so that we can capture a reference of the request in `withTaskCancellationHandler`
+        // onCancel parameter.
+        //
+        // This nifty workaround found here: https://forums.swift.org/t/how-to-use-withtaskcancellationhandler-properly/54341/6
+        var request: Request?
+        let onCancel = { request?.cancel() }
 
+        // Return a continuation wrapping a `Request`
         return try await withTaskCancellationHandler {
-            try await withCheckedThrowingContinuation { continuation in
-                request.perform(urlRequest: urlRequest) { response in
+            return try await withCheckedThrowingContinuation { continuation in
+                // The task may have already been cancelled at this point so it's always good to check...
+                guard !Task.isCancelled else {
+                    continuation.resume(throwing: RequestError.swiftCancellation)
+                    return
+                }
+
+                request = Request(session: session,
+                                  validators: validators,
+                                  interceptor: interceptor,
+                                  dispatchQueue: .global()) { response in
                     if let underlyingError = response.error {
                         let error = RequestError(underlyingError: underlyingError, response: response.response)
                         continuation.resume(throwing: error)
@@ -57,9 +71,11 @@ public extension HTTPClient {
                         preconditionFailure("Network request failed with no error")
                     }
                 }
+
+                request?.perform(urlRequest: urlRequest)
             }
         } onCancel: {
-            request.cancel()
+            onCancel()
         }
     }
 
@@ -109,4 +125,7 @@ public struct RequestError: Error {
 
     /// The `HTTPURLResponse` for the request if the error occurred at a point where one might exist.
     public let response: HTTPURLResponse?
+
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    static let swiftCancellation = RequestError(underlyingError: CancellationError(), response: nil)
 }

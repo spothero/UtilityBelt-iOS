@@ -14,24 +14,6 @@ final class RequestTests: XCTestCase, URLRequesting {
         // Verify the Request is not running.
         XCTAssertFalse(request.isRunning)
     }
-
-    func testRequestCallOverriddenCompletionHandler() throws {
-        // Initialize a new Request object.
-        let originalExpectation = self.expectation(description: "Request completed")
-        originalExpectation.isInverted = true
-        let request = Request(session: .shared) { _ in
-            originalExpectation.fulfill()
-        }
-
-        // Perform the request with the updated completion.
-        let overridingExpectation = self.expectation(description: "Request Completed")
-        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com")) { _ in
-            overridingExpectation.fulfill()
-        }
-
-        // Wait on the request to complete.
-        self.wait(for: [originalExpectation, overridingExpectation], timeout: 1)
-    }
     
     func testRequestIsNotRunningAfterCompletionBlockIsCalled() throws {
         // Initialize a new Request object.
