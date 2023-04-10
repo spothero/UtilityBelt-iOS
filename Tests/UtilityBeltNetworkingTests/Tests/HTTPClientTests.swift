@@ -27,13 +27,16 @@ final class HTTPClientTests: XCTestCase, URLRequesting {
 
     func testCancellationAfterStartingRequest() async throws {
         // We capture the request in a task so we can cancel it later.
-        let client = HTTPClient()
+        let session = MockURLSession()
+        let didCreateTaskExpectation = expectation(description: "Did create task")
+        session.didCreateTask = { didCreateTaskExpectation.fulfill() }
+        let client = HTTPClient(session: session)
         let task = Task { try await client.request(self.urlRequest(url: "https://spothero.com")) }
 
-        // Add a delay so the task has a moment to start
-        try await Task.sleep(nanoseconds: 500000000)
+        // Wait till the session has actually created a task.
+        await fulfillment(of: [didCreateTaskExpectation])
 
-        // Cancel the request immediately through Swift Concurrency
+        // Cancel the request through Swift Concurrency
         task.cancel()
 
         // Then we can assert that the failure is:
@@ -47,5 +50,23 @@ final class HTTPClientTests: XCTestCase, URLRequesting {
             let nsError = error.underlyingError as NSError
             XCTAssertEqual(nsError.code, NSURLErrorCancelled)
         }
+    }
+}
+
+// MARK: MockURLSession
+
+private class MockURLSession: URLSession {
+    var didCreateTask: (() -> Void)?
+
+    override func dataTask(with request: URLRequest,
+                           completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            completionHandler(data, response, error)
+        }
+
+        // We want this to be called sometime after returning...
+        DispatchQueue.main.async { self.didCreateTask?() }
+
+        return task
     }
 }
