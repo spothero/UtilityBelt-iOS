@@ -34,7 +34,7 @@ final class HTTPClientTests: XCTestCase, URLRequesting {
         let task = Task { try await client.request(self.urlRequest(url: "https://spothero.com")) }
 
         // Wait till the session has actually created a task.
-        await fulfillment(of: [didCreateTaskExpectation])
+        await fulfillment(of: [didCreateTaskExpectation], timeout: 5)
 
         // Cancel the request through Swift Concurrency
         task.cancel()
