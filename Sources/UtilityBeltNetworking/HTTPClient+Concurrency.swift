@@ -12,7 +12,7 @@ public typealias DataTaskSuccess = (request: URLRequest,
 
 /// A tuple returned from requests that return decoded objects.
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-public typealias DecodableTaskSuccess<T: Decodable> = (request: URLRequest,
+public typealias DecodableTaskSuccess<T: Decodable> = (request: URLRequest, // swiftlint:disable:this large_tuple
                                                        response: HTTPURLResponse,
                                                        data: Data,
                                                        value: T)
