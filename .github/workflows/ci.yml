@@ -15,14 +15,16 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: macos-11
+    runs-on: macos-13
     permissions:
       pull-requests: write
     env:
       DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
       - name: Install Dependencies
         run: |
           bundle install
@@ -31,16 +33,16 @@ jobs:
         run: sh ./scripts/danger_lint.sh
   iOS:
     name: iOS ${{ matrix.os }} ${{ matrix.device_name }}
-    runs-on: macos-11
+    runs-on: macos-13
     needs: [lint]
     strategy:
       matrix:
-        device_name: ["iPhone 12 Pro", "iPad Pro (11-inch) (2nd generation)"]
-        os: ["15.0"]
-        xcode_version: ["13.0"]
+        device_name: ["iPhone 13 Pro", "iPad Pro (11-inch) (3rd generation)"]
+        os: ["16.2"]
+        xcode_version: ["14.3.0"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Switch Xcode Version
         run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
@@ -52,14 +54,14 @@ jobs:
           path: ${{ env.DEPLOY_DIRECTORY }}
   macOS:
     name: macOS
-    runs-on: macos-11
+    runs-on: macos-13
     needs: [lint]
     strategy:
       matrix:
-        xcode_version: ["13.0"]
+        xcode_version: ["14.3.0"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Switch Xcode Version
         run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
@@ -71,16 +73,16 @@ jobs:
           path: ${{ env.DEPLOY_DIRECTORY }}
   tvOS:
     name: tvOS ${{ matrix.os }} ${{ matrix.device_name }}
-    runs-on: macos-11
+    runs-on: macos-13
     needs: [lint]
     strategy:
       matrix:
-        device_name: ["Apple TV 4K"]
-        os: ["15.0"]
-        xcode_version: ["13.0"]
+        device_name: ["Apple TV 4K (3rd generation)"]
+        os: ["16.1"]
+        xcode_version: ["14.3.0"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Switch Xcode Version
         run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests
@@ -96,11 +98,11 @@ jobs:
     needs: [lint]
     strategy:
       matrix:
-        os: [macos-11]
-        xcode_version: ["13.0"]
+        os: [macos-13]
+        xcode_version: ["14.3.0"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Switch Xcode Version
         run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode_version }}.app"
       - name: Run Tests

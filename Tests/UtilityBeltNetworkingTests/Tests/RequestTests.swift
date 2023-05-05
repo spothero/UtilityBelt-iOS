@@ -1,10 +1,10 @@
-// Copyright © 2022 SpotHero, Inc. All rights reserved.
+// Copyright © 2023 SpotHero, Inc. All rights reserved.
 
 import Foundation
 @testable import UtilityBeltNetworking
 import XCTest
 
-final class RequestTests: XCTestCase {
+final class RequestTests: XCTestCase, URLRequesting {
     // MARK: State Tests
     
     func testRequestIsNotRunningUponInitialization() {
@@ -23,7 +23,7 @@ final class RequestTests: XCTestCase {
         }
         
         // Perform the request.
-        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com"))
         
         // Wait on the request to complete.
         self.wait(for: [expectation], timeout: 1)
@@ -60,7 +60,7 @@ final class RequestTests: XCTestCase {
         
         // Start the Request.
         let request = Request(session: .shared, interceptor: interceptor)
-        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com"))
         
         // Wait for the signal that request adaptation has begun.
         self.wait(for: [expectation], timeout: 1)
@@ -101,7 +101,7 @@ final class RequestTests: XCTestCase {
         
         // Perform the Request.
         let request = Request(session: .shared, interceptor: interceptor)
-        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com"))
         
         // Wait for the RequestRetrier to start.
         self.wait(for: [expectation], timeout: 1)
@@ -141,7 +141,7 @@ final class RequestTests: XCTestCase {
         // Perform the request.
         let initialURL = "https://spothero.com"
         XCTAssertNotEqual(initialURL, MockAdapter.adaptedURL)
-        request.perform(urlRequest: try self.urlRequest(url: initialURL))
+        try request.perform(urlRequest: self.urlRequest(url: initialURL))
         
         // Verify the expectation is met.
         self.wait(for: [expectation], timeout: 1)
@@ -177,7 +177,7 @@ final class RequestTests: XCTestCase {
         }
         
         // Perform the request.
-        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com"))
         
         // Verify the expectation is met.
         self.wait(for: [expectation], timeout: 1)
@@ -212,7 +212,7 @@ final class RequestTests: XCTestCase {
         
         // Perform the request.
         let request = Request(session: .shared, interceptor: interceptor) { _ in }
-        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com"))
         
         // Verify that the retry expectation was called.
         self.wait(for: [retryExpectation], timeout: 1)
@@ -252,7 +252,7 @@ final class RequestTests: XCTestCase {
         let request = Request(session: .shared, interceptor: interceptor) { _ in
             requestExpectation.fulfill()
         }
-        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com"))
         
         // Verify retry occurred multiple times yet the request completion was only invoked once.
         self.wait(for: [retryExpectation, requestExpectation], timeout: 2)
@@ -292,7 +292,7 @@ final class RequestTests: XCTestCase {
             
             requestExpectation.fulfill()
         }
-        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com"))
         
         // Cancel the request while the adapter is running.
         request.cancel()
@@ -347,7 +347,7 @@ final class RequestTests: XCTestCase {
         interceptor.asyncRetryOperationStartedExpectation = requestRetrierStartedExpectation
         
         // Perform the request.
-        request.perform(urlRequest: try self.urlRequest(url: "https://spothero.com"))
+        try request.perform(urlRequest: self.urlRequest(url: "https://spothero.com"))
         
         // Wait for the RequestRetrier to start.
         self.wait(for: [requestRetrierStartedExpectation], timeout: 1)
@@ -357,30 +357,5 @@ final class RequestTests: XCTestCase {
         
         // Wait for the request to complete.
         self.wait(for: [requestExpectation], timeout: 2)
-    }
-}
-
-// MARK: - Utilities
-
-private extension RequestTests {
-    func urlRequest(url: URLConvertible,
-                    method: HTTPMethod = .get,
-                    parameters: ParameterDictionaryConvertible? = nil,
-                    headers: HTTPHeaderDictionaryConvertible? = nil,
-                    encoding: ParameterEncoding? = nil,
-                    timeout: TimeInterval? = 0.1) throws -> URLRequest {
-        var request = try URLRequest(
-            url: url,
-            method: method,
-            parameters: parameters,
-            headers: headers,
-            encoding: encoding
-        )
-        
-        if let timeout = timeout {
-            request.timeoutInterval = timeout
-        }
-        
-        return request
     }
 }

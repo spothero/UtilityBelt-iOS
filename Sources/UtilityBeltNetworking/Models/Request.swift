@@ -1,4 +1,4 @@
-// Copyright © 2022 SpotHero, Inc. All rights reserved.
+// Copyright © 2023 SpotHero, Inc. All rights reserved.
 
 import Foundation
 
@@ -179,7 +179,7 @@ public final class Request {
         let result: Result<Data, Error> = {
             if let response = httpResponse {
                 do {
-                    for validator in validators {
+                    for validator in self.validators {
                         try validator.validate(response: response)
                     }
                 } catch {
