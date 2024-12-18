@@ -75,7 +75,8 @@ final class RequestTests: XCTestCase, URLRequesting {
             func adapt(_ request: URLRequest, completion: @escaping (Result<URLRequest, Error>) -> Void) {
                 completion(.success(request))
             }
-            
+
+            var selectors = [String]()
             var retryBeganExpectation: XCTestExpectation?
             
             func retry(_ request: Request, dueTo error: Error, data: Data?, completion: @escaping (Bool) -> Void) {
@@ -91,6 +92,14 @@ final class RequestTests: XCTestCase, URLRequesting {
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                     completion(true)
                 }
+            }
+
+            func requestWillStart(_ request: Request) {
+                selectors.append(#function)
+            }
+
+            func requestDidEnd(_ request: Request) {
+                selectors.append(#function)
             }
         }
         
@@ -108,6 +117,8 @@ final class RequestTests: XCTestCase, URLRequesting {
         
         // Verify the Request is running.
         XCTAssertTrue(request.isRunning)
+
+        XCTAssertEqual(interceptor.selectors, ["requestWillStart(_:)"])
     }
     
     // MARK: Request Adapting Tests
@@ -229,7 +240,8 @@ final class RequestTests: XCTestCase, URLRequesting {
             }
             
             var retryExpectation: XCTestExpectation?
-            
+            var selectors = [String]()
+
             func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 if request.retryCount < 3 {
                     completion(true)
@@ -237,6 +249,14 @@ final class RequestTests: XCTestCase, URLRequesting {
                 } else {
                     completion(false)
                 }
+            }
+
+            func requestWillStart(_ request: Request) {
+                selectors.append(#function)
+            }
+
+            func requestDidEnd(_ request: Request) {
+                selectors.append(#function)
             }
         }
         
@@ -256,6 +276,8 @@ final class RequestTests: XCTestCase, URLRequesting {
         
         // Verify retry occurred multiple times yet the request completion was only invoked once.
         self.wait(for: [retryExpectation, requestExpectation], timeout: 2)
+
+        XCTAssertEqual(interceptor.selectors, ["requestWillStart(_:)", "requestDidEnd(_:)"])
     }
     
     // MARK: Cancelling Tests
@@ -263,6 +285,8 @@ final class RequestTests: XCTestCase, URLRequesting {
     func testCancellingARequestWhileRequestAdapterIsRunningProducesCancellationError() throws {
         // Create an interceptor that will adapt the request.
         class MockInterceptor: RequestInterceptor {
+            var selectors = [String]()
+
             func adapt(_ request: URLRequest, completion: @escaping (Result<URLRequest, Error>) -> Void) {
                 // Delay calling the completion block for 1 second to ensure the
                 // cancellation request is received prior to the adapter finishing.
@@ -273,6 +297,14 @@ final class RequestTests: XCTestCase, URLRequesting {
             
             func retry(_ request: Request, dueTo error: Error, data: Data?, completion: (Bool) -> Void) {
                 completion(false)
+            }
+
+            func requestWillStart(_ request: Request) {
+                selectors.append(#function)
+            }
+
+            func requestDidEnd(_ request: Request) {
+                selectors.append(#function)
             }
         }
         
@@ -298,6 +330,8 @@ final class RequestTests: XCTestCase, URLRequesting {
         request.cancel()
         
         self.wait(for: [requestExpectation], timeout: 2)
+
+        XCTAssertEqual(interceptor.selectors, ["requestWillStart(_:)", "requestDidEnd(_:)"])
     }
     
     func testCancellingARequestWhileRequestRetrierIsRunningProducesCancellationError() throws {

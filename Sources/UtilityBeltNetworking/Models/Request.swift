@@ -68,10 +68,14 @@ public final class Request {
     
     /// Performs any necessary request adaptation then creates and resumes a `URLSessionTask`.
     /// - Parameter urlRequest: The request to be sent to the server.
-    func perform(urlRequest: URLRequest) {
+    func perform(urlRequest: URLRequest, isInitialRun: Bool = true) {
         self.isRunning = true
         
-        if let interceptor = self.interceptor {
+        if let interceptor {
+            if isInitialRun {
+                interceptor.requestWillStart(self)
+            }
+
             // If there's a RequestInterceptor, pass the request
             // off to be adapted, then create resume the task.
             interceptor.adapt(urlRequest) { result in
@@ -79,6 +83,7 @@ public final class Request {
                 case let .success(adaptedRequest):
                     self.createAndResumeSessionTask(with: adaptedRequest)
                 case let .failure(error):
+                    interceptor.requestDidEnd(self)
                     self.completion?(.failure(error))
                 }
             }
@@ -216,7 +221,7 @@ public final class Request {
                     if shouldRetry {
                         // If we should retry, bump the retry count and perform the request again.
                         self.retryCount += 1
-                        self.perform(urlRequest: urlRequest)
+                        self.perform(urlRequest: urlRequest, isInitialRun: false)
                     } else {
                         // Otherwise, complete the request.
                         self.completeRequest(urlRequest: urlRequest,
@@ -246,7 +251,7 @@ public final class Request {
                                  data: Data?,
                                  result: Result<Data, Error>) {
         self.isRunning = false
-        
+
         // Create the DataResponse object containing all necessary information from the response
         let dataResponse = DataResponse(request: urlRequest,
                                         response: urlResponse,
@@ -254,6 +259,7 @@ public final class Request {
                                         result: result)
         
         self.dispatchQueue.async {
+            self.interceptor?.requestDidEnd(self)
             // Fire the completion!
             self.completion?(dataResponse)
         }
