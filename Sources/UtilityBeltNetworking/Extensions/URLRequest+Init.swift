@@ -27,4 +27,27 @@ public extension URLRequest {
         // Parameters must be set after setting headers, because encoding dictates (and therefore overrides) the Content-Type header
         self.setParameters(parameters, method: method, encoding: encoding)
     }
+
+
+    /// Creates a configured URLRequest.
+    /// - Parameter url: The URL for the request. Accepts a URL or a String.
+    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
+    /// - Parameter body: The HTTP body data.
+    /// - Parameter headers: The HTTP headers to send with the request.
+    /// - Returns: The configured `URLRequest` object.
+    init(
+        url: URLConvertible,
+        method: HTTPMethod = .get,
+        body: Data? = nil,
+        headers: HTTPHeaderDictionaryConvertible? = nil,
+    ) throws {
+        let url = try url.asURL()
+        self.init(url: url)
+
+        self.httpMethod = method.rawValue
+
+        self.setHeaders(headers)
+
+        self.httpBody = body
+    }
 }
