@@ -39,7 +39,7 @@ public extension URLRequest {
         url: URLConvertible,
         method: HTTPMethod = .get,
         body: Data? = nil,
-        headers: HTTPHeaderDictionaryConvertible? = nil,
+        headers: HTTPHeaderDictionaryConvertible? = nil
     ) throws {
         let url = try url.asURL()
         self.init(url: url)
