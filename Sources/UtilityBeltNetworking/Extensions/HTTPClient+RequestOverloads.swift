@@ -257,4 +257,56 @@ public extension HTTPClient {
             completion: completion
         )
     }
+
+
+
+    /// Creates and sends a request which fetches raw data from an endpoint and decodes it.
+    /// - Parameter url: The URL for the request. Accepts a URL or a String.
+    /// - Parameter method: The HTTP method for the request. Defaults to `GET`.
+    /// - Parameter body: The  HTTP data body.
+    /// - Parameter headers: The HTTP headers to send with the request.
+    /// - Parameter encoding: The parameter encoding method. If nil, uses the default encoding for the provided HTTP method.
+    /// - Parameter validators: An array of validators that will be applied to the response. Defaults to ensuring a JSON mime type on the response.
+    /// - Parameter interceptor: An object that can intercept the url request. Defaults to `nil`.
+    /// - Parameter dispatchQueue: The dispatch queue that the completion will be called on. Defaults to `.main`.
+    /// - Parameter decoder: The `JSONDecoder` to use when decoding the response data. Defaults to `JSONDecoder()`.
+    /// - Parameter completion: The completion block to call when the request is completed.
+    /// - Returns: The configured `Request` object that is performed upon execution of this method.
+    @discardableResult
+    func request<T: Decodable>(
+        _ url: URLConvertible,
+        method: HTTPMethod = .get,
+        body: Data? = nil,
+        headers: HTTPHeaderDictionaryConvertible? = nil,
+        validators: [ResponseValidator] = [.ensureMimeType(.json)],
+        interceptor: RequestInterceptor? = nil,
+        dispatchQueue: DispatchQueue = .main,
+        decoder: JSONDecoder = .init(),
+        completion: DecodableTaskCompletion<T>? = nil
+    ) -> Request? {
+        let request: URLRequest
+
+        do {
+            request = try .init(
+                url: url,
+                method: method,
+                body: body,
+                headers: headers
+            )
+        } catch {
+            dispatchQueue.async {
+                completion?(.failure(error))
+            }
+            return nil
+        }
+
+        return self.request(
+            request,
+            validators: validators,
+            interceptor: interceptor,
+            dispatchQueue: dispatchQueue,
+            decoder: decoder,
+            completion: completion
+        )
+    }
 }
